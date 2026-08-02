@@ -1,0 +1,6 @@
+node_modules
+dist
+work/
+vault/
+.DS_Store
+work/jp2-originals

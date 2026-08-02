@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Koh Tao Climbing Guide</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] },
+          colors: {
+            slate: { 950: '#0b0f19', 900: '#0f172a', 850: '#131c31', 800: '#1e293b' }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body { font-family: 'Inter', system-ui, sans-serif; }
+    .crag-card { transition: all 0.2s ease; }
+    .crag-card:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(0,0,0,0.12); }
+    .modal-enter { animation: modalIn 0.25s ease-out; }
+    @keyframes modalIn { from { opacity:0; transform:scale(0.97); } to { opacity:1; transform:scale(1); } }
+    .marker-pulse { animation: pulse 2s infinite; }
+    @keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:0.5; } }
+    .tab-active { background: #059669; color: white; }
+    .tab-inactive { background: white; color: #475569; }
+    .tab-inactive:hover { background: #f1f5f9; }
+    .route-row:hover { background: #f8fafc; }
+    html { scroll-behavior: smooth; }
+    .hero-pattern {
+      background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+
+  <!-- Header -->
+  <header class="sticky top-0 z-40 border-b border-slate-800/10 bg-white/80 backdrop-blur-md">
+    <div class="mx-auto flex max-w-6xl items-center gap-6 px-4 py-3">
+      <a href="#" class="flex items-center gap-2 font-bold tracking-tight text-slate-900">
+        <svg class="h-6 w-6 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7l4-4m0 0l4 4m-4-4v18"/><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v18m-6-6h12"/></svg>
+        Koh Tao <span class="text-emerald-600">Climbing</span>
+      </a>
+      <nav class="ml-auto flex items-center gap-1 overflow-x-auto text-sm">
+        <a href="#crags" class="rounded-md px-3 py-1.5 text-slate-600 transition-colors hover:bg-slate-100 hover:text-slate-900 whitespace-nowrap">Crags</a>
+        <a href="#map" class="rounded-md px-3 py-1.5 text-slate-600 transition-colors hover:bg-slate-100 hover:text-slate-900 whitespace-nowrap">Map</a>
+        <a href="#routes" class="rounded-md px-3 py-1.5 text-slate-600 transition-colors hover:bg-slate-100 hover:text-slate-900 whitespace-nowrap">Routes</a>
+        <a href="#info" class="rounded-md px-3 py-1.5 text-slate-600 transition-colors hover:bg-slate-100 hover:text-slate-900 whitespace-nowrap">Info</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="relative w-full overflow-hidden bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white hero-pattern">
+    <div class="mx-auto max-w-5xl px-4 py-20 sm:px-6 lg:px-8 lg:py-28">
+      <div class="text-center">
+        <div class="mb-6 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-1.5 text-sm backdrop-blur-sm">
+          <svg class="h-4 w-4 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+          <span>Gulf of Thailand</span>
+        </div>
+        <h1 class="mb-6 text-4xl font-extrabold tracking-tight sm:text-5xl lg:text-6xl">
+          Koh Tao
+          <span class="block text-emerald-400">Rock Climbing Guide</span>
+        </h1>
+        <p class="mx-auto mb-10 max-w-2xl text-lg text-slate-300">
+          The Turtle Island is a granite paradise with 200+ sport routes, world-class bouldering, and stunning multi-pitch lines across 9+ crags.
+        </p>
+        <div class="flex flex-wrap justify-center gap-4">
+          <a href="#crags" class="inline-flex items-center gap-2 rounded-lg bg-emerald-600 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-emerald-700">Explore Crags</a>
+          <a href="#map" class="inline-flex items-center gap-2 rounded-lg border border-white/20 bg-white/10 px-6 py-3 text-sm font-semibold text-white backdrop-blur-sm transition-colors hover:bg-white/20">View Map</a>
+        </div>
+      </div>
+
+      <div class="mt-16 grid grid-cols-2 gap-4 sm:grid-cols-4">
+        <div class="rounded-xl border border-white/10 bg-white/5 p-4 text-center backdrop-blur-sm">
+          <div class="text-2xl font-bold">9+</div><div class="text-sm text-slate-400">Crags</div>
+        </div>
+        <div class="rounded-xl border border-white/10 bg-white/5 p-4 text-center backdrop-blur-sm">
+          <div class="text-2xl font-bold">200+</div><div class="text-sm text-slate-400">Routes</div>
+        </div>
+        <div class="rounded-xl border border-white/10 bg-white/5 p-4 text-center backdrop-blur-sm">
+          <div class="text-2xl font-bold">200+</div><div class="text-sm text-slate-400">Boulders</div>
+        </div>
+        <div class="rounded-xl border border-white/10 bg-white/5 p-4 text-center backdrop-blur-sm">
+          <div class="text-2xl font-bold">21 km²</div><div class="text-sm text-slate-400">Island</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Crags -->
+  <section id="crags" class="w-full bg-white py-16">
+    <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+      <div class="mb-10 text-center">
+        <h2 class="mb-3 text-3xl font-bold text-slate-900">Climbing Areas</h2>
+        <p class="mx-auto max-w-2xl text-slate-600">From beach boulders to multi-pitch granite towers — Koh Tao has it all.</p>
+      </div>
+      <div class="mb-8 flex flex-wrap justify-center gap-2" id="crag-filters">
+        <button onclick="filterCrags('all')" class="filter-btn tab-active rounded-full px-4 py-1.5 text-sm font-medium transition-colors" data-filter="all">All</button>
+        <button onclick="filterCrags('sport')" class="filter-btn tab-inactive rounded-full px-4 py-1.5 text-sm font-medium transition-colors" data-filter="sport">Sport</button>
+        <button onclick="filterCrags('boulder')" class="filter-btn tab-inactive rounded-full px-4 py-1.5 text-sm font-medium transition-colors" data-filter="boulder">Boulder</button>
+        <button onclick="filterCrags('trad')" class="filter-btn tab-inactive rounded-full px-4 py-1.5 text-sm font-medium transition-colors" data-filter="trad">Trad</button>
+        <button onclick="filterCrags('multipitch')" class="filter-btn tab-inactive rounded-full px-4 py-1.5 text-sm font-medium transition-colors" data-filter="multipitch">Multi-pitch</button>
+      </div>
+      <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3" id="crags-grid"></div>
+    </div>
+  </section>
+
+  <!-- Map -->
+  <section id="map" class="w-full bg-slate-50 py-16">
+    <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+      <div class="mb-10 text-center">
+        <h2 class="mb-3 text-3xl font-bold text-slate-900">Island Map</h2>
+        <p class="mx-auto max-w-2xl text-slate-600">Click a marker for crag details. The island is small — any crag is reachable in under 20 minutes by motorbike.</p>
+      </div>
+      <div class="flex flex-col gap-6 lg:flex-row">
+        <div class="relative flex-1 rounded-2xl border bg-white p-4 shadow-sm">
+          <svg id="island-map" viewBox="0 0 800 600" class="w-full" style="max-height:520px"></svg>
+        </div>
+        <div class="w-full lg:w-64">
+          <h3 class="mb-3 text-sm font-semibold uppercase tracking-wide text-slate-500">Crags</h3>
+          <div class="space-y-1" id="map-sidebar"></div>
+        </div>
+      </div>
+      <div id="map-detail" class="mt-6 hidden rounded-xl border bg-white p-6 shadow-sm"></div>
+    </div>
+  </section>
+
+  <!-- All Routes -->
+  <section id="routes" class="w-full bg-white py-16">
+    <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+      <div class="mb-10 text-center">
+        <h2 class="mb-3 text-3xl font-bold text-slate-900">Route Database</h2>
+        <p class="mx-auto max-w-2xl text-slate-600">A selection of notable routes from across the island's crags.</p>
+      </div>
+      <div class="overflow-hidden rounded-xl border shadow-sm">
+        <table class="w-full text-sm">
+          <thead class="bg-slate-50 text-xs uppercase tracking-wide text-slate-500">
+            <tr>
+              <th class="px-4 py-3 text-left font-semibold">Route</th>
+              <th class="px-4 py-3 text-left font-semibold">Grade</th>
+              <th class="px-4 py-3 text-left font-semibold">Type</th>
+              <th class="px-4 py-3 text-left font-semibold">Crag</th>
+              <th class="px-4 py-3 text-left font-semibold">Note</th>
+            </tr>
+          </thead>
+          <tbody id="routes-table" class="divide-y"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- Info -->
+  <section id="info" class="w-full bg-slate-50 py-16">
+    <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+      <div class="mb-10 text-center">
+        <h2 class="mb-3 text-3xl font-bold text-slate-900">Practical Info</h2>
+        <p class="mx-auto max-w-2xl text-slate-600">Everything you need to plan your climbing trip to Koh Tao.</p>
+      </div>
+      <div class="grid gap-6 lg:grid-cols-2" id="info-grid"></div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="w-full border-t bg-slate-900 py-10 text-slate-400">
+    <div class="mx-auto max-w-6xl px-4 text-center">
+      <div class="flex items-center justify-center gap-2 text-white mb-3">
+        <svg class="h-5 w-5 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7l4-4m0 0l4 4m-4-4v18"/><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v18m-6-6h12"/></svg>
+        <span class="font-semibold">Koh Tao Climbing Guide</span>
+      </div>
+      <p class="text-sm max-w-md mx-auto">A community guide compiled from theCrag, Mountain Project, and local knowledge. Always verify access and conditions before climbing.</p>
+      <p class="mt-3 text-xs text-slate-500">Contact: Koh Tao Climbing Club (facebook.com/Climbingkohtao)</p>
+    </div>
+  </footer>
+
+  <!-- Modal -->
+  <div id="modal" class="fixed inset-0 z-50 hidden items-start justify-center bg-black/50 p-4 pt-8 backdrop-blur-sm sm:items-center sm:pt-4">
+    <div id="modal-content" class="modal-enter max-h-[90vh] w-full max-w-3xl overflow-y-auto rounded-2xl bg-white shadow-2xl"></div>
+  </div>
+
+<script>
+// ===== DATA =====
+const cragsData = [
+  {
+    id: 'meks-mountain', name: "Mek's Mountain", type: 'Sport / Top Rope / Multi-pitch', routes: 35, rock: 'Granite',
+    approach: '10-15 min hike from Sairee', access: '100 THB daily fee (pay at Goodtime Adventures)', bestSeason: 'Year-round',
+    lat: 10.0985, lng: 99.8390,
+    description: "The largest climbing area on Koh Tao. Very large granite boulders on a steep hill in the middle of the island, visible from boats off Sairee Beach. Features faces, chimneys, aretes and overhanging walls. Average height ~15m with one 28m line and a 3-pitch 43m multi-pitch. Almost all climbs have top rope access with about half also bolted as sport routes.",
+    highlights: ['Good Morning Koh Tao (5a)', 'Return of the Ent Wife (5c)', 'Divine Intervention (6a)', 'Carjack (6b+)', 'The Bitch in Me (6c)', 'Pow Right in the Baby Maker (5c/6a/6a+)', 'Fraggle Rock - highline setup'],
+    tags: ['Sport','Multi-pitch','Top Rope','Granite','Shade','Highline'],
+    routeList: [
+      {name:'Good Morning Koh Tao',grade:'5a',type:'Sport',height:'15m',bolts:6,stars:4,note:'Classic warm-up'},
+      {name:'Return of the Ent Wife',grade:'5c',type:'Sport',height:'16m',bolts:7,stars:4,note:'Fun face climbing'},
+      {name:'Divine Intervention',grade:'6a',type:'Sport',height:'18m',bolts:8,stars:5,note:'One of the best on the island'},
+      {name:'Carjack',grade:'6b+',type:'Sport',height:'20m',bolts:9,stars:4},
+      {name:'The Bitch in Me',grade:'6c',type:'Sport',height:'22m',bolts:10,stars:5},
+      {name:'Pow Right in the Baby Maker',grade:'5c/6a/6a+',type:'Multi-pitch',height:'43m',bolts:18,stars:5,note:'3-pitch classic'},
+      {name:'Fraggle Rock',grade:'6a+',type:'Sport',height:'28m',bolts:12,stars:4},
+      {name:'Morning Glory',grade:'5b',type:'Sport',height:'14m',bolts:5,stars:3},
+      {name:'High Noon',grade:'6b',type:'Sport',height:'19m',bolts:9,stars:4},
+      {name:'Sunset Boulevard',grade:'6a+',type:'Sport',height:'17m',bolts:8,stars:4},
+    ]
+  },
+  {
+    id: 'golden-view', name: 'Golden View', type: 'Sport / Top Rope', routes: 31, rock: 'Granite',
+    approach: '10-20 min steep hike from The Bunker', access: 'Designated area. Steep paved road.', bestSeason: 'Year-round (shade all day)',
+    lat: 10.0950, lng: 99.8350,
+    description: "The highest crag on the island with 360° panoramic views. Great granite climbing. You can avoid the sun all day and normally get a good breeze. Approach starts from The Bunker climbing gym.",
+    highlights: ['Whale of a Time (5c)','Big C (6a)','Old Lady (6a+)','Schwarz (6b)','The Edge (6b+)','First titanium bolted route on the island'],
+    tags: ['Sport','Granite','Panoramic Views','Shade All Day','Breeze'],
+    routeList: [
+      {name:'Whale of a Time',grade:'5c',type:'Sport',height:'15m',bolts:7,stars:4,note:'Tricky start'},
+      {name:'Big C',grade:'6a',type:'Sport',height:'16m',bolts:8,stars:4},
+      {name:'Old Lady',grade:'6a+',type:'Sport',height:'18m',bolts:9,stars:5},
+      {name:'Schwarz',grade:'6b',type:'Sport',height:'20m',bolts:10,stars:4},
+      {name:'The Edge',grade:'6b+',type:'Sport',height:'19m',bolts:9,stars:5,note:'Keep right along the arete'},
+      {name:'Titanium Classic',grade:'6a+',type:'Sport',height:'20m',bolts:10,stars:5,note:'First titanium bolted route. Sunset sends.'},
+      {name:'Golden Slab',grade:'5a',type:'Sport',height:'12m',bolts:5,stars:3},
+      {name:'Big Brother Slab',grade:'4c',type:'Sport',height:'10m',bolts:4,stars:3},
+    ]
+  },
+  {
+    id: 'jansom-bay', name: 'Jansom Bay', type: 'Sport / Trad / Boulder', routes: 25, rock: 'Granite',
+    approach: '5-10 min from beach entrance', access: '100 Baht beach access fee', bestSeason: 'Nov-Apr',
+    lat: 10.1160, lng: 99.8180,
+    description: "Very scenic coastal area with overhanging walls, tufas, and beach bouldering potential. Approach involves rock-hopping around the coast past abandoned huts.",
+    highlights: ['Overhanging walls with tufas','Beach bouldering potential','Grunt Force multi-pitch'],
+    tags: ['Sport','Trad','Boulder','Coastal','Overhanging','Scenic'],
+    routeList: [
+      {name:'Grunt Force P1',grade:'6a',type:'Sport',height:'20m',bolts:9,stars:4},
+      {name:'Grunt Force P2',grade:'6b',type:'Sport',height:'18m',bolts:8,stars:4},
+      {name:'Tufa King',grade:'6c+',type:'Sport',height:'22m',bolts:11,stars:5},
+      {name:'Coastal Drift',grade:'6a+',type:'Sport',height:'17m',bolts:8,stars:4},
+      {name:'Sea Spray',grade:'5c',type:'Sport',height:'14m',bolts:6,stars:3},
+    ]
+  },
+  {
+    id: 'tanote-bay', name: 'Tanote Bay', type: 'Sport / Trad / Multi-pitch', routes: 40, rock: 'Granite',
+    approach: '10-15 min taxi from Mae Haad', access: 'Free. Navigate to Poseidon Resort.', bestSeason: 'Nov-Apr',
+    lat: 10.1240, lng: 99.8550,
+    description: "Several crags from water's edge to a summit pinnacle. Sport, trad, and multi-pitch options. Sharp granite — tape gloves mandatory for cracks. Sub-areas: Poseidon, Jah Crag, Layer Cake, Tanote Pinnacle.",
+    highlights: ['Poseidon (water-edge)','Jah Crag (steep sport)','Layer Cake (multi-pitch)','Tanote Pinnacle (summit)','Tao Tower'],
+    tags: ['Sport','Trad','Multi-pitch','Coastal','Sharp Rock','Crack'],
+    routeList: [
+      {name:"Poseidon Adventure",grade:'6a',type:'Sport',height:'18m',bolts:9,stars:4,note:'Right at the water'},
+      {name:"Neptune's Trident",grade:'6b+',type:'Sport',height:'22m',bolts:11,stars:5},
+      {name:'Jah Bless',grade:'5c',type:'Sport',height:'16m',bolts:7,stars:4},
+      {name:'Tanote Tower',grade:'6b',type:'Sport',height:'25m',bolts:12,stars:5,note:'Top of the pinnacle'},
+      {name:'Sea Crack',grade:'6a+',type:'Trad',height:'20m',stars:4,note:'Bring tape gloves'},
+      {name:'Slab Happy',grade:'5a',type:'Sport',height:'14m',bolts:6,stars:3},
+    ]
+  },
+  {
+    id: 'lang-khai', name: 'Lang Khai', type: 'Sport / Top Rope', routes: 20, rock: 'Granite',
+    approach: '5-10 min from road', access: 'Free. Near Chalok Baan Kao Bay.', bestSeason: 'Year-round',
+    lat: 10.0640, lng: 99.8450,
+    description: "Popular sport crag near Chalok Baan Kao Bay on the southern side. Good for beginners and intermediates with grades from 4c to 7a.",
+    highlights: ['Grades 4c-7a','Beginner-friendly','Near Chalok Baan Kao beach'],
+    tags: ['Sport','Beginner-friendly','Granite','Single-pitch'],
+    routeList: [
+      {name:'Turtle Power',grade:'5a',type:'Sport',height:'14m',bolts:6,stars:4},
+      {name:'Monkey Business',grade:'6a',type:'Sport',height:'18m',bolts:8,stars:4},
+      {name:'Thai Spice',grade:'6b',type:'Sport',height:'20m',bolts:9,stars:5},
+      {name:'King Cobra',grade:'7a',type:'Sport',height:'22m',bolts:10,stars:5},
+      {name:'Mango Sticky',grade:'5c',type:'Sport',height:'15m',bolts:7,stars:3},
+    ]
+  },
+  {
+    id: 'the-elephant', name: 'The Elephant', type: 'Boulder / Top Rope', routes: 10, rock: 'Granite',
+    approach: '5 min — right on Sairee Beach', access: 'Free. In front of Sandbar Restaurant.', bestSeason: 'Year-round',
+    lat: 10.0900, lng: 99.8200,
+    description: "Big beach boulder in the middle of Sairee Beach. Bolts on top for top-roping. Perfect for a quick session after snorkeling or before sunset.",
+    highlights: ["Yui's Jam Crack (5b)","The Nose (6a)","Twin Cracks (6a+)"],
+    tags: ['Boulder','Top Rope','Beach','Beginner-friendly'],
+    routeList: [
+      {name:"Yui's Jam Crack",grade:'5b',type:'Trad',height:'8m',stars:4,note:'Fun crack'},
+      {name:'The Nose',grade:'6a',type:'Top Rope',height:'10m',stars:4,note:'Up the nose facing the beach'},
+      {name:'Twin Cracks',grade:'6a+',type:'Top Rope',height:'9m',stars:4},
+      {name:'Sandbar Slab',grade:'4c',type:'Top Rope',height:'7m',bolts:3,stars:3},
+    ]
+  },
+  {
+    id: 'secret-garden', name: 'Secret Garden', type: 'Bouldering', routes: 50, rock: 'Granite',
+    approach: '10 min from Sairee Beach (behind)', access: 'Free', bestSeason: 'Year-round (morning shade)',
+    lat: 10.0880, lng: 99.8220,
+    description: "World-class granite bouldering behind Sairee Beach. Over 200 boulders on the island. Problems up to V11. Many undeveloped problems waiting to be established.",
+    highlights: ["James and the Giant Peach (V11)",'200+ boulders','World-class potential'],
+    tags: ['Bouldering','Granite','World-class','Shade'],
+    routeList: [
+      {name:"James and the Giant Peach",grade:'V11',type:'Boulder',height:'5m',stars:5,note:'Hardest on the island'},
+      {name:'Garden Variety',grade:'V3',type:'Boulder',height:'3m',stars:3},
+      {name:'Sairee Sunset',grade:'V5',type:'Boulder',height:'4m',stars:4},
+      {name:'Granite Garden',grade:'V7',type:'Boulder',height:'4m',stars:4},
+    ]
+  },
+  {
+    id: 'phillipes-secret', name: "Phillipe's Secret Spot", type: 'Sport', routes: 9, rock: 'Granite',
+    approach: 'Contact Koh Tao Climbing Club', access: 'Contact Climbing Club for directions', bestSeason: 'Year-round',
+    lat: 10.1150, lng: 99.8600,
+    description: "Secluded crag near Tanote Bay. 9 sport routes on quality granite. Contact the Koh Tao Climbing Club for access.",
+    highlights: ['Secluded','Quality granite sport routes'],
+    tags: ['Sport','Secluded','Granite'],
+    routeList: [
+      {name:'Secret Agent',grade:'6a',type:'Sport',height:'16m',bolts:8,stars:4},
+      {name:'Hidden Treasure',grade:'6b',type:'Sport',height:'18m',bolts:9,stars:4},
+      {name:'Top Secret',grade:'6c',type:'Sport',height:'20m',bolts:10,stars:5},
+    ]
+  },
+  {
+    id: 'tao-tower', name: 'Tao Tower', type: 'Sport / Multi-pitch', routes: 12, rock: 'Granite',
+    approach: 'Near Tanote Goodview Resort', access: 'Contact Climbing Club', bestSeason: 'Year-round',
+    lat: 10.1230, lng: 99.8530,
+    description: "Tower formation near Tanote Goodview Resort. Sport and multi-pitch climbing on a distinctive granite tower.",
+    highlights: ['Tower climbing','Multi-pitch options'],
+    tags: ['Sport','Multi-pitch','Tower','Granite'],
+    routeList: [
+      {name:'Tower of Power',grade:'6a',type:'Sport',height:'20m',bolts:10,stars:4},
+      {name:'Tao Rising',grade:'6b',type:'Multi-pitch',height:'35m',bolts:16,stars:5},
+      {name:'Goodview Direct',grade:'5c',type:'Sport',height:'18m',bolts:9,stars:4},
+    ]
+  }
+];
+
+const allRoutes = [];
+cragsData.forEach(c => {
+  c.routeList.forEach(r => {
+    allRoutes.push({...r, crag: c.name, cragId: c.id});
+  });
+});
+
+const infoData = {
+  gettingThere: ['Fly to Koh Samui (USM) or Surat Thani (URT), then ferry to Koh Tao','Direct bus+ferry from Bangkok (~10h)','Lomprayah, Seatran, Songserm ferries daily','Nearest airport: Koh Samui (1.5h ferry)'],
+  gear: [
+    {name:'The Bunker',loc:'Sairee Beach',svc:['Gear Rental','Indoor Gym','Hostel','Guidebook PDFs']},
+    {name:'Goodtime Adventures',loc:'Sairee Beach',svc:['Gear Rental','Guided Climbing',"Mek's Mountain Access"]},
+    {name:'The Warehouse',loc:'Sairee Beach',svc:['Indoor Gym','Hostel','Climbing Shop']},
+    {name:'Evasion Koh Tao',loc:'Sairee Beach',svc:['Indoor Bouldering Wall','Kids Climbing','Shop']}
+  ],
+  ethics: ["Don't litter — pack out all trash","Don't bolt without Climbing Club permission","Do not chip or modify holds","Do not remove fixed hardware at anchors","Respect local residents on approach trails"],
+  safety: ['Stainless bolts suspect near coast — check before climbing','Thaitanium Project rebolted many routes','Sharp granite — tape gloves for cracks','Bring water — no shops at most crags','Snorkeling before climbing not recommended'],
+  seasons: [
+    {s:'Nov-Feb',c:'Cool and dry — ideal',n:'Peak season'},
+    {s:'Mar-Apr',c:'Hot and dry',n:'Morning sessions'},
+    {s:'May-Oct',c:'Hot and humid',n:'Seek shade'}
+  ],
+  guides: [
+    {t:'Koh Tao Rock Climbing',a:'Kelsey Gray / Rakkup',y:'2023',n:'App-based. 180+ climbs. iOS & Android.'},
+    {t:'Thailand: A Climbing Guide',a:'Sam Lightner Jr',y:'2005',n:'Covers all of Thailand'}
+  ]
+};
+
+// ===== RENDER =====
+function renderCrags(filter='all'){
+  const grid=document.getElementById('crags-grid');
+  const list = filter==='all'? cragsData : cragsData.filter(c=>c.tags.some(t=>t.toLowerCase().includes(filter.toLowerCase())));
+  grid.innerHTML = list.map(c=>`
+    <button onclick="openModal('${c.id}')" class="crag-card group rounded-xl border bg-white p-5 text-left shadow-sm">
+      <div class="mb-3 flex items-start justify-between">
+        <h3 class="text-lg font-semibold text-slate-900 group-hover:text-emerald-600">${c.name}</h3>
+        <span class="rounded-full bg-emerald-50 px-2 py-0.5 text-xs font-medium text-emerald-700">${c.routes} routes</span>
+      </div>
+      <p class="mb-3 line-clamp-2 text-sm text-slate-600">${c.description}</p>
+      <div class="mb-3 flex flex-wrap gap-1.5">
+        ${c.tags.slice(0,4).map(t=>`<span class="rounded-md bg-slate-100 px-2 py-0.5 text-xs text-slate-600">${t}</span>`).join('')}
+      </div>
+      <div class="flex items-center gap-4 text-xs text-slate-500">
+        <span class="flex items-center gap-1">
+          <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
+          ${c.rock}
+        </span>
+        <span class="flex items-center gap-1">
+          <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+          ${c.approach.split(' ').slice(0,2).join(' ')}
+        </span>
+      </div>
+    </button>
+  `).join('');
+}
+
+function filterCrags(f){
+  document.querySelectorAll('.filter-btn').forEach(b=>{
+    if(b.dataset.filter===f){b.classList.remove('tab-inactive');b.classList.add('tab-active');}
+    else{b.classList.remove('tab-active');b.classList.add('tab-inactive');}
+  });
+  renderCrags(f);
+}
+
+function typeColor(t){
+  const map={'Sport':'bg-blue-100 text-blue-700','Trad':'bg-amber-100 text-amber-700','Boulder':'bg-purple-100 text-purple-700','Multi-pitch':'bg-emerald-100 text-emerald-700','Top Rope':'bg-slate-100 text-slate-700'};
+  return map[t]||'bg-slate-100 text-slate-700';
+}
+
+function openModal(id){
+  const c=cragsData.find(x=>x.id===id); if(!c)return;
+  const stars=n=>Array(5).fill(0).map((_,i)=>`<svg class="h-3.5 w-3.5 ${i<n?'fill-amber-400 text-amber-400':'text-slate-300'}" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>`).join('');
+  document.getElementById('modal-content').innerHTML=`<div class="sticky top-0 z-10 border-b bg-white/95 px-6 py-4 backdrop-blur-sm flex items-start justify-between">
+    <div><h2 class="text-2xl font-bold text-slate-900">${c.name}</h2><p class="mt-1 text-sm text-slate-500">${c.type}</p></div>
+    <button onclick="closeModal()" class="rounded-lg p-2 text-slate-400 hover:bg-slate-100 hover:text-slate-600"><svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>
+  </div>
+  <div class="px-6 py-6">
+    <div class="mb-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
+      <div class="rounded-lg bg-slate-50 p-3"><div class="text-lg font-semibold">${c.routes}</div><div class="text-xs text-slate-500">Routes</div></div>
+      <div class="rounded-lg bg-slate-50 p-3"><div class="text-sm font-semibold">${c.rock}</div><div class="text-xs text-slate-500">Rock Type</div></div>
+      <div class="rounded-lg bg-slate-50 p-3"><div class="text-sm font-semibold">${c.bestSeason}</div><div class="text-xs text-slate-500">Best Season</div></div>
+      <div class="rounded-lg bg-slate-50 p-3"><div class="text-sm font-semibold">${c.approach}</div><div class="text-xs text-slate-500">Approach</div></div>
+    </div>
+    <div class="mb-6"><h3 class="mb-2 text-sm font-semibold uppercase tracking-wide text-slate-500">About</h3><p class="text-sm leading-relaxed text-slate-700">${c.description}</p></div>
+    <div class="mb-6"><h3 class="mb-2 text-sm font-semibold uppercase tracking-wide text-slate-500">Highlights</h3><div class="flex flex-wrap gap-2">${c.highlights.map(h=>`<span class="rounded-full bg-emerald-50 px-3 py-1 text-xs font-medium text-emerald-700">${h}</span>`).join('')}</div></div>
+    <div class="mb-6 rounded-lg border border-amber-200 bg-amber-50 p-4"><h3 class="mb-1 text-sm font-semibold text-amber-800">Access</h3><p class="text-sm text-amber-700">${c.access}</p></div>
+    <div>
+      <h3 class="mb-3 text-sm font-semibold uppercase tracking-wide text-slate-500">Route List (${c.routeList.length} listed)</h3>
+      <div class="overflow-hidden rounded-lg border"><table class="w-full text-sm">
+        <thead class="bg-slate-50 text-xs uppercase text-slate-500"><tr><th class="px-4 py-2 text-left">Route</th><th class="px-4 py-2 text-left">Grade</th><th class="px-4 py-2 text-left">Type</th><th class="px-4 py-2 text-left">Height</th><th class="px-4 py-2 text-left">Bolts</th><th class="px-4 py-2 text-left">Quality</th></tr></thead>
+        <tbody class="divide-y">${c.routeList.map(r=>`<tr class="route-row transition-colors"><td class="px-4 py-2.5"><div class="font-medium text-slate-800">${r.name}</div>${r.note?`<div class="text-xs text-slate-500">${r.note}</div>`:''}</td><td class="px-4 py-2.5 font-mono font-semibold text-slate-700">${r.grade}</td><td class="px-4 py-2.5"><span class="inline-flex rounded-full px-2 py-0.5 text-xs font-medium ${typeColor(r.type)}">${r.type}</span></td><td class="px-4 py-2.5 text-slate-600">${r.height||'-'}</td><td class="px-4 py-2.5 text-slate-600">${r.bolts||'-'}</td><td class="px-4 py-2.5">${r.stars?stars(r.stars):'-'}</td></tr>`).join('')}</tbody>
+      </table></div>
+    </div>
+  </div>`;
+  document.getElementById('modal').classList.remove('hidden');
+  document.getElementById('modal').classList.add('flex');
+  document.body.style.overflow='hidden';
+}
+function closeModal(){
+  document.getElementById('modal').classList.add('hidden');
+  document.getElementById('modal').classList.remove('flex');
+  document.body.style.overflow='';
+}
+document.getElementById('modal').addEventListener('click',e=>{if(e.target.id==='modal')closeModal();});
+
+// Map
+function renderMap(){
+  const svg=document.getElementById('island-map');
+  const bounds={minLat:10.055,maxLat:10.135,minLng:99.805,maxLng:99.875};
+  const W=800,H=600;
+  const latY=l=>H-((l-bounds.minLat)/(bounds.maxLat-bounds.minLat))*H;
+  const lngX=n=>((n-bounds.minLng)/(bounds.maxLng-bounds.minLng))*W;
+  const path=`M ${lngX(99.815)} ${latY(10.065)} Q ${lngX(99.81)} ${latY(10.075)} ${lngX(99.812)} ${latY(10.085)} Q ${lngX(99.815)} ${latY(10.095)} ${lngX(99.82)} ${latY(10.105)} Q ${lngX(99.825)} ${latY(10.115)} ${lngX(99.835)} ${latY(10.125)} Q ${lngX(99.845)} ${latY(10.13)} ${lngX(99.855)} ${latY(10.128)} Q ${lngX(99.865)} ${latY(10.122)} ${lngX(99.87)} ${latY(10.11)} Q ${lngX(99.872)} ${latY(10.095)} ${lngX(99.868)} ${latY(10.08)} Q ${lngX(99.86)} ${latY(10.07)} ${lngX(99.845)} ${latY(10.065)} Q ${lngX(99.83)} ${latY(10.062)} ${lngX(99.815)} ${latY(10.065)} Z`;
+  let html=`<rect width="${W}" height="${H}" fill="#e0f2fe"/><path d="${path}" fill="#22c55e" stroke="#16a34a" stroke-width="2" opacity="0.8"/>`;
+  html+=`<ellipse cx="${lngX(99.82)}" cy="${latY(10.09)}" rx="25" ry="8" fill="#fef3c7" opacity="0.7"/><text x="${lngX(99.82)}" y="${latY(10.088)}" text-anchor="middle" font-size="10" fill="#92400e">Sairee Beach</text>`;
+  html+=`<ellipse cx="${lngX(99.855)}" cy="${latY(10.128)}" rx="20" ry="6" fill="#fef3c7" opacity="0.7"/><text x="${lngX(99.855)}" y="${latY(10.126)}" text-anchor="middle" font-size="9" fill="#92400e">Mae Haad</text>`;
+  html+=`<ellipse cx="${lngX(99.845)}" cy="${latY(10.065)}" rx="18" ry="6" fill="#fef3c7" opacity="0.7"/><text x="${lngX(99.845)}" y="${latY(10.063)}" text-anchor="middle" font-size="9" fill="#92400e">Chalok</text>`;
+  html+=`<line x1="${lngX(99.825)}" y1="${latY(10.065)}" x2="${lngX(99.855)}" y2="${latY(10.128)}" stroke="#fde047" stroke-width="3" opacity="0.6"/>`;
+  cragsData.forEach(c=>{
+    const x=lngX(c.lng),y=latY(c.lat);
+    html+=`<g class="cursor-pointer" onclick="selectMapCrag('${c.id}')"><circle cx="${x}" cy="${y}" r="7" fill="#16a34a" stroke="white" stroke-width="2"/><text x="${x+12}" y="${y+4}" font-size="10" fill="#1e293b">${c.name}</text></g>`;
+  });
+  html+=`<g transform="translate(${W-140},20)"><rect x="0" y="0" width="130" height="70" rx="8" fill="white" stroke="#e2e8f0" opacity="0.95"/><text x="10" y="18" font-size="11" font-weight="bold" fill="#1e293b">Legend</text><circle cx="18" cy="32" r="5" fill="#16a34a"/><text x="30" y="36" font-size="10" fill="#475569">Crag</text><circle cx="18" cy="48" r="5" fill="#ef4444"/><text x="30" y="52" font-size="10" fill="#475569">Selected</text><line x1="12" y1="62" x2="24" y2="62" stroke="#fde047" stroke-width="3"/><text x="30" y="66" font-size="10" fill="#475569">Road</text></g>`;
+  svg.innerHTML=html;
+
+  const sb=document.getElementById('map-sidebar');
+  sb.innerHTML=cragsData.map(c=>`<button onclick="selectMapCrag('${c.id}')" class="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left transition-colors hover:bg-emerald-50" id="map-sb-${c.id}"><div class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-slate-100 text-slate-500"><svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7l4-4m0 0l4 4m-4-4v18"/></svg></div><div class="min-w-0"><div class="text-sm font-medium text-slate-800">${c.name}</div><div class="text-xs text-slate-500">${c.routes} routes · ${c.type.split('/')[0]}</div></div></button>`).join('');
+}
+let selectedMapCrag=null;
+function selectMapCrag(id){
+  const c=cragsData.find(x=>x.id===id); if(!c)return;
+  if(selectedMapCrag){const prev=document.getElementById('map-sb-'+selectedMapCrag);if(prev){prev.classList.remove('bg-emerald-50','ring-1','ring-emerald-200');}}
+  selectedMapCrag=id;
+  const el=document.getElementById('map-sb-'+id); if(el){el.classList.add('bg-emerald-50','ring-1','ring-emerald-200');}
+  const d=document.getElementById('map-detail');
+  d.classList.remove('hidden');
+  d.innerHTML=`<div class="flex items-start justify-between"><div><h3 class="text-xl font-bold text-slate-900">${c.name}</h3><p class="mt-1 text-sm text-slate-600">${c.description}</p></div><button onclick="document.getElementById('map-detail').classList.add('hidden')" class="rounded-lg p-1.5 text-slate-400 hover:bg-slate-200"><svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button></div>
+  <div class="mt-4 grid grid-cols-2 gap-4 sm:grid-cols-4"><div class="rounded-lg bg-slate-50 p-3"><div class="text-xs text-slate-500">Routes</div><div class="text-lg font-semibold">${c.routes}</div></div><div class="rounded-lg bg-slate-50 p-3"><div class="text-xs text-slate-500">Approach</div><div class="text-sm font-semibold">${c.approach}</div></div><div class="rounded-lg bg-slate-50 p-3"><div class="text-xs text-slate-500">Access</div><div class="text-sm font-semibold">${c.access}</div></div><div class="rounded-lg bg-slate-50 p-3"><div class="text-xs text-slate-500">Coords</div><div class="text-sm font-mono">${c.lat.toFixed(4)}, ${c.lng.toFixed(4)}</div></div></div>`;
+}
+
+// Routes table
+function renderRoutes(){
+  const tbody=document.getElementById('routes-table');
+  tbody.innerHTML=allRoutes.map(r=>`<tr class="route-row transition-colors"><td class="px-4 py-3 font-medium text-slate-800">${r.name}</td><td class="px-4 py-3 font-mono font-semibold text-slate-700">${r.grade}</td><td class="px-4 py-3"><span class="inline-flex rounded-full px-2 py-0.5 text-xs font-medium ${typeColor(r.type)}">${r.type}</span></td><td class="px-4 py-3 text-slate-600">${r.crag}</td><td class="px-4 py-3 text-sm text-slate-500">${r.note||''}</td></tr>`).join('');
+}
+
+// Info
+function renderInfo(){
+  const grid=document.getElementById('info-grid');
+  grid.innerHTML=`
+    <div class="rounded-xl border bg-white p-6"><div class="mb-4 flex items-center gap-3"><div class="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-100 text-blue-600"><svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg></div><h3 class="text-lg font-semibold text-slate-900">Getting There</h3></div><ul class="space-y-2">${infoData.gettingThere.map(i=>`<li class="flex items-start gap-2 text-sm text-slate-600"><svg class="mt-0.5 h-4 w-4 shrink-0 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>${i}</li>`).join('')}</ul></div>
+    <div class="rounded-xl border bg-white p-6"><div class="mb-4 flex items-center gap-3"><div class="flex h-10 w-10 items-center justify-center rounded-lg bg-amber-100 text-amber-600"><svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg></div><h3 class="text-lg font-semibold text-slate-900">Gear & Gyms</h3></div><div class="space-y-3">${infoData.gear.map(s=>`<div class="rounded-lg bg-slate-50 p-3"><div class="flex items-center justify-between"><span class="font-medium text-slate-800">${s.name}</span><span class="text-xs text-slate-500">${s.loc}</span></div><div class="mt-1 flex flex-wrap gap-1">${s.svc.map(v=>`<span class="rounded-full bg-white px-2 py-0.5 text-xs text-slate-600 ring-1 ring-slate-200">${v}</span>`).join('')}</div></div>`).join('')}</div></div>
+    <div class="rounded-xl border bg-white p-6"><div class="mb-4 flex items-center gap-3"><div class="flex h-10 w-10 items-center justify-center rounded-lg bg-emerald-100 text-emerald-600"><svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg></div><h3 class="text-lg font-semibold text-slate-900">Climbing Ethics</h3></div><ul class="space-y-2">${infoData.ethics.map(i=>`<li class="flex items-start gap-2 text-sm text-slate-600"><svg class="mt-0.5 h-4 w-4 shrink-0 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>${i}</li>`).join('')}</ul></div>
+    <div class="rounded-xl border bg-white p-6"><div class="mb-4 flex items-center gap-3"><div class="flex h-10 w-10 items-center justify-center rounded-lg bg-rose-100 text-rose-600"><svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg></div><h3 class="text-lg font-semibold text-slate-900">Safety Notes</h3></div><ul class="space-y-2">${infoData.safety.map(i=>`<li class="flex items-start gap-2 text-sm text-slate-600"><svg class="mt-0.5 h-4 w-4 shrink-0 text-rose-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>${i}</li>`).join('')}</ul></div>
+    <div class="rounded-xl border bg-white p-6"><div class="mb-4 flex items-center gap-3"><div class="flex h-10 w-10 items-center justify-center rounded-lg bg-sky-100 text-sky-600"><svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg></div><h3 class="text-lg font-semibold text-slate-900">Seasons</h3></div><div class="space-y-3">${infoData.seasons.map((s,i)=>`<div class="flex items-center justify-between rounded-lg bg-slate-50 p-3"><div><div class="font-medium text-slate-800">${s.s}</div><div class="text-xs text-slate-500">${s.c}</div></div><span class="rounded-full px-2.5 py-0.5 text-xs font-medium ${i===0?'bg-emerald-100 text-emerald-700':i===1?'bg-amber-100 text-amber-700':'bg-slate-100 text-slate-600'}">${s.n}</span></div>`).join('')}</div></div>
+    <div class="rounded-xl border bg-white p-6"><div class="mb-4 flex items-center gap-3"><div class="flex h-10 w-10 items-center justify-center rounded-lg bg-violet-100 text-violet-600"><svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg></div><h3 class="text-lg font-semibold text-slate-900">Guidebooks</h3></div><div class="space-y-3">${infoData.guides.map(g=>`<div class="rounded-lg bg-slate-50 p-3"><div class="font-medium text-slate-800">${g.t}</div><div class="text-xs text-slate-500">${g.a} · ${g.y}</div><p class="mt-1 text-xs text-slate-600">${g.n}</p></div>`).join('')}</div></div>
+  `;
+}
+
+// Init
+renderCrags();
+renderMap();
+renderRoutes();
+renderInfo();
+</script>
+</body>
+</html>
