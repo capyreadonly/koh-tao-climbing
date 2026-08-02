@@ -4,8 +4,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Input } from '@/components/ui/input'
 import { crags, styleColor, type Style } from '@/data/climbing'
-import { isNdLicense, photosForCrag, type PhotoEntry } from '@/data/photos'
-import { imgSrc } from '@/lib/photo'
+import { isNdLicense } from '@/data/photos'
+import { cragThumbnail, imgSrc } from '@/lib/photo'
 import CragMap from '@/components/CragMap'
 import { MapPin, Sun, Search, ShieldCheck, ShieldAlert, Mountain } from 'lucide-react'
 
@@ -16,16 +16,6 @@ const filters: { key: Style | 'all'; label: string }[] = [
   { key: 'boulder', label: 'Boulder' },
   { key: 'multipitch', label: 'Multi-pitch' },
 ]
-
-// Best card thumbnail: real photos before maps/diagrams.
-function cragThumb(cragName: string): PhotoEntry | undefined {
-  const all = photosForCrag(cragName)
-  return (
-    all.find((p) =>
-      ['community-photo', 'crag-photo', 'action-photo', 'photo-topo', 'scenic'].includes(p.kind),
-    ) ?? all[0]
-  )
-}
 
 // The `verified` note says what the 2026-08-02 fact-check confirmed; notes that open
 // with "Unverified" mean nothing could be corroborated.
@@ -89,7 +79,7 @@ export default function Crags() {
 
       <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {list.map((c) => {
-          const thumb = cragThumb(c.name)
+          const thumb = cragThumbnail(c.name)
           const checked = isFactChecked(c.verified)
           return (
             <Link key={c.slug} to={`/crags/${c.slug}`}>

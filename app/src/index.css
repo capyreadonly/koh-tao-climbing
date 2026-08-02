@@ -73,3 +73,99 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* --- CragMap (Leaflet) dark-theme overrides --- */
+
+/* Subtle dark filter so the tiles sit comfortably on the dark page while
+   keeping the satellite imagery legible. */
+.crag-map .leaflet-tile-pane {
+  filter: brightness(0.92) saturate(0.95);
+}
+
+/* divIcon crag markers: teal dot with a pulsing ring, amber when selected. */
+.crag-leaflet-marker {
+  background: transparent;
+  border: none;
+}
+.crag-marker-dot {
+  position: relative;
+  display: block;
+  width: 14px;
+  height: 14px;
+  margin: 3px;
+  border-radius: 9999px;
+  background: #2dd4bf; /* teal-400 */
+  border: 2px solid #0c0a09; /* stone-950 */
+}
+.crag-marker-dot::after {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border-radius: 9999px;
+  border: 2px solid rgb(45 212 191 / 0.5);
+  animation: crag-marker-pulse 2.4s ease-out infinite;
+}
+.crag-marker-dot-selected {
+  background: #fbbf24; /* amber-400 */
+}
+.crag-marker-dot-selected::after {
+  border-color: rgb(251 191 36 / 0.55);
+}
+@keyframes crag-marker-pulse {
+  0% {
+    transform: scale(0.6);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(2.1);
+    opacity: 0;
+  }
+}
+
+/* Leaflet chrome (zoom, layer toggle, attribution, popup) in stone/teal. */
+.crag-map .leaflet-bar {
+  border-color: #44403c;
+}
+.crag-map .leaflet-bar a {
+  background: #1c1917;
+  color: #e7e5e4;
+  border-bottom-color: #44403c;
+}
+.crag-map .leaflet-bar a:hover {
+  background: #292524;
+  color: #2dd4bf;
+}
+.crag-map .leaflet-control-layers {
+  background: #1c1917;
+  color: #e7e5e4;
+  border: 1px solid #44403c;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgb(0 0 0 / 0.5);
+}
+.crag-map .leaflet-control-attribution {
+  background: rgb(12 10 9 / 0.75);
+  color: #a8a29e;
+}
+.crag-map .leaflet-control-attribution a {
+  color: #2dd4bf;
+}
+.crag-map .leaflet-popup-content-wrapper {
+  background: #1c1917;
+  color: #e7e5e4;
+  border: 1px solid #44403c;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgb(0 0 0 / 0.5);
+}
+.crag-map .leaflet-popup-content {
+  margin: 10px 12px;
+  line-height: 1.4;
+}
+.crag-map .leaflet-popup-tip {
+  background: #1c1917;
+}
+.crag-map .leaflet-popup-close-button {
+  color: #a8a29e;
+}
+.crag-map .leaflet-popup-close-button:hover {
+  color: #2dd4bf;
+}

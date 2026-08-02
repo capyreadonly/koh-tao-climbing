@@ -40,10 +40,19 @@ import {
   Check,
   ExternalLink,
   Images,
+  ChevronRight,
 } from 'lucide-react'
 
 // Guide imagery that belongs in the large topo viewer rather than the gallery.
 const TOPO_KINDS = new Set(['photo-topo', 'topo-diagram', 'map'])
+
+// People/atmosphere shots (as opposed to rock or topo imagery) — shown collapsed
+// at the bottom of the gallery so the crag itself stays the focus.
+const ATMOSPHERE_KINDS = new Set(['action-photo', 'scenic'])
+
+// Gallery sort: crag context photos first, then community scenery, then the rest.
+const contextRank = (p: PhotoEntry) =>
+  p.kind === 'crag-photo' ? 0 : p.kind === 'community-photo' ? 1 : 2
 
 export default function CragDetail() {
   const { slug } = useParams()
@@ -66,6 +75,16 @@ export default function CragDetail() {
   const galleryGuide = guideAll.filter((p) => !TOPO_KINDS.has(p.kind))
   const community = communityPhotosForCrag(crag.name)
   const cragRoutes = routesForCrag(crag.name)
+
+  // Gallery split: crag context (rock, community scenery) up front, people/atmosphere
+  // shots last under a collapsed toggle. If the crag has nothing else, the action
+  // shots are shown directly so the page is never empty.
+  const galleryAll = [...galleryGuide, ...community]
+  const context = galleryAll
+    .filter((p) => !ATMOSPHERE_KINDS.has(p.kind))
+    .sort((a, b) => contextRank(a) - contextRank(b))
+  const atmosphere = galleryAll.filter((p) => ATMOSPHERE_KINDS.has(p.kind))
+  const atmosphereCollapsed = atmosphere.length > 0 && (context.length > 0 || topos.length > 0)
 
   const facts = [
     { icon: MapPin, label: 'Area', value: crag.area },
@@ -189,18 +208,37 @@ export default function CragDetail() {
         </section>
       )}
 
-      {/* Gallery */}
-      {(galleryGuide.length > 0 || community.length > 0) && (
+      {/* Gallery — crag context first; action/atmosphere shots collapsed at the end */}
+      {(context.length > 0 || atmosphere.length > 0) && (
         <section className="mt-12">
           <h2 className="mb-4 text-2xl font-semibold">Gallery</h2>
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {galleryGuide.map((p) => (
-              <PhotoCard key={p.file} photo={p} onClick={() => setLightbox(p)} />
+          {context.length > 0 && (
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {context.map((p) => (
+                <PhotoCard key={p.file} photo={p} onClick={() => setLightbox(p)} />
+              ))}
+            </div>
+          )}
+          {atmosphere.length > 0 &&
+            (atmosphereCollapsed ? (
+              <details className="group mt-6 rounded-lg border border-stone-800 bg-stone-900/60">
+                <summary className="flex cursor-pointer list-none items-center gap-2 p-4 text-sm font-medium text-stone-300 transition-colors hover:text-teal-300 [&::-webkit-details-marker]:hidden">
+                  <ChevronRight className="h-4 w-4 text-stone-500 transition-transform group-open:rotate-90" />
+                  Action &amp; atmosphere ({atmosphere.length})
+                </summary>
+                <div className="grid gap-4 p-4 pt-0 sm:grid-cols-2 lg:grid-cols-3">
+                  {atmosphere.map((p) => (
+                    <PhotoCard key={p.file} photo={p} onClick={() => setLightbox(p)} />
+                  ))}
+                </div>
+              </details>
+            ) : (
+              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                {atmosphere.map((p) => (
+                  <PhotoCard key={p.file} photo={p} onClick={() => setLightbox(p)} />
+                ))}
+              </div>
             ))}
-            {community.map((p) => (
-              <PhotoCard key={p.file} photo={p} onClick={() => setLightbox(p)} />
-            ))}
-          </div>
         </section>
       )}
 

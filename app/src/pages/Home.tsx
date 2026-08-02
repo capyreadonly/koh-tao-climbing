@@ -4,9 +4,9 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { crags, routes as classicRoutes, styleColor, sources } from '@/data/climbing'
 import { routes } from '@/data/routes'
-import { guidePhotos, communityPhotos, isUsable, isNdLicense, photosForCrag, type PhotoEntry } from '@/data/photos'
+import { guidePhotos, communityPhotos, isUsable, isNdLicense } from '@/data/photos'
 import { reports } from '@/data/reports'
-import { imgSrc } from '@/lib/photo'
+import { cragThumbnail, imgSrc } from '@/lib/photo'
 import {
   ArrowRight,
   MapPin,
@@ -18,8 +18,9 @@ import {
   ExternalLink,
 } from 'lucide-react'
 
-// Hero: Jansom Bay climbing area, by Kelsey Gray (rakkup guide release article).
-const HERO = communityPhotos.find((p) => p.file.includes('report-jansom-bay-kelsey-gray'))!
+// Hero: wide view over Tanote Bay and its granite headlands (CC BY 2.0, Fabio Achilli)
+// — scenery and rock rather than a random action shot.
+const HERO = communityPhotos.find((p) => p.file.includes('tanote-bay-commons-achilli'))!
 
 const stats = [
   { icon: MapPin, label: 'Documented crags', value: String(crags.length) },
@@ -33,15 +34,6 @@ const stats = [
 ]
 
 const featured = ['meks-mountain', 'tanote-bay', 'jansom-bay', 'secret-garden-boulders']
-
-// Best card thumbnail: real photos before maps/diagrams.
-function cragThumb(cragName: string): PhotoEntry | undefined {
-  const all = photosForCrag(cragName)
-  return (
-    all.find((p) => ['community-photo', 'crag-photo', 'action-photo', 'photo-topo', 'scenic'].includes(p.kind)) ??
-    all[0]
-  )
-}
 
 // Newest dated reports first (dates are free-form, e.g. "2026-04 to 2026-05…").
 const dateKey = (d: string) => {
@@ -125,7 +117,7 @@ export default function Home() {
         <div className="grid gap-4 sm:grid-cols-2">
           {featured.map((slug) => {
             const c = crags.find((x) => x.slug === slug)!
-            const thumb = cragThumb(c.name)
+            const thumb = cragThumbnail(c.name)
             return (
               <Link key={slug} to={`/crags/${slug}`}>
                 <Card className="h-full overflow-hidden border-stone-800 bg-stone-900/60 transition-colors hover:border-teal-500/50">
