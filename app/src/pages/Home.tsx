@@ -53,21 +53,21 @@ export default function Home() {
           className="absolute inset-0 h-full w-full object-cover"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-stone-950/80 via-stone-950/60 to-stone-950" />
-        <div className="relative mx-auto max-w-6xl px-4 py-20 sm:py-28">
+        <div className="relative mx-auto max-w-6xl px-4 py-16 sm:py-28">
           <Badge variant="outline" className="mb-4 border-teal-500/40 bg-stone-950/60 text-teal-300">
             Gulf of Thailand · Chumphon Archipelago
           </Badge>
-          <h1 className="max-w-3xl text-4xl font-bold tracking-tight sm:text-5xl">
+          <h1 className="max-w-3xl text-3xl font-bold tracking-tight sm:text-5xl">
             Granite, jungle &amp; sea — the complete climbing database for{' '}
             <span className="text-teal-400">Koh Tao</span>
           </h1>
-          <p className="mt-4 max-w-2xl text-lg text-stone-300">
+          <p className="mt-4 max-w-2xl text-base text-stone-300 sm:text-lg">
             A small island famous for diving, hiding {routes.length} documented sport, trad and
             boulder lines on 200-million-year-old granite. Every crag, route, season tip and
             access rule — fact-checked against 2026 sources.
           </p>
-          <div className="mt-8 flex flex-wrap gap-3">
-            <Button asChild className="bg-teal-600 text-white hover:bg-teal-500">
+          <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+            <Button asChild className="w-full bg-teal-600 text-white hover:bg-teal-500 sm:w-auto">
               <Link to="/crags">
                 Explore the island map <ArrowRight className="ml-1 h-4 w-4" />
               </Link>
@@ -75,13 +75,13 @@ export default function Home() {
             <Button
               asChild
               variant="outline"
-              className="border-stone-600 bg-stone-950/60 text-stone-200 hover:bg-stone-800"
+              className="w-full border-stone-600 bg-stone-950/60 text-stone-200 hover:bg-stone-800 sm:w-auto"
             >
               <Link to="/routes">Browse {routes.length} routes</Link>
             </Button>
           </div>
         </div>
-        <p className="absolute bottom-2 right-3 rounded bg-stone-950/70 px-2 py-1 text-[11px] text-stone-400">
+        <p className="absolute inset-x-3 bottom-2 rounded bg-stone-950/70 px-2 py-1 text-[11px] text-stone-400 sm:left-auto sm:max-w-[70%]">
           {HERO.caption} © {HERO.credit} ·{' '}
           <a href={HERO.sourceUrl} target="_blank" rel="noreferrer" className="text-teal-400 hover:underline">
             source

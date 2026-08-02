@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import { Link, useParams } from 'react-router'
+import { useEffect, useRef, useState } from 'react'
+import { Link, useParams, useSearchParams } from 'react-router'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from '@/components/ui/dialog'
@@ -27,6 +27,7 @@ import {
 } from '@/data/photos'
 import { imgSrc, GUIDE_PHOTO_CREDIT, GUIDE_PDF_URL, sourceLabel, gradeSystemLabel, styleLabel, styleList } from '@/lib/photo'
 import PhotoCard from '@/components/PhotoCard'
+import RouteCard from '@/components/RouteCard'
 import {
   ArrowLeft,
   MapPin,
@@ -54,10 +55,50 @@ const ATMOSPHERE_KINDS = new Set(['action-photo', 'scenic'])
 const contextRank = (p: PhotoEntry) =>
   p.kind === 'crag-photo' ? 0 : p.kind === 'community-photo' ? 1 : 2
 
+// Route → topo matching: guidebook topo captions name their routes in prose
+// ("named routes Good Morning Koh Tao (5 bolts, 14m), …"), so a
+// case-insensitive substring check on the caption is enough.
+const topoForRoute = (routeName: string, topos: PhotoEntry[]) => {
+  const needle = routeName.toLowerCase()
+  return topos.find((p) => p.caption.toLowerCase().includes(needle))
+}
+
 export default function CragDetail() {
   const { slug } = useParams()
   const crag = cragBySlug(slug ?? '')
   const [lightbox, setLightbox] = useState<PhotoEntry | null>(null)
+  const [searchParams] = useSearchParams()
+  const routeParam = searchParams.get('route')
+  const topoSectionRef = useRef<HTMLElement>(null)
+  const [topoFlash, setTopoFlash] = useState(false)
+
+  // Computed before the not-found return so hooks below run unconditionally.
+  const guideAll = crag ? guidePhotosForCrag(crag.name) : []
+  const topos = guideAll.filter((p) => TOPO_KINDS.has(p.kind))
+
+  // Deep link /crags/{slug}?route=Name (from the route database): land on the
+  // photo-topo section; when a topo caption mentions the route, open that topo
+  // straight in the lightbox. No caption match → scroll + flash the header.
+  useEffect(() => {
+    if (!crag || !routeParam) return
+    const scroll = window.setTimeout(() => {
+      topoSectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    }, 150)
+    const match = topoForRoute(routeParam, topos)
+    let followUp: number | undefined
+    if (match) {
+      followUp = window.setTimeout(() => setLightbox(match), 600)
+    } else if (topos.length > 0) {
+      setTopoFlash(true)
+      followUp = window.setTimeout(() => setTopoFlash(false), 2200)
+    }
+    return () => {
+      window.clearTimeout(scroll)
+      if (followUp) window.clearTimeout(followUp)
+    }
+    // topos derives from crag — stable per slug.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [crag, routeParam])
 
   if (!crag) {
     return (
@@ -70,11 +111,24 @@ export default function CragDetail() {
     )
   }
 
-  const guideAll = guidePhotosForCrag(crag.name)
-  const topos = guideAll.filter((p) => TOPO_KINDS.has(p.kind))
   const galleryGuide = guideAll.filter((p) => !TOPO_KINDS.has(p.kind))
   const community = communityPhotosForCrag(crag.name)
   const cragRoutes = routesForCrag(crag.name)
+
+  // Row/card click in the routes table: open the matching topo in the lightbox
+  // directly; without a caption match, scroll to the topo section and flash it.
+  const openRouteTopo = (routeName: string) => {
+    const match = topoForRoute(routeName, topos)
+    if (match) {
+      setLightbox(match)
+      return
+    }
+    topoSectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    if (topos.length > 0) {
+      setTopoFlash(true)
+      window.setTimeout(() => setTopoFlash(false), 2200)
+    }
+  }
 
   // Gallery split: crag context (rock, community scenery) up front, people/atmosphere
   // shots last under a collapsed toggle. If the crag has nothing else, the action
@@ -168,8 +222,12 @@ export default function CragDetail() {
 
       {/* Photo-topos */}
       {topos.length > 0 && (
-        <section className="mt-12">
-          <div className="mb-4 flex items-center gap-2">
+        <section ref={topoSectionRef} className="mt-12 scroll-mt-20">
+          <div
+            className={`-mx-2 mb-4 flex items-center gap-2 rounded-md px-2 py-1 transition-colors duration-500 ${
+              topoFlash ? 'bg-teal-500/15 text-teal-300' : ''
+            }`}
+          >
             <Images className="h-5 w-5 text-teal-400" />
             <h2 className="text-2xl font-semibold">Photo-topos &amp; maps</h2>
           </div>
@@ -262,33 +320,41 @@ export default function CragDetail() {
             the route counts above, and verify locally.
           </p>
         ) : (
-          <div className="overflow-hidden rounded-lg border border-stone-800">
-            <Table>
-              <TableHeader>
-                <TableRow className="border-stone-800 bg-stone-900/80 hover:bg-stone-900/80">
-                  <TableHead className="text-stone-400">Route</TableHead>
-                  <TableHead className="text-stone-400">Grade</TableHead>
-                  <TableHead className="text-stone-400">Style</TableHead>
-                  <TableHead className="text-stone-400">★</TableHead>
-                  <TableHead className="hidden text-stone-400 md:table-cell">Height</TableHead>
-                  <TableHead className="text-stone-400">Status</TableHead>
-                  <TableHead className="hidden text-stone-400 lg:table-cell">Source</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {cragRoutes.map((r, i) => (
-                  <TableRow key={`${r.name}-${i}`} className="border-stone-800 hover:bg-stone-900/60">
-                    <TableCell className="font-medium text-stone-100">
-                      {r.name}
-                      {r.sector && (
-                        <span className="ml-2 rounded bg-stone-800 px-1.5 py-0.5 text-[10px] text-stone-400">
-                          {r.sector}
-                        </span>
-                      )}
-                      {r.note && (
-                        <p className="mt-1 text-xs font-normal text-amber-300/80">⚠ {r.note}</p>
-                      )}
-                    </TableCell>
+          <>
+            <div className="hidden overflow-hidden rounded-lg border border-stone-800 md:block">
+              <Table>
+                <TableHeader>
+                  <TableRow className="border-stone-800 bg-stone-900/80 hover:bg-stone-900/80">
+                    <TableHead className="text-stone-400">Route</TableHead>
+                    <TableHead className="text-stone-400">Grade</TableHead>
+                    <TableHead className="text-stone-400">Style</TableHead>
+                    <TableHead className="text-stone-400">★</TableHead>
+                    <TableHead className="hidden text-stone-400 md:table-cell">Height</TableHead>
+                    <TableHead className="text-stone-400">Status</TableHead>
+                    <TableHead className="hidden text-stone-400 lg:table-cell">Source</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {cragRoutes.map((r, i) => (
+                    <TableRow
+                      key={`${r.name}-${i}`}
+                      onClick={(e) => {
+                        if ((e.target as HTMLElement).closest('a')) return
+                        openRouteTopo(r.name)
+                      }}
+                      className="group cursor-pointer border-stone-800 hover:bg-stone-900/60"
+                    >
+                      <TableCell className="min-w-40 whitespace-normal font-medium text-stone-100">
+                        <span className="text-teal-300 group-hover:underline">{r.name}</span>
+                        {r.sector && (
+                          <span className="ml-2 rounded bg-stone-800 px-1.5 py-0.5 text-[10px] text-stone-400">
+                            {r.sector}
+                          </span>
+                        )}
+                        {r.note && (
+                          <p className="mt-1 text-xs font-normal text-amber-300/80">⚠ {r.note}</p>
+                        )}
+                      </TableCell>
                     <TableCell className="whitespace-nowrap">
                       <span className="font-semibold text-teal-400">{r.grade}</span>{' '}
                       <span className="rounded bg-stone-800 px-1 py-0.5 text-[10px] uppercase text-stone-400">
@@ -347,7 +413,18 @@ export default function CragDetail() {
                 ))}
               </TableBody>
             </Table>
-          </div>
+            </div>
+            {/* Stacked cards on small screens */}
+            <div className="space-y-3 md:hidden">
+              {cragRoutes.map((r, i) => (
+                <RouteCard key={`${r.name}-${i}`} route={r} onOpen={() => openRouteTopo(r.name)} />
+              ))}
+            </div>
+            <p className="mt-2 text-xs text-stone-500">
+              Click a route to open its photo-topo (when a topo caption mentions it) or to jump to
+              the topo section.
+            </p>
+          </>
         )}
       </section>
 
@@ -407,7 +484,7 @@ export default function CragDetail() {
 
       {/* Lightbox */}
       <Dialog open={lightbox !== null} onOpenChange={(open) => !open && setLightbox(null)}>
-        <DialogContent className="max-w-4xl border-stone-800 bg-stone-950 text-stone-100">
+        <DialogContent className="max-h-[92vh] max-w-[calc(100vw-2rem)] overflow-y-auto border-stone-800 bg-stone-950 p-4 text-stone-100 sm:max-w-4xl sm:p-6">
           {lightbox && (
             <>
               <DialogTitle className="sr-only">Photo viewer</DialogTitle>

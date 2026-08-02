@@ -13,7 +13,7 @@ export default function Sources() {
         Koh Tao Climbing Club before acting on anything here.
       </p>
 
-      <div className="mt-8 overflow-hidden rounded-lg border border-stone-800">
+      <div className="mt-8 overflow-x-auto rounded-lg border border-stone-800">
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b border-stone-800 bg-stone-900/80 text-left text-stone-400">
@@ -59,8 +59,9 @@ export default function Sources() {
         under the licenses listed below — CC-ND images are shown unmodified.
       </p>
 
-      <div className="overflow-hidden rounded-lg border border-stone-800">
-        <table className="w-full text-sm">
+      <p className="mb-2 text-xs text-stone-500 md:hidden">Swipe sideways to see the full table →</p>
+      <div className="overflow-x-auto rounded-lg border border-stone-800">
+        <table className="w-full min-w-[560px] text-sm">
           <thead>
             <tr className="border-b border-stone-800 bg-stone-900/80 text-left text-stone-400">
               <th className="px-4 py-3 font-medium">File</th>

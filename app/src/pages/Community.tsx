@@ -43,7 +43,7 @@ export default function Community() {
             <CardContent className="flex flex-1 flex-col">
               <p className="mb-4 text-sm text-stone-400">{r.summary}</p>
               {r.photos && r.photos.length > 0 && (
-                <div className="mb-4 grid grid-cols-2 gap-2">
+                <div className="mb-4 grid grid-cols-1 gap-2 sm:grid-cols-2">
                   {r.photos.map((file) => {
                     const p = photoByFile.get(file)
                     return (
@@ -68,7 +68,6 @@ export default function Community() {
                 <Button
                   asChild
                   variant="outline"
-                  size="sm"
                   className="border-stone-700 text-stone-200 hover:bg-stone-800"
                 >
                   <a href={r.url} target="_blank" rel="noreferrer">

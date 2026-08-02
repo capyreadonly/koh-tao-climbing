@@ -169,3 +169,21 @@
 .crag-map .leaflet-popup-close-button:hover {
   color: #2dd4bf;
 }
+
+/* Mobile: keep popups inside small viewports and make map chrome finger-friendly. */
+.crag-map .leaflet-popup-content-wrapper {
+  max-width: min(300px, 78vw);
+}
+.crag-map .leaflet-popup-content {
+  overflow-wrap: break-word;
+}
+.crag-map .leaflet-bar a {
+  width: 40px;
+  height: 40px;
+  line-height: 40px;
+}
+.crag-map .leaflet-control-layers-toggle {
+  width: 40px;
+  height: 40px;
+  background-size: 22px 22px;
+}

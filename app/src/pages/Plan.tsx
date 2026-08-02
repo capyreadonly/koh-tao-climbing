@@ -47,23 +47,23 @@ export default function Plan() {
       </p>
 
       <Tabs defaultValue="season" className="mt-8">
-        <TabsList className="flex w-full flex-wrap justify-start gap-1 bg-stone-900 p-1">
-          <TabsTrigger value="season" className="gap-1.5 data-[state=active]:bg-teal-500/20 data-[state=active]:text-teal-300">
+        <TabsList className="flex h-auto w-full flex-wrap justify-start gap-1 bg-stone-900 p-1">
+          <TabsTrigger value="season" className="min-h-10 gap-1.5 data-[state=active]:bg-teal-500/20 data-[state=active]:text-teal-300">
             <CalendarDays className="h-4 w-4" /> When to go
           </TabsTrigger>
-          <TabsTrigger value="logistics" className="gap-1.5 data-[state=active]:bg-teal-500/20 data-[state=active]:text-teal-300">
+          <TabsTrigger value="logistics" className="min-h-10 gap-1.5 data-[state=active]:bg-teal-500/20 data-[state=active]:text-teal-300">
             <Plane className="h-4 w-4" /> Getting there
           </TabsTrigger>
-          <TabsTrigger value="gear" className="gap-1.5 data-[state=active]:bg-teal-500/20 data-[state=active]:text-teal-300">
+          <TabsTrigger value="gear" className="min-h-10 gap-1.5 data-[state=active]:bg-teal-500/20 data-[state=active]:text-teal-300">
             <Backpack className="h-4 w-4" /> Gear &amp; safety
           </TabsTrigger>
-          <TabsTrigger value="ethics" className="gap-1.5 data-[state=active]:bg-teal-500/20 data-[state=active]:text-teal-300">
+          <TabsTrigger value="ethics" className="min-h-10 gap-1.5 data-[state=active]:bg-teal-500/20 data-[state=active]:text-teal-300">
             <HeartHandshake className="h-4 w-4" /> Ethics &amp; access
           </TabsTrigger>
-          <TabsTrigger value="itineraries" className="gap-1.5 data-[state=active]:bg-teal-500/20 data-[state=active]:text-teal-300">
+          <TabsTrigger value="itineraries" className="min-h-10 gap-1.5 data-[state=active]:bg-teal-500/20 data-[state=active]:text-teal-300">
             <Map className="h-4 w-4" /> Itineraries
           </TabsTrigger>
-          <TabsTrigger value="guidebooks" className="gap-1.5 data-[state=active]:bg-teal-500/20 data-[state=active]:text-teal-300">
+          <TabsTrigger value="guidebooks" className="min-h-10 gap-1.5 data-[state=active]:bg-teal-500/20 data-[state=active]:text-teal-300">
             <BookOpen className="h-4 w-4" /> Guidebooks
           </TabsTrigger>
         </TabsList>
@@ -71,7 +71,7 @@ export default function Plan() {
         {/* When to go */}
         <TabsContent value="season" className="mt-6 space-y-6">
           <p className="max-w-3xl text-sm text-stone-400">{seasons.climate}</p>
-          <div className="overflow-hidden rounded-lg border border-stone-800">
+          <div className="overflow-x-auto rounded-lg border border-stone-800">
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-stone-800 bg-stone-900/80 text-left text-stone-400">
@@ -117,7 +117,7 @@ export default function Plan() {
             </CardContent>
           </Card>
 
-          <div className="overflow-hidden rounded-lg border border-stone-800">
+          <div className="overflow-x-auto rounded-lg border border-stone-800">
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-stone-800 bg-stone-900/80 text-left text-stone-400">

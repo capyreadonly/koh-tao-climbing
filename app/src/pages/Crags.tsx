@@ -65,7 +65,7 @@ export default function Crags() {
             <button
               key={f.key}
               onClick={() => setStyle(f.key)}
-              className={`rounded-full border px-3 py-1 text-sm transition-colors ${
+              className={`inline-flex min-h-10 items-center rounded-full border px-3 py-1.5 text-sm transition-colors ${
                 style === f.key
                   ? 'border-teal-500/60 bg-teal-500/15 text-teal-300'
                   : 'border-stone-700 text-stone-400 hover:bg-stone-800'

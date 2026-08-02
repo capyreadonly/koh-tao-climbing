@@ -27,6 +27,14 @@ const linkClass = ({ isActive }: { isActive: boolean }) =>
       : 'text-stone-400 hover:text-stone-100 hover:bg-stone-800'
   }`
 
+// Sheet links get a taller hit area for thumbs (>= 40px).
+const mobileLinkClass = ({ isActive }: { isActive: boolean }) =>
+  `rounded-md px-3 py-3 text-base transition-colors ${
+    isActive
+      ? 'bg-teal-500/15 text-teal-300'
+      : 'text-stone-400 hover:text-stone-100 hover:bg-stone-800'
+  }`
+
 export default function Layout() {
   const [open, setOpen] = useState(false)
 
@@ -80,7 +88,7 @@ export default function Layout() {
                       to={n.to}
                       end={n.to === '/'}
                       onClick={() => setOpen(false)}
-                      className={linkClass}
+                      className={mobileLinkClass}
                     >
                       {n.label}
                     </NavLink>

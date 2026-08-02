@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react'
-import { Link } from 'react-router'
+import { Link, useNavigate } from 'react-router'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import {
@@ -20,6 +20,7 @@ import {
 import { crags, styleColor, type Style } from '@/data/climbing'
 import { routes } from '@/data/routes'
 import { sourceLabel, gradeSystemLabel, styleLabel, styleList } from '@/lib/photo'
+import RouteCard from '@/components/RouteCard'
 import { Search, Check, ChevronLeft, ChevronRight, ExternalLink } from 'lucide-react'
 
 const STYLE_FILTERS = [
@@ -42,6 +43,7 @@ export default function Routes() {
   const [crag, setCrag] = useState<string>('all')
   const [verifiedOnly, setVerifiedOnly] = useState(false)
   const [page, setPage] = useState(0)
+  const navigate = useNavigate()
 
   const cragNames = useMemo(() => [...new Set(routes.map((r) => r.crag))].sort(), [])
 
@@ -117,7 +119,7 @@ export default function Routes() {
                 setStyle(f.key)
                 resetPage()
               }}
-              className={`rounded-full border px-3 py-1 text-sm transition-colors ${
+              className={`inline-flex min-h-10 items-center rounded-full border px-3 py-1.5 text-sm transition-colors ${
                 style === f.key
                   ? 'border-teal-500/60 bg-teal-500/15 text-teal-300'
                   : 'border-stone-700 text-stone-400 hover:bg-stone-800'
@@ -131,7 +133,7 @@ export default function Routes() {
               setVerifiedOnly((v) => !v)
               resetPage()
             }}
-            className={`inline-flex items-center gap-1 rounded-full border px-3 py-1 text-sm transition-colors ${
+            className={`inline-flex min-h-10 items-center gap-1 rounded-full border px-3 py-1.5 text-sm transition-colors ${
               verifiedOnly
                 ? 'border-teal-500/60 bg-teal-500/15 text-teal-300'
                 : 'border-stone-700 text-stone-400 hover:bg-stone-800'
@@ -146,7 +148,7 @@ export default function Routes() {
         {list.length} matching routes{list.length > PAGE_SIZE && ` — page ${pageSafe + 1} of ${pageCount}`}
       </p>
 
-      <div className="mt-3 overflow-hidden rounded-lg border border-stone-800">
+      <div className="mt-3 hidden overflow-hidden rounded-lg border border-stone-800 md:block">
         <Table>
           <TableHeader>
             <TableRow className="border-stone-800 bg-stone-900/80 hover:bg-stone-900/80">
@@ -165,10 +167,27 @@ export default function Routes() {
               return (
                 <TableRow
                   key={`${r.name}-${r.crag}-${i}`}
-                  className="border-stone-800 hover:bg-stone-900/60"
+                  onClick={
+                    slug
+                      ? (e) => {
+                          if ((e.target as HTMLElement).closest('a')) return
+                          navigate(`/crags/${slug}?route=${encodeURIComponent(r.name)}`)
+                        }
+                      : undefined
+                  }
+                  className={`border-stone-800 hover:bg-stone-900/60 ${slug ? 'cursor-pointer' : ''}`}
                 >
-                  <TableCell className="font-medium text-stone-100">
-                    {r.name}
+                  <TableCell className="min-w-40 whitespace-normal font-medium text-stone-100">
+                    {slug ? (
+                      <Link
+                        to={`/crags/${slug}?route=${encodeURIComponent(r.name)}`}
+                        className="text-teal-300 hover:text-teal-200 hover:underline"
+                      >
+                        {r.name}
+                      </Link>
+                    ) : (
+                      r.name
+                    )}
                     {r.sector && (
                       <span className="ml-2 rounded bg-stone-800 px-1.5 py-0.5 text-[10px] text-stone-400">
                         {r.sector}
@@ -246,6 +265,13 @@ export default function Routes() {
         </Table>
       </div>
 
+      {/* Stacked cards on small screens */}
+      <div className="mt-3 space-y-3 md:hidden">
+        {rows.map((r, i) => (
+          <RouteCard key={`${r.name}-${r.crag}-${i}`} route={r} cragSlug={cragSlugByName.get(r.crag)} />
+        ))}
+      </div>
+
       {list.length === 0 && (
         <p className="mt-10 text-center text-stone-500">No routes match your filters.</p>
       )}
@@ -254,7 +280,6 @@ export default function Routes() {
         <div className="mt-4 flex items-center justify-between">
           <Button
             variant="outline"
-            size="sm"
             disabled={pageSafe === 0}
             onClick={() => setPage(pageSafe - 1)}
             className="border-stone-700 text-stone-300 hover:bg-stone-800"
@@ -266,7 +291,6 @@ export default function Routes() {
           </span>
           <Button
             variant="outline"
-            size="sm"
             disabled={pageSafe >= pageCount - 1}
             onClick={() => setPage(pageSafe + 1)}
             className="border-stone-700 text-stone-300 hover:bg-stone-800"

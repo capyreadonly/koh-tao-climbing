@@ -53,7 +53,7 @@ export default function CragMap({
 
   return (
     <div className={className}>
-      <div className="crag-map relative z-0 h-[500px] w-full overflow-hidden rounded-lg border border-stone-800">
+      <div className="crag-map relative z-0 h-[350px] w-full overflow-hidden rounded-lg border border-stone-800 sm:h-[500px]">
         <MapContainer
           center={KOH_TAO}
           zoom={13}
