@@ -50,3 +50,16 @@ export const gradeSystemLabel: Record<string, string> = {
   font: 'FB',
   v: 'V',
 }
+
+// A route can be more than one style at once (e.g. 'sport/toprope' — bolted
+// but also easy to top-rope). Compound styles are stored slash-joined.
+export const styleList = (style: string): string[] => style.split('/')
+
+export const styleLabel: Record<string, string> = {
+  sport: 'Sport',
+  trad: 'Trad',
+  boulder: 'Boulder',
+  multipitch: 'Multi-pitch',
+  toprope: 'Top-rope',
+  dws: 'Deep-water solo',
+}

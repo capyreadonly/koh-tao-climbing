@@ -18,14 +18,14 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import { cragBySlug, styleColor } from '@/data/climbing'
+import { cragBySlug, styleColor, type Style } from '@/data/climbing'
 import { routesForCrag } from '@/data/routes'
 import {
   guidePhotosForCrag,
   communityPhotosForCrag,
   type PhotoEntry,
 } from '@/data/photos'
-import { imgSrc, GUIDE_PHOTO_CREDIT, GUIDE_PDF_URL, sourceLabel, gradeSystemLabel } from '@/lib/photo'
+import { imgSrc, GUIDE_PHOTO_CREDIT, GUIDE_PDF_URL, sourceLabel, gradeSystemLabel, styleLabel, styleList } from '@/lib/photo'
 import PhotoCard from '@/components/PhotoCard'
 import {
   ArrowLeft,
@@ -295,7 +295,18 @@ export default function CragDetail() {
                         {gradeSystemLabel[r.gradeSystem] ?? r.gradeSystem}
                       </span>
                     </TableCell>
-                    <TableCell className="text-sm text-stone-300">{r.style}</TableCell>
+                    <TableCell className="text-sm text-stone-300">
+                      <span className="flex flex-wrap gap-1">
+                        {styleList(r.style).map((s) => (
+                          <span
+                            key={s}
+                            className={`rounded-full border px-2 py-0.5 text-xs ${styleColor[s as Style] ?? 'bg-stone-500/15 text-stone-300 border-stone-500/30'}`}
+                          >
+                            {styleLabel[s] ?? s}
+                          </span>
+                        ))}
+                      </span>
+                    </TableCell>
                     <TableCell className="text-sm text-amber-400">
                       {r.stars != null && r.stars > 0 ? r.stars : '—'}
                     </TableCell>

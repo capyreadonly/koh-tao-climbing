@@ -17,9 +17,9 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import { crags } from '@/data/climbing'
+import { crags, styleColor, type Style } from '@/data/climbing'
 import { routes } from '@/data/routes'
-import { sourceLabel, gradeSystemLabel } from '@/lib/photo'
+import { sourceLabel, gradeSystemLabel, styleLabel, styleList } from '@/lib/photo'
 import { Search, Check, ChevronLeft, ChevronRight, ExternalLink } from 'lucide-react'
 
 const STYLE_FILTERS = [
@@ -184,7 +184,18 @@ export default function Routes() {
                       {gradeSystemLabel[r.gradeSystem] ?? r.gradeSystem}
                     </span>
                   </TableCell>
-                  <TableCell className="text-sm text-stone-300">{r.style}</TableCell>
+                  <TableCell className="text-sm text-stone-300">
+                    <span className="flex flex-wrap gap-1">
+                      {styleList(r.style).map((s) => (
+                        <span
+                          key={s}
+                          className={`rounded-full border px-2 py-0.5 text-xs ${styleColor[s as Style] ?? 'bg-stone-500/15 text-stone-300 border-stone-500/30'}`}
+                        >
+                          {styleLabel[s] ?? s}
+                        </span>
+                      ))}
+                    </span>
+                  </TableCell>
                   <TableCell>
                     {slug ? (
                       <Link
