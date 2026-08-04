@@ -1,8 +1,10 @@
 // Practical trip-planning info for the Koh Tao climbing guide.
 // Merged from the legacy static site infoData (work/static-site-content.md — unverified draft),
 // the vault planning notes (work/vault-facts.json) and the 2026-08-02 web fact-check
-// (work/web-services.json). Known contradictions between sources are kept in `notes`/`conflicts`
-// fields rather than silently resolved.
+// (work/web-services.json); corrected 2026-08-04 per work/research2/audit.json + research2 sources
+// (monsoon window per 27crags, Mek's/Jansom fees per the Goodtime PDF, rakkup counts verified,
+// phantom 'Warehouse' shop removed). Known contradictions between sources are kept in
+// `notes`/`conflicts` fields rather than silently resolved.
 
 export interface FerryRoute {
   route: string
@@ -127,7 +129,7 @@ export const seasons: Seasons = {
     { period: 'Mar–Apr', conditions: 'Hot and dry', note: 'Morning sessions; March–May warm, dry, calm seas' },
     { period: 'May–Jun', conditions: 'Hot, often called the sweet spot', note: 'Not too hot, fewer tourists' },
     { period: 'Jul–Aug', conditions: 'Hot and humid', note: 'Second tourist peak; generally good conditions; seek shade' },
-    { period: 'Sep–Nov', conditions: 'Rainy season', note: 'Mostly short ~2-hour afternoon downpours but also full rainy days; October the wettest month, rough ferry crossings possible — plan flex days at The Bunker gym' },
+    { period: 'Oct–Dec', conditions: 'Monsoon season (27crags)', note: 'Mostly short ~2-hour afternoon downpours but also full rainy days; October the wettest month, rough ferry crossings possible — plan flex days at The Bunker gym' },
   ],
   dailyRhythm: [
     'Start ~7:00 — it gets hot fast; early starts are the key to success.',
@@ -135,7 +137,7 @@ export const seasons: Seasons = {
     'Midday = lunch, snorkel, siesta. Nobody climbs granite in tropical noon sun voluntarily.',
   ],
   notes: [
-    'Seasons verified 2026-08-02: dry season roughly December–April, October–November wettest (thediversboat.com, wonderlandkohtao.com).',
+    'Seasons verified 2026-08-02: dry season roughly December–April, October–November wettest (thediversboat.com, wonderlandkohtao.com). 27crags states the monsoon as October–December; the table above follows that window.',
     'The legacy draft seasons table (Nov–Feb / Mar–Apr / May–Oct) is coarser and slightly conflicts with the vault on the monsoon window — the table above follows the fact-checked sources.',
   ],
 }
@@ -150,7 +152,7 @@ export const gearAndSafety: GearAndSafety = {
   kitList: [
     "60 m rope, 12–15 quickdraws (sport at Mek's Mountain, Jansom Bay, Lang Khai, Golden View)",
     'Trad rack with large cams to 6" for Mao Rock and Tanote trad',
-    'Crash pad(s) for Secret Garden / Babaloo / Sairee Beach — rentable on-island',
+    'Crash pad(s) — boulders run from 1 m to highballs up to 10 m (27crags); rent at The Bunker (per 27crags) or Goodtime Adventures',
     'Lots of water (jungle approaches at Mao Rock), mosquito repellent, sun protection',
     'Or skip it all: rent from Goodtime Adventures or The Bunker',
   ],
@@ -168,7 +170,7 @@ export const gearAndSafety: GearAndSafety = {
       name: 'The Bunker',
       location: 'Sairee Beach',
       services: ['Gear rental', 'Indoor gym', 'Hostel', 'Guidebook PDFs'],
-      verified: 'Verified operating 2026-08-02; gear rental confirmed by theCrag. Rental inventory and prices are not published.',
+      verified: 'Verified operating 2026-08-02; gear rental confirmed by theCrag. Rental inventory and prices are not published. The Warehouse Hostel is The Bunker\'s own adjacent dorm — the legacy draft\'s separate "The Warehouse" gym/shop was a conflation and has been removed.',
     },
     {
       name: 'Goodtime Adventures',
@@ -181,12 +183,6 @@ export const gearAndSafety: GearAndSafety = {
       location: 'Sairee Beach',
       services: ['Indoor bouldering wall', 'Kids climbing', 'Shop'],
       verified: 'Unverified — legacy draft + a 2018 Mountain Project note only.',
-    },
-    {
-      name: 'The Warehouse',
-      location: 'Sairee Beach',
-      services: ['Indoor gym', 'Hostel', 'Climbing shop'],
-      verified: "Unverified — legacy draft only; possibly conflated with The Bunker's Warehouse Hostel.",
     },
   ],
 }
@@ -204,7 +200,7 @@ export const ethics: Ethics = {
   fullerPicture: [
     'Sensitive access exists. Some crags sit on or beside private land and resorts (Jansom Bay by Jamahkiri; Tao Tower and Phillips Secret Spot at Tanote Bay). Contact the club for current status before exploring off the beaten path.',
     "Be a good guest. Buy a drink or meal from the business whose land you're crossing; keep noise and chalk reasonable at beach crags like Sairee; don't boulder too close to the Secret Garden bungalows.",
-    'All land on Koh Tao is private (Goodtime PDF); several crags charge ~100 THB day fees — pay them.',
+    'All land on Koh Tao is private (Goodtime PDF) — pay the access fees: Mek\'s Mountain is 100 THB paid at Goodtime Adventures (receipt issued; PDF p8 attention box), Jansom Bay is paid at the beach office (PDF p5).',
     'Support the stewards. Renting gear or booking a day with Goodtime Adventures / The Bunker funds the people maintaining routes; the Thaitanium Project rebolting work runs on community donations.',
     'Leave No Trace applies doubly on a 21 km² island — pack out tape, tape wrappers and chalk-caked brushes.',
   ],
@@ -280,9 +276,9 @@ export const guidebooks: Guidebook[] = [
   {
     title: 'Koh Tao Rock Climbing (rakkup app)',
     author: 'Kelsey Gray',
-    year: '2019 release; 2023 listing',
-    note: 'The current digital guide — 114 climbs at release, 180+ per the 2023 Mountain Project book entry. Essentially required for Tanote Bay, where route-finding depends on its approach photos. iOS & Android.',
-    url: 'https://rakkup.com/koh-tao-thailand-rock-climbing-by-kelsey-gray/',
+    year: '2019 release; current edition',
+    note: 'The current digital guide — 114 established climbs at the November 2019 release (rakkup release article, verified); the current edition lists 180 routes (rakkup guidebook page, checked 2026-08-04). Goodtime\'s own guidebook page (updated 2026-07-30) calls it "the most up to date resource available". Essentially required for Tanote Bay, where route-finding depends on its approach photos. iOS & Android, $7.99.',
+    url: 'https://rakkup.com/guidebooks/thailand-koh-tao-rock-climbing/',
     current: true,
   },
   {
@@ -305,7 +301,7 @@ export const guidebooks: Guidebook[] = [
     title: '27crags — Koh Tao',
     author: 'community database (topo by Thai-Climb)',
     year: 'live',
-    note: 'The bouldering reference: 216 problems with sectors across 8 crags. Topo images and descriptions are paywalled (Premium).',
+    note: 'The bouldering reference: 258 problems with sectors, tick counts and ratings across 8 crags (deep fetch 2026-08-04). Topo images and descriptions are paywalled (Premium). No roped Koh Tao crags are listed on 27crags.',
     url: 'https://27crags.com/crags/koh-tao',
     current: true,
   },
@@ -313,7 +309,7 @@ export const guidebooks: Guidebook[] = [
     title: 'Koh Tao Rock Climbing & Bouldering Guide (free PDF)',
     author: 'Goodtime Adventures; incl. the Zen Gecko Bouldering Guide (James March 2002, updated 2010 with Matt Pierson)',
     year: 'v1/14',
-    note: 'Historic free guide via railay.com covering Babaloo and Secret Garden. Old — verify everything on the ground.',
+    note: "Historic free guide via railay.com covering Babaloo and Secret Garden. Zen Gecko was the island's first climbing shop (closed 2005); James March compiled the first guidebook in 2002. Old — verify everything on the ground.",
     url: 'http://www.railay.com/railay/climbing/KT-Climbing-guide-1.14-sm.compressed.pdf',
     current: false,
   },

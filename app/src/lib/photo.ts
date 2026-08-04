@@ -35,13 +35,13 @@ export const GUIDE_PHOTO_CREDIT = 'from the Goodtime Adventures free guidebook P
 export const GUIDE_PDF_URL =
   'http://www.railay.com/railay/climbing/KT-Climbing-guide-1.14-sm.compressed.pdf'
 
-// Human labels for the route-database source keys.
+// Human labels for the route-database source keys. The 'guidebook' source is the
+// Goodtime Adventures free PDF (v1/14) — the authoritative print source.
 export const sourceLabel: Record<string, string> = {
   mountainproject: 'Mountain Project',
   '27crags': '27crags',
-  'legacy-static': 'legacy draft',
   vault: 'vault note',
-  guidebook: 'guidebook',
+  guidebook: 'Goodtime PDF',
 }
 
 export const gradeSystemLabel: Record<string, string> = {
@@ -49,11 +49,13 @@ export const gradeSystemLabel: Record<string, string> = {
   yds: 'YDS',
   font: 'FB',
   v: 'V',
+  'zen-gecko': 'ZG',
 }
 
 // A route can be more than one style at once (e.g. 'sport/toprope' — bolted
-// but also easy to top-rope). Compound styles are stored slash-joined.
-export const styleList = (style: string): string[] => style.split('/')
+// but also easy to top-rope; MP also stores comma-joined pairs like 'trad,tr').
+// Compound styles are stored slash- or comma-joined.
+export const styleList = (style: string): string[] => style.split(/[\/,]/)
 
 export const styleLabel: Record<string, string> = {
   sport: 'Sport',

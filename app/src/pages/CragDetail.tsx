@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { Fragment, useEffect, useRef, useState } from 'react'
 import { Link, useParams, useSearchParams } from 'react-router'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
@@ -28,6 +28,7 @@ import {
 import { imgSrc, GUIDE_PHOTO_CREDIT, GUIDE_PDF_URL, sourceLabel, gradeSystemLabel, styleLabel, styleList } from '@/lib/photo'
 import PhotoCard from '@/components/PhotoCard'
 import RouteCard from '@/components/RouteCard'
+import RouteDetails, { hasRouteDetails } from '@/components/RouteDetails'
 import {
   ArrowLeft,
   MapPin,
@@ -42,6 +43,7 @@ import {
   ExternalLink,
   Images,
   ChevronRight,
+  Banknote,
 } from 'lucide-react'
 
 // Guide imagery that belongs in the large topo viewer rather than the gallery.
@@ -71,6 +73,8 @@ export default function CragDetail() {
   const routeParam = searchParams.get('route')
   const topoSectionRef = useRef<HTMLElement>(null)
   const [topoFlash, setTopoFlash] = useState(false)
+  // Expanded per-route detail rows in the routes table (description/protection/FA).
+  const [openDetails, setOpenDetails] = useState<ReadonlySet<string>>(new Set())
 
   // Computed before the not-found return so hooks below run unconditionally.
   const guideAll = crag ? guidePhotosForCrag(crag.name) : []
@@ -147,7 +151,16 @@ export default function CragDetail() {
     { icon: CalendarDays, label: 'Best season', value: crag.bestSeason ?? 'Unverified' },
     { icon: Footprints, label: 'Approach', value: crag.approach },
     { icon: ShieldAlert, label: 'Access', value: crag.access },
+    ...(crag.accessFee ? [{ icon: Banknote, label: 'Entry fee', value: crag.accessFee }] : []),
   ]
+
+  const toggleDetails = (key: string) =>
+    setOpenDetails((prev) => {
+      const next = new Set(prev)
+      if (next.has(key)) next.delete(key)
+      else next.add(key)
+      return next
+    })
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-10">
@@ -172,6 +185,14 @@ export default function CragDetail() {
         )}
       </div>
       <p className="mt-3 max-w-3xl text-lg text-stone-400">{crag.summary}</p>
+
+      {crag.accessWarning && (
+        <Alert className="mt-6 border-amber-500/40 bg-amber-500/10 text-amber-100">
+          <ShieldAlert className="h-4 w-4 text-amber-400" />
+          <AlertTitle className="text-amber-300">Access warning</AlertTitle>
+          <AlertDescription className="text-amber-100/80">{crag.accessWarning}</AlertDescription>
+        </Alert>
+      )}
 
       {/* Facts panel */}
       <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
@@ -329,89 +350,124 @@ export default function CragDetail() {
                     <TableHead className="text-stone-400">Grade</TableHead>
                     <TableHead className="text-stone-400">Style</TableHead>
                     <TableHead className="text-stone-400">★</TableHead>
-                    <TableHead className="hidden text-stone-400 md:table-cell">Height</TableHead>
+                    <TableHead className="hidden text-stone-400 md:table-cell">Length</TableHead>
                     <TableHead className="text-stone-400">Status</TableHead>
                     <TableHead className="hidden text-stone-400 lg:table-cell">Source</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {cragRoutes.map((r, i) => (
-                    <TableRow
-                      key={`${r.name}-${i}`}
-                      onClick={(e) => {
-                        if ((e.target as HTMLElement).closest('a')) return
-                        openRouteTopo(r.name)
-                      }}
-                      className="group cursor-pointer border-stone-800 hover:bg-stone-900/60"
-                    >
-                      <TableCell className="min-w-40 whitespace-normal font-medium text-stone-100">
-                        <span className="text-teal-300 group-hover:underline">{r.name}</span>
-                        {r.sector && (
-                          <span className="ml-2 rounded bg-stone-800 px-1.5 py-0.5 text-[10px] text-stone-400">
-                            {r.sector}
-                          </span>
-                        )}
-                        {r.note && (
-                          <p className="mt-1 text-xs font-normal text-amber-300/80">⚠ {r.note}</p>
-                        )}
-                      </TableCell>
-                    <TableCell className="whitespace-nowrap">
-                      <span className="font-semibold text-teal-400">{r.grade}</span>{' '}
-                      <span className="rounded bg-stone-800 px-1 py-0.5 text-[10px] uppercase text-stone-400">
-                        {gradeSystemLabel[r.gradeSystem] ?? r.gradeSystem}
-                      </span>
-                    </TableCell>
-                    <TableCell className="text-sm text-stone-300">
-                      <span className="flex flex-wrap gap-1">
-                        {styleList(r.style).map((s) => (
-                          <span
-                            key={s}
-                            className={`rounded-full border px-2 py-0.5 text-xs ${styleColor[s as Style] ?? 'bg-stone-500/15 text-stone-300 border-stone-500/30'}`}
-                          >
-                            {styleLabel[s] ?? s}
-                          </span>
-                        ))}
-                      </span>
-                    </TableCell>
-                    <TableCell className="text-sm text-amber-400">
-                      {r.stars != null && r.stars > 0 ? r.stars : '—'}
-                    </TableCell>
-                    <TableCell className="hidden text-sm text-stone-400 md:table-cell">
-                      {r.heightM ? `${r.heightM} m` : ''}
-                      {r.bolts ? `${r.heightM ? ' · ' : ''}${r.bolts} bolts` : ''}
-                      {!r.heightM && !r.bolts && '—'}
-                    </TableCell>
-                    <TableCell>
-                      {r.verified ? (
-                        <span className="inline-flex items-center gap-1 rounded-full border border-teal-500/30 bg-teal-500/10 px-2 py-0.5 text-xs text-teal-300">
-                          <Check className="h-3 w-3" /> verified
-                        </span>
-                      ) : (
-                        <span className="inline-flex items-center rounded-full border border-amber-500/30 bg-amber-500/10 px-2 py-0.5 text-xs text-amber-300">
-                          unverified
-                        </span>
-                      )}
-                    </TableCell>
-                    <TableCell className="hidden lg:table-cell">
-                      {r.sourceUrl ? (
-                        <a
-                          href={r.sourceUrl}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="inline-flex items-center gap-1 text-xs text-teal-400 hover:underline"
+                  {cragRoutes.map((r, i) => {
+                    const key = `${r.name}-${i}`
+                    const expandable = hasRouteDetails(r)
+                    const open = openDetails.has(key)
+                    return (
+                      <Fragment key={key}>
+                        <TableRow
+                          onClick={(e) => {
+                            if ((e.target as HTMLElement).closest('a,button')) return
+                            openRouteTopo(r.name)
+                          }}
+                          className="group cursor-pointer border-stone-800 hover:bg-stone-900/60"
                         >
-                          {sourceLabel[r.source] ?? r.source}
-                          <ExternalLink className="h-3 w-3" />
-                        </a>
-                      ) : (
-                        <span className="text-xs text-stone-500">
-                          {sourceLabel[r.source] ?? r.source}
-                        </span>
-                      )}
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
+                          <TableCell className="min-w-40 whitespace-normal font-medium text-stone-100">
+                            <span className="text-teal-300 group-hover:underline">{r.name}</span>
+                            {expandable && (
+                              <button
+                                type="button"
+                                onClick={(e) => {
+                                  e.stopPropagation()
+                                  toggleDetails(key)
+                                }}
+                                aria-expanded={open}
+                                aria-label={`Route details for ${r.name}`}
+                                title="Description, protection, first ascent"
+                                className={`ml-2 inline-flex h-5 w-5 items-center justify-center rounded-full align-middle transition-colors ${
+                                  open ? 'text-teal-300' : 'text-stone-500 hover:text-teal-300'
+                                }`}
+                              >
+                                <Info className="h-3.5 w-3.5" />
+                              </button>
+                            )}
+                            {r.sector && (
+                              <span className="ml-2 rounded bg-stone-800 px-1.5 py-0.5 text-[10px] text-stone-400">
+                                {r.sector}
+                              </span>
+                            )}
+                            {r.ticks != null && r.ticks > 0 && (
+                              <span className="ml-2 text-[10px] font-normal text-stone-500">
+                                {r.ticks} ticks
+                              </span>
+                            )}
+                            {r.note && (
+                              <p className="mt-1 text-xs font-normal text-amber-300/80">⚠ {r.note}</p>
+                            )}
+                          </TableCell>
+                          <TableCell className="whitespace-nowrap">
+                            <span className="font-semibold text-teal-400">{r.grade}</span>{' '}
+                            <span className="rounded bg-stone-800 px-1 py-0.5 text-[10px] uppercase text-stone-400">
+                              {gradeSystemLabel[r.gradeSystem] ?? r.gradeSystem}
+                            </span>
+                          </TableCell>
+                          <TableCell className="text-sm text-stone-300">
+                            <span className="flex flex-wrap gap-1">
+                              {styleList(r.style).map((s) => (
+                                <span
+                                  key={s}
+                                  className={`rounded-full border px-2 py-0.5 text-xs ${styleColor[s as Style] ?? 'bg-stone-500/15 text-stone-300 border-stone-500/30'}`}
+                                >
+                                  {styleLabel[s] ?? s}
+                                </span>
+                              ))}
+                            </span>
+                          </TableCell>
+                          <TableCell className="text-sm text-amber-400">
+                            {r.stars != null && r.stars > 0 ? r.stars : '—'}
+                          </TableCell>
+                          <TableCell className="hidden text-sm text-stone-400 md:table-cell">
+                            {r.lengthM ? `${r.lengthM} m` : ''}
+                            {r.bolts ? `${r.lengthM ? ' · ' : ''}${r.bolts} bolts` : ''}
+                            {!r.lengthM && !r.bolts && '—'}
+                          </TableCell>
+                          <TableCell>
+                            {r.verified ? (
+                              <span className="inline-flex items-center gap-1 rounded-full border border-teal-500/30 bg-teal-500/10 px-2 py-0.5 text-xs text-teal-300">
+                                <Check className="h-3 w-3" /> verified
+                              </span>
+                            ) : (
+                              <span className="inline-flex items-center rounded-full border border-amber-500/30 bg-amber-500/10 px-2 py-0.5 text-xs text-amber-300">
+                                unverified
+                              </span>
+                            )}
+                          </TableCell>
+                          <TableCell className="hidden lg:table-cell">
+                            {r.sourceUrl ? (
+                              <a
+                                href={r.sourceUrl}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="inline-flex items-center gap-1 text-xs text-teal-400 hover:underline"
+                              >
+                                {sourceLabel[r.source] ?? r.source}
+                                <ExternalLink className="h-3 w-3" />
+                              </a>
+                            ) : (
+                              <span className="text-xs text-stone-500">
+                                {sourceLabel[r.source] ?? r.source}
+                              </span>
+                            )}
+                          </TableCell>
+                        </TableRow>
+                        {open && expandable && (
+                          <TableRow className="border-stone-800 bg-stone-950/70 hover:bg-stone-950/70">
+                            <TableCell colSpan={7} className="whitespace-normal py-3 pl-6">
+                              <RouteDetails route={r} />
+                            </TableCell>
+                          </TableRow>
+                        )}
+                      </Fragment>
+                    )
+                  })}
+                </TableBody>
             </Table>
             </div>
             {/* Stacked cards on small screens */}
@@ -422,7 +478,8 @@ export default function CragDetail() {
             </div>
             <p className="mt-2 text-xs text-stone-500">
               Click a route to open its photo-topo (when a topo caption mentions it) or to jump to
-              the topo section.
+              the topo section. The ⓘ button expands description, protection and first-ascent beta
+              where the fact-checked sources have it.
             </p>
           </>
         )}
@@ -467,9 +524,9 @@ export default function CragDetail() {
           </CardHeader>
           <CardContent className="space-y-3 text-sm text-stone-400">
             <p>
-              Grades and bolt counts come from Mountain Project, 27crags, the legacy draft and
-              vault notes — scales and reliability differ per source. Amber rows need local
-              verification.
+              Grades and bolt counts come from Mountain Project, 27crags, the Goodtime
+              Adventures PDF and vault notes — scales and reliability differ per source. Amber
+              rows need local verification.
             </p>
             <p>
               Near-coast hardware can be suspect — inspect before trusting and ask the Koh Tao

@@ -2,7 +2,8 @@ import { Link } from 'react-router'
 import { styleColor, type Style } from '@/data/climbing'
 import type { RouteRecord } from '@/data/routes'
 import { gradeSystemLabel, styleLabel, styleList } from '@/lib/photo'
-import { Check } from 'lucide-react'
+import RouteDetails, { hasRouteDetails } from '@/components/RouteDetails'
+import { Check, ChevronRight } from 'lucide-react'
 
 // Mobile (<md) presentation of one route record — the wide route tables get a
 // stacked card instead of a cramped horizontally scrolling grid.
@@ -69,14 +70,15 @@ export default function RouteCard({
       <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-stone-500">
         {onOpen !== undefined ? (
           <span>
-            {r.heightM ? `${r.heightM} m` : ''}
-            {r.bolts ? `${r.heightM ? ' · ' : ''}${r.bolts} bolts` : ''}
-            {!r.heightM && !r.bolts && '—'}
+            {r.lengthM ? `${r.lengthM} m` : ''}
+            {r.bolts ? `${r.lengthM ? ' · ' : ''}${r.bolts} bolts` : ''}
+            {!r.lengthM && !r.bolts && '—'}
           </span>
         ) : (
           <span>{r.crag}</span>
         )}
         {r.stars != null && r.stars > 0 && <span className="text-amber-400">★ {r.stars}</span>}
+        {r.ticks != null && r.ticks > 0 && <span>{r.ticks} ticks</span>}
         {r.verified ? (
           <span className="ml-auto inline-flex items-center gap-1 rounded-full border border-teal-500/30 bg-teal-500/10 px-2 py-0.5 text-teal-300">
             <Check className="h-3 w-3" /> verified
@@ -87,6 +89,17 @@ export default function RouteCard({
           </span>
         )}
       </div>
+      {hasRouteDetails(r) && (
+        <details className="group mt-2 rounded-md border border-stone-800 bg-stone-950/60">
+          <summary className="flex min-h-10 cursor-pointer list-none items-center gap-2 px-3 text-xs font-medium text-stone-400 transition-colors hover:text-teal-300 [&::-webkit-details-marker]:hidden">
+            <ChevronRight className="h-3.5 w-3.5 text-stone-500 transition-transform group-open:rotate-90" />
+            Route details
+          </summary>
+          <div className="px-3 pb-3">
+            <RouteDetails route={r} />
+          </div>
+        </details>
+      )}
     </div>
   )
 }
