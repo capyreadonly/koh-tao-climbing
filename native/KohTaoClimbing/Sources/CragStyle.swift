@@ -21,8 +21,14 @@ enum CragStyle {
 
     /// Routes carry free-form style strings ("sport/toprope", "trad,tr") — tint by first part.
     static func color(forStyleString style: String) -> Color {
+        color(primaryStyle(style))
+    }
+
+    /// Normalized base style for filtering: first component, lowercased, "tr" -> "toprope".
+    static func primaryStyle(_ style: String) -> String {
         let first = style.split(whereSeparator: { $0 == "/" || $0 == "," }).first.map(String.init) ?? style
-        return color(first)
+        let trimmed = first.lowercased().trimmingCharacters(in: .whitespaces)
+        return trimmed == "tr" ? "toprope" : trimmed
     }
 }
 

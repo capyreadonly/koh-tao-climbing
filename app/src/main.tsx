@@ -8,9 +8,8 @@ import App from './App.tsx'
 
 // Importing virtual:pwa-register suppresses vite-plugin-pwa's auto-injected
 // registerSW.js script tag, so registration only happens here. Skip it on
-// non-http(s) origins: the iOS app (Capacitor) serves the bundle from a
-// capacitor:// scheme where SW registration is unsupported, and everything
-// is already on-device there so caching adds nothing.
+// non-http(s) origins (e.g. file:// or a webview's custom scheme) where SW
+// registration is unsupported.
 if (location.protocol === 'http:' || location.protocol === 'https:') {
   registerSW({ immediate: true })
 }

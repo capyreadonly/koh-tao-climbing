@@ -7,6 +7,13 @@ options:
     iOS: "26.0"
   createIntermediateGroups: true
 
+# Treat .icon (Icon Composer document) as a single file in Resources, matching
+# what Xcode creates by hand — the build system compiles it into the app icon.
+fileTypes:
+  icon:
+    file: true
+    buildPhase: resources
+
 targets:
   KohTaoClimbing:
     type: application
@@ -15,6 +22,9 @@ targets:
     sources:
       - path: KohTaoClimbing/Sources
       - path: KohTaoClimbing/Assets.xcassets
+      # iOS 26 Liquid Glass icon (Icon Composer document) — compiled by the build
+      # system; ASSETCATALOG_COMPILER_APPICON_NAME points at its basename.
+      - path: KohTaoClimbing/AppIcon.icon
       # Whole folder copied into the bundle as a folder reference (blue folder),
       # preserving Data/, Images/{guide,community}/ and Tiles/{z}/{x}/{y}.png structure.
       # NOTE: must NOT be named "Resources" — a top-level Resources/ folder in an iOS
@@ -32,3 +42,31 @@ targets:
         TARGETED_DEVICE_FAMILY: "1,2"
         MARKETING_VERSION: "0.1"
         CURRENT_PROJECT_VERSION: "1"
+
+  # Hosted unit tests — they run inside the app process, so Bundle.main in the
+  # tests sees the real AppResources the app ships.
+  KohTaoClimbingTests:
+    type: bundle.unit-test
+    platform: iOS
+    deploymentTarget: "26.0"
+    sources:
+      - path: KohTaoClimbing/Tests
+    dependencies:
+      - target: KohTaoClimbing
+    settings:
+      base:
+        SWIFT_VERSION: "6.0"
+        GENERATE_INFOPLIST_FILE: YES
+
+schemes:
+  KohTaoClimbing:
+    build:
+      targets:
+        KohTaoClimbing: all
+        KohTaoClimbingTests: [test]
+    run:
+      config: Debug
+    test:
+      config: Debug
+      targets:
+        - KohTaoClimbingTests

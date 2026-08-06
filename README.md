@@ -37,34 +37,30 @@ HashRouter makes routing fully server-independent.
 
 ## iOS app
 
-The site is wrapped as a native iOS app with [Capacitor](https://capacitorjs.com)
-(v8) in `app/ios/` — the web build is bundled into the app and served offline
-from a `capacitor://` origin (service-worker registration is skipped there;
-see `app/src/main.tsx`).
-
-Prerequisites: Xcode (with an iOS simulator runtime) and CocoaPods
-(`brew install cocoapods`).
+The iOS app is a fully native SwiftUI app in `native/` (iOS 26, Swift 6,
+XcodeGen). It ships the same data, photos and map tiles inside the bundle and
+works completely offline. The Xcode project is generated — regenerate it after
+any change to `native/project.yml`:
 
 ```sh
-cd app
-npm run build && npx cap sync ios   # rebuild the web bundle and copy it into ios/
-npx cap open ios                    # open the project in Xcode
+cd native
+xcodegen generate
+open KohTaoClimbing.xcodeproj        # or build from the command line:
+xcodebuild -project KohTaoClimbing.xcodeproj -scheme KohTaoClimbing \
+  -configuration Debug -destination 'platform=iOS Simulator,name=iPhone 17 Pro' build
 ```
 
-From the command line, build and run in the simulator:
+To run in the simulator: install the built `.app` with
+`xcrun simctl install booted <path-to>/KohTaoClimbing.app`, then
+`xcrun simctl launch booted com.kohtaoclimbing.guide`.
 
-```sh
-cd app/ios/App
-xcodebuild -project App.xcodeproj -scheme App -configuration Debug \
-  -destination 'platform=iOS Simulator,name=iPhone 17 Pro' build CODE_SIGNING_ALLOWED=NO
-xcrun simctl boot "iPhone 17 Pro"
-xcrun simctl install booted <path-to>/Debug-iphonesimulator/App.app
-xcrun simctl launch booted com.kohtaoclimbing.guide
-```
+The bundled JSON/images/tiles under `native/KohTaoClimbing/AppResources/` are
+generated from the web data layer — re-run `node work/export-data.mjs` after
+changing `app/src/data/*` or `app/public/{images,tiles}`.
 
-App Store distribution additionally needs an Apple Developer account and
-signing configured in Xcode (Signing & Capabilities → your team), then a
-Release archive uploaded via Xcode's organizer.
+App Store distribution needs an Apple Developer account and signing configured
+in Xcode (Signing & Capabilities → your team), then a Release archive uploaded
+via Xcode's organizer.
 
 ## Deployment
 

@@ -20,6 +20,7 @@ final class DataStore {
     private(set) var loadErrors: [String] = []
 
     private var cragsBySlug: [String: Crag] = [:]
+    private var cragsByName: [String: Crag] = [:]
     private var routesByCragName: [String: [RouteRecord]] = [:]
 
     private init() {
@@ -35,6 +36,7 @@ final class DataStore {
         if let v: [SourceLink] = load("sources") { sources = v }
 
         cragsBySlug = Dictionary(crags.map { ($0.slug, $0) }, uniquingKeysWith: { first, _ in first })
+        cragsByName = Dictionary(crags.map { ($0.name, $0) }, uniquingKeysWith: { first, _ in first })
         routesByCragName = Dictionary(grouping: routes, by: \.crag)
     }
 
@@ -54,6 +56,9 @@ final class DataStore {
     // MARK: - Lookups
 
     func crag(slug: String) -> Crag? { cragsBySlug[slug] }
+
+    /// RouteRecord.crag holds the crag NAME (not the slug) — this resolves it back.
+    func crag(named name: String) -> Crag? { cragsByName[name] }
 
     /// RouteRecord.crag holds the crag NAME (not the slug), matching routes.ts routesForCrag().
     func routes(forCrag crag: Crag) -> [RouteRecord] {

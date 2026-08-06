@@ -1,18 +1,60 @@
 import SwiftUI
 
-/// Routes tab: all 624 routes, grouped by crag, searchable.
+/// Routes tab: all 624 routes with search, style chips, a verified-only toggle
+/// and optional grade sorting. Grouped by crag in the default order.
 struct RoutesTabView: View {
     let store: DataStore
     @State private var searchText = ""
+    @State private var selectedStyle: String? = RoutesTabView.debugStyle
+    @State private var verifiedOnly = false
+    @State private var gradeSort: GradeSortOrder = RoutesTabView.debugSort
+
+    // Testing/screenshot hooks: `-routesStyle boulder -routesSort asc|desc`.
+    private static let debugStyle: String? = {
+        let args = ProcessInfo.processInfo.arguments
+        guard let i = args.firstIndex(of: "-routesStyle"), i + 1 < args.count else { return nil }
+        return args[i + 1]
+    }()
+    private static let debugSort: GradeSortOrder = {
+        let args = ProcessInfo.processInfo.arguments
+        guard let i = args.firstIndex(of: "-routesSort"), i + 1 < args.count else { return .off }
+        return args[i + 1] == "asc" ? .ascending : args[i + 1] == "desc" ? .descending : .off
+    }()
+
+    enum GradeSortOrder: String, CaseIterable, Identifiable {
+        case off = "By crag"
+        case ascending = "Grade ↑"
+        case descending = "Grade ↓"
+        var id: String { rawValue }
+    }
+
+    @State private var path = NavigationPath()
+
+    // Testing/screenshot hook: `-initialRoute <name substring>` pushes that route.
+    private static let debugRoute: String? = {
+        let args = ProcessInfo.processInfo.arguments
+        guard let i = args.firstIndex(of: "-initialRoute"), i + 1 < args.count else { return nil }
+        return args[i + 1].lowercased()
+    }()
+
+    /// Style categories present in the data, well-known ones first.
+    private var stylesPresent: [String] {
+        var set = Set(store.routes.map { CragStyle.primaryStyle($0.style) })
+        let known = ["boulder", "sport", "toprope", "trad", "multipitch", "dws"]
+        let ordered = known.filter { set.remove($0) != nil }
+        return ordered + set.sorted()
+    }
 
     private var filtered: [RouteRecord] {
         let query = searchText.trimmingCharacters(in: .whitespaces).lowercased()
-        guard !query.isEmpty else { return store.routes }
-        return store.routes.filter {
-            $0.name.lowercased().contains(query)
-                || $0.crag.lowercased().contains(query)
-                || $0.grade.lowercased().contains(query)
-                || ($0.sector?.lowercased().contains(query) ?? false)
+        return store.routes.filter { route in
+            if verifiedOnly && !route.verified { return false }
+            if let selectedStyle, CragStyle.primaryStyle(route.style) != selectedStyle { return false }
+            guard !query.isEmpty else { return true }
+            return route.name.lowercased().contains(query)
+                || route.crag.lowercased().contains(query)
+                || route.grade.lowercased().contains(query)
+                || (route.sector?.lowercased().contains(query) ?? false)
         }
     }
 
@@ -27,8 +69,96 @@ struct RoutesTabView: View {
         return order.map { (crag: $0, routes: byCrag[$0] ?? []) }
     }
 
+    private var gradeSorted: [RouteRecord] {
+        let direction: Double = gradeSort == .descending ? -1 : 1
+        return filtered.sorted { a, b in
+            let ka = GradeSort.key(for: a), kb = GradeSort.key(for: b)
+            if ka.system != kb.system {
+                return Double(ka.system - kb.system) * direction < 0
+            }
+            if ka.value != kb.value {
+                return (ka.value - kb.value) * direction < 0
+            }
+            return a.name.localizedCaseInsensitiveCompare(b.name) == .orderedAscending
+        }
+    }
+
     var body: some View {
-        NavigationStack {
+        NavigationStack(path: $path) {
+            VStack(spacing: 0) {
+                filterBar
+                Divider()
+                routeList
+            }
+            .navigationTitle("Routes")
+            .navigationDestination(for: RouteRecord.self) { route in
+                RouteDetailView(route: route, store: store)
+            }
+            .navigationDestination(for: Crag.self) { crag in
+                CragDetailView(crag: crag, store: store)
+            }
+            .searchable(text: $searchText, prompt: "Route, crag, sector or grade")
+            .overlay {
+                if filtered.isEmpty {
+                    ContentUnavailableView.search(text: searchText)
+                }
+            }
+            .onAppear {
+                guard path.isEmpty, let keyword = Self.debugRoute,
+                      let match = store.routes.first(where: { $0.name.lowercased().contains(keyword) })
+                else { return }
+                path.append(match)
+            }
+        }
+    }
+
+    // MARK: - Filter bar
+
+    private var filterBar: some View {
+        ScrollView(.horizontal, showsIndicators: false) {
+            HStack(spacing: 8) {
+                ForEach(stylesPresent, id: \.self) { style in
+                    FilterChip(
+                        text: style,
+                        color: CragStyle.color(style),
+                        isSelected: selectedStyle == style
+                    ) {
+                        selectedStyle = selectedStyle == style ? nil : style
+                    }
+                }
+                FilterChip(
+                    text: "verified",
+                    color: .green,
+                    systemImage: "checkmark.seal.fill",
+                    isSelected: verifiedOnly
+                ) {
+                    verifiedOnly.toggle()
+                }
+                Menu {
+                    Picker("Sort", selection: $gradeSort) {
+                        ForEach(GradeSortOrder.allCases) { order in
+                            Text(order.rawValue).tag(order)
+                        }
+                    }
+                } label: {
+                    FilterChipLabel(
+                        text: gradeSort.rawValue,
+                        color: .secondary,
+                        systemImage: "arrow.up.arrow.down",
+                        isSelected: gradeSort != .off
+                    )
+                }
+            }
+            .padding(.horizontal, 16)
+            .padding(.vertical, 8)
+        }
+    }
+
+    // MARK: - Route list
+
+    @ViewBuilder
+    private var routeList: some View {
+        if gradeSort == .off {
             List {
                 ForEach(groups, id: \.crag) { group in
                     Section(group.crag) {
@@ -40,16 +170,56 @@ struct RoutesTabView: View {
                     }
                 }
             }
-            .navigationTitle("Routes")
-            .navigationDestination(for: RouteRecord.self) { route in
-                RouteDetailView(route: route)
-            }
-            .searchable(text: $searchText, prompt: "Route, crag, sector or grade")
-            .overlay {
-                if filtered.isEmpty {
-                    ContentUnavailableView.search(text: searchText)
+        } else {
+            List {
+                Section("\(filtered.count) routes") {
+                    ForEach(gradeSorted) { route in
+                        NavigationLink(value: route) {
+                            RouteRow(route: route)
+                        }
+                    }
                 }
             }
+        }
+    }
+}
+
+/// Tappable capsule used for the route filter bar.
+struct FilterChip: View {
+    let text: String
+    var color: Color = .secondary
+    var systemImage: String? = nil
+    let isSelected: Bool
+    let action: () -> Void
+
+    var body: some View {
+        Button(action: action) {
+            FilterChipLabel(text: text, color: color, systemImage: systemImage, isSelected: isSelected)
+        }
+        .buttonStyle(.plain)
+    }
+}
+
+struct FilterChipLabel: View {
+    let text: String
+    var color: Color = .secondary
+    var systemImage: String? = nil
+    let isSelected: Bool
+
+    var body: some View {
+        HStack(spacing: 4) {
+            if let systemImage {
+                Image(systemName: systemImage)
+            }
+            Text(text)
+        }
+        .font(.caption.weight(.medium))
+        .padding(.horizontal, 10)
+        .padding(.vertical, 6)
+        .background(isSelected ? color.opacity(0.25) : color.opacity(0.1), in: Capsule())
+        .foregroundStyle(isSelected ? color : .secondary)
+        .overlay {
+            Capsule().strokeBorder(isSelected ? color : .clear, lineWidth: 1)
         }
     }
 }
@@ -85,8 +255,10 @@ struct RouteRow: View {
 }
 
 /// Route detail: grade/style facts, protection and description, source link.
+/// The crag name links across to that crag's detail screen.
 struct RouteDetailView: View {
     let route: RouteRecord
+    let store: DataStore
 
     var body: some View {
         List {
@@ -106,7 +278,13 @@ struct RouteDetailView: View {
             Section("Facts") {
                 LabeledContent("Grade", value: "\(route.grade) (\(route.gradeSystem))")
                 LabeledContent("Style", value: route.style)
-                LabeledContent("Crag", value: route.crag)
+                if let crag = store.crag(named: route.crag) {
+                    NavigationLink(value: crag) {
+                        LabeledContent("Crag", value: route.crag)
+                    }
+                } else {
+                    LabeledContent("Crag", value: route.crag)
+                }
                 if let sector = route.sector {
                     LabeledContent("Sector", value: sector)
                 }

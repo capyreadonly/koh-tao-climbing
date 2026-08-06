@@ -5,6 +5,15 @@ struct CragDetailView: View {
     let crag: Crag
     let store: DataStore
 
+    // Testing/screenshot hook: `-showViewer [index]` pre-opens the full-screen
+    // photo viewer, optionally at a page index.
+    @State private var debugViewer: ViewerSelection? = {
+        let args = ProcessInfo.processInfo.arguments
+        guard let i = args.firstIndex(of: "-showViewer") else { return nil }
+        if i + 1 < args.count, let index = Int(args[i + 1]) { return ViewerSelection(index: index) }
+        return ViewerSelection(index: 0)
+    }()
+
     private var routes: [RouteRecord] { store.routes(forCrag: crag) }
     private var photos: [PhotoEntry] { store.photos(forCrag: crag) }
 
@@ -99,7 +108,12 @@ struct CragDetailView: View {
         }
         .navigationTitle(crag.name)
         .navigationDestination(for: RouteRecord.self) { route in
-            RouteDetailView(route: route)
+            RouteDetailView(route: route, store: store)
+        }
+        .sheet(item: $debugViewer) { selection in
+            if !photos.isEmpty {
+                PhotoViewerSheet(photos: photos, startIndex: min(selection.index, photos.count - 1))
+            }
         }
     }
 }
@@ -125,6 +139,12 @@ struct PhotoGalleryRow: View {
                         BundledPhoto(file: photo.file, maxPixel: 640, cropToFill: !photo.isNdLicense)
                             .frame(width: 240, height: 170)
                             .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
+                            .overlay(alignment: .bottomTrailing) {
+                                if photo.isNdLicense {
+                                    NdBadge()
+                                        .padding(6)
+                                }
+                            }
                     }
                     .buttonStyle(.plain)
                 }
@@ -139,7 +159,20 @@ struct PhotoGalleryRow: View {
     }
 }
 
-/// Full-screen paging photo viewer with caption and credit/license line.
+/// Small "ND" badge marking NoDerivatives-licensed photos (must be shown unmodified).
+struct NdBadge: View {
+    var body: some View {
+        Text("ND")
+            .font(.caption2.weight(.bold))
+            .padding(.horizontal, 5)
+            .padding(.vertical, 2)
+            .background(.black.opacity(0.65), in: Capsule())
+            .foregroundStyle(.white)
+    }
+}
+
+/// Full-screen paging photo viewer: pinch-to-zoom + pan per page, caption and
+/// credit/license line, ND badge where the license forbids derivatives.
 struct PhotoViewerSheet: View {
     let photos: [PhotoEntry]
     let startIndex: Int
@@ -156,8 +189,15 @@ struct PhotoViewerSheet: View {
         NavigationStack {
             TabView(selection: $index) {
                 ForEach(Array(photos.enumerated()), id: \.element.id) { i, photo in
-                    BundledPhoto(file: photo.file, maxPixel: 1600)
-                        .tag(i)
+                    Group {
+                        if let uiImage = BundledImageStore.image(photo.file, maxPixel: 2400) {
+                            ZoomableImageView(uiImage: uiImage)
+                        } else {
+                            ContentUnavailableView("Photo unavailable", systemImage: "photo",
+                                                   description: Text(photo.file))
+                        }
+                    }
+                    .tag(i)
                 }
             }
             .tabViewStyle(.page)
@@ -175,12 +215,15 @@ struct PhotoViewerSheet: View {
                 VStack(alignment: .leading, spacing: 4) {
                     Text(photo.caption)
                         .font(.caption)
-                    HStack {
+                    HStack(spacing: 6) {
                         if let credit = photo.credit {
                             Text("© \(credit)")
                         }
                         if let license = photo.license {
                             Text(license)
+                        }
+                        if photo.isNdLicense {
+                            NdBadge()
                         }
                     }
                     .font(.caption2)
