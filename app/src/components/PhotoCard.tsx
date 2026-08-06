@@ -23,13 +23,13 @@ export default function PhotoCard({
   return (
     <figure
       className={cn(
-        'overflow-hidden rounded-xl border border-stone-800 bg-stone-900',
-        onClick && 'cursor-zoom-in transition-colors hover:border-teal-500/50',
+        'overflow-hidden rounded-xl border border-stone-200 bg-white shadow-sm',
+        onClick && 'cursor-zoom-in transition-colors hover:border-teal-400',
         className,
       )}
       onClick={onClick}
     >
-      <div className={cn('aspect-[4/3] w-full', nd && 'bg-stone-950')}>
+      <div className={cn('aspect-[4/3] w-full', nd && 'bg-stone-50')}>
         <img
           src={imgSrc(photo.file)}
           alt={photo.caption}
@@ -42,7 +42,7 @@ export default function PhotoCard({
         />
       </div>
       <figcaption className="space-y-1 p-3">
-        <p className="line-clamp-2 text-xs text-stone-400">{photo.caption}</p>
+        <p className="line-clamp-2 text-xs text-stone-600">{photo.caption}</p>
         {community ? (
           <p className="flex flex-wrap items-center gap-x-1.5 text-[11px] text-stone-500">
             <span>
@@ -54,7 +54,7 @@ export default function PhotoCard({
                 target="_blank"
                 rel="noreferrer"
                 onClick={(e) => e.stopPropagation()}
-                className="inline-flex items-center gap-0.5 text-teal-400 hover:underline"
+                className="inline-flex items-center gap-0.5 text-teal-700 hover:underline"
               >
                 source <ExternalLink className="h-3 w-3" />
               </a>

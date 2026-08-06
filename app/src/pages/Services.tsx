@@ -42,40 +42,40 @@ export default function Services() {
           return (
             <Card
               key={s.name}
-              className="flex flex-col rounded-xl border-stone-800 bg-stone-900 transition hover:border-stone-700"
+              className="flex flex-col rounded-xl border-stone-200 bg-white shadow-sm transition hover:shadow-md"
             >
               <CardHeader>
                 <div className="flex items-center justify-between gap-2">
                   <CardTitle className="font-display text-lg tracking-tight">{s.name}</CardTitle>
                   {verified ? (
-                    <Badge variant="outline" className="shrink-0 border-teal-500/40 text-xs text-teal-300">
+                    <Badge variant="outline" className="shrink-0 border-teal-200 bg-teal-50 text-xs text-teal-700">
                       <ShieldCheck className="mr-1 h-3 w-3" /> verified 2026
                     </Badge>
                   ) : (
-                    <Badge variant="outline" className="shrink-0 border-amber-500/40 text-xs text-amber-300">
+                    <Badge variant="outline" className="shrink-0 border-amber-300 bg-amber-50 text-xs text-amber-800">
                       <ShieldAlert className="mr-1 h-3 w-3" /> unverified
                     </Badge>
                   )}
                 </div>
-                <div className="text-xs font-semibold uppercase tracking-wider text-teal-400">{s.role}</div>
+                <div className="text-xs font-semibold uppercase tracking-wider text-teal-700">{s.role}</div>
               </CardHeader>
               <CardContent className="flex flex-1 flex-col">
-                <p className="mb-4 text-sm text-stone-400">{s.summary}</p>
+                <p className="mb-4 text-sm text-stone-600">{s.summary}</p>
                 <ul className="mb-4 space-y-2">
                   {s.bullets.map((b, i) => (
-                    <li key={i} className="flex gap-2.5 text-sm text-stone-300">
-                      <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-teal-400" />
+                    <li key={i} className="flex gap-2.5 text-sm text-stone-700">
+                      <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-teal-600" />
                       {b}
                     </li>
                   ))}
                 </ul>
-                <div className="mt-auto border-t border-stone-800 pt-3 text-sm">
-                  <div className="text-stone-400">{s.contact}</div>
+                <div className="mt-auto border-t border-stone-200 pt-3 text-sm">
+                  <div className="text-stone-600">{s.contact}</div>
                   <a
                     href={s.url}
                     target="_blank"
                     rel="noreferrer"
-                    className="mt-1 inline-flex items-center gap-1 text-teal-400 hover:underline"
+                    className="mt-1 inline-flex items-center gap-1 text-teal-700 hover:underline"
                   >
                     Visit <ExternalLink className="h-3.5 w-3.5" />
                   </a>
@@ -97,15 +97,15 @@ export default function Services() {
       />
       <div className="mt-8 grid gap-3 sm:grid-cols-2">
         {guidebooks.map((g) => (
-          <div key={g.name} className="rounded-xl border border-stone-800 bg-stone-900 p-4">
+          <div key={g.name} className="rounded-xl border border-stone-200 bg-white p-4 shadow-sm">
             <div className="text-sm font-medium">{g.name}</div>
             <p className="mt-1 text-sm text-stone-400">{g.note}</p>
           </div>
         ))}
       </div>
 
-      <div className="mt-12 rounded-xl border border-stone-800 bg-stone-900/40 p-5 text-sm text-stone-400">
-        <h3 className="mb-2 font-display font-semibold tracking-tight text-stone-200">A short history</h3>
+      <div className="mt-12 rounded-xl border border-stone-200 bg-stone-50 p-5 text-sm text-stone-600">
+        <h3 className="mb-2 font-display font-semibold tracking-tight text-stone-800">A short history</h3>
         Climbing grew out of the diving scene. James March’s Zen Gecko opened first (guide 2002,
         shop closed 2005); Goodtime Adventures followed in 2008 and drove most modern development;
         Evasion Koh Tao and a bouldering gym came and went. Today Goodtime and The Bunker remain,

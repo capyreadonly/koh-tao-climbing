@@ -2,8 +2,19 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- viewport-fit=cover: the fixed bottom tab bar handles the home-indicator
+         safe area itself (env(safe-area-inset-bottom)). -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <meta name="description" content="The complete climbing database for Koh Tao, Thailand — every crag, route, season tip and access rule, fact-checked against 2026 sources." />
+    <!-- PWA (vite-plugin-pwa injects the manifest link + SW registration;
+         icons are relative for subpath deploys) -->
+    <meta name="theme-color" content="#ffffff" />
+    <link rel="icon" type="image/png" href="icons/icon-192.png" />
+    <link rel="apple-touch-icon" href="icons/icon-192.png" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="KT Climbing" />
     <title>Koh Tao Climbing Guide</title>
     <!-- Self-hosted fonts (no third-party runtime fetches). woff2 files live in
          public/fonts/ and are copied verbatim to dist/fonts/; relative url()

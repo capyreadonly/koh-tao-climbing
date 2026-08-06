@@ -19,16 +19,16 @@ export default function SectionHeader({
 }) {
   return (
     <header className={className}>
-      <p className="text-xs font-semibold uppercase tracking-[0.2em] text-emerald-400">{kicker}</p>
+      <p className="text-xs font-semibold uppercase tracking-[0.2em] text-emerald-700">{kicker}</p>
       <Heading
         className={cn(
-          'mt-2 font-display font-semibold tracking-tight text-stone-100',
+          'mt-2 font-display font-semibold tracking-tight text-stone-900',
           Heading === 'h1' ? 'text-3xl sm:text-5xl' : 'text-2xl sm:text-3xl',
         )}
       >
         {title}
       </Heading>
-      {lede && <p className="mt-3 max-w-prose text-stone-400">{lede}</p>}
+      {lede && <p className="mt-3 max-w-prose text-stone-600">{lede}</p>}
     </header>
   )
 }

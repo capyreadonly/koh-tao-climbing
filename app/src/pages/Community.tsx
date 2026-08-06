@@ -55,8 +55,8 @@ export default function Community() {
             onClick={() => setGroup(f.key)}
             className={`inline-flex min-h-10 items-center rounded-full border px-3 py-1.5 text-sm transition-colors ${
               group === f.key
-                ? 'border-teal-500/60 bg-teal-500/15 text-teal-300'
-                : 'border-stone-700 text-stone-400 hover:bg-stone-800'
+                ? 'border-teal-600 bg-teal-50 text-teal-700'
+                : 'border-stone-300 text-stone-600 hover:bg-stone-100'
             }`}
           >
             {f.label} ({countFor(f.key)})
@@ -70,7 +70,7 @@ export default function Community() {
           return (
             <Card
               key={r.url + r.title}
-              className="flex flex-col rounded-xl border-stone-800 bg-stone-900 transition hover:border-stone-700"
+              className="flex flex-col rounded-xl border-stone-200 bg-white shadow-sm transition hover:shadow-md"
             >
               <CardHeader>
                 <div className="flex items-start justify-between gap-3">
@@ -80,7 +80,7 @@ export default function Community() {
                   <Badge
                     variant="outline"
                     className={`shrink-0 text-xs ${
-                      video ? 'border-rose-500/40 text-rose-300' : 'border-teal-500/40 text-teal-300'
+                      video ? 'border-rose-300 bg-rose-50 text-rose-700' : 'border-teal-200 bg-teal-50 text-teal-700'
                     }`}
                   >
                     {video && <Play className="mr-1 h-3 w-3" />}
@@ -92,13 +92,13 @@ export default function Community() {
                 </div>
               </CardHeader>
               <CardContent className="flex flex-1 flex-col">
-                <p className="mb-4 text-sm text-stone-400">{r.summary}</p>
+                <p className="mb-4 text-sm text-stone-600">{r.summary}</p>
                 {r.photos && r.photos.length > 0 && (
                   <div className="mb-4 grid grid-cols-1 gap-2 sm:grid-cols-2">
                     {r.photos.map((file) => {
                       const p = photoByFile.get(file)
                       return (
-                        <figure key={file} className="overflow-hidden rounded-lg border border-stone-800">
+                        <figure key={file} className="overflow-hidden rounded-lg border border-stone-200">
                           <img
                             src={imgSrc(file)}
                             alt={p?.caption ?? r.title}
@@ -119,7 +119,7 @@ export default function Community() {
                   <Button
                     asChild
                     variant="outline"
-                    className="border-stone-700 text-stone-200 hover:bg-stone-800"
+                    className="border-stone-300 text-stone-700 hover:bg-stone-100"
                   >
                     <a href={r.url} target="_blank" rel="noreferrer">
                       {video ? (
@@ -152,7 +152,7 @@ export default function Community() {
           href="https://www.facebook.com/Climbingkohtao/"
           target="_blank"
           rel="noreferrer"
-          className="text-teal-400 hover:underline"
+          className="text-teal-700 hover:underline"
         >
           Koh Tao Climbing Club
         </a>{' '}
@@ -161,11 +161,11 @@ export default function Community() {
           href="https://www.thecrag.com/en/climbing/thailand/koh-tao"
           target="_blank"
           rel="noreferrer"
-          className="text-teal-400 hover:underline"
+          className="text-teal-700 hover:underline"
         >
           theCrag
         </a>
-        . Full image attribution lives on the <Link to="/sources" className="text-teal-400 hover:underline">Sources</Link> page.
+        . Full image attribution lives on the <Link to="/sources" className="text-teal-700 hover:underline">Sources</Link> page.
       </p>
     </div>
   )

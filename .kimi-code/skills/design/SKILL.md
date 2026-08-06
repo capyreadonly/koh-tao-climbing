@@ -7,49 +7,58 @@ type: prompt
 
 # Design standards — Koh Tao climbing guide
 
-The user judged an earlier iteration "quite ugly". These rules are binding for any UI work on this site. Stack: Tailwind 3 + shadcn/ui, dark theme.
+Binding rules for any UI work on this site. Stack: Tailwind 3 + shadcn/ui, LIGHT editorial theme (thetopo.com-style destination magazine, not a dashboard). The site was dark (stone-950/emerald) until 2026-08; it is now light — do not reintroduce dark surfaces.
 
 ## Personality
 
-Premium guidebook, not generic dashboard. Think print guide meets modern outdoor brand: warm dark background, confident display type, real granite photography doing the heavy lifting, one disciplined accent color. No gradient-everything, no emoji-as-icons, no rainbow badges.
+Magazine destination guide: airy white pages, generous whitespace, big real photography, clean cards, long-form prose sections, one restrained accent. Calm and print-like. No gradient-everything, no emoji-as-icons, no rainbow badges, no dashboard tiles.
 
 ## Typography
 
-- Display/headings: a distinctive face (e.g. "Sora" or "Space Grotesk" via Google Fonts); body/UI: "Inter". Load with `display=swap` + system fallbacks in `app/index.html`.
-- Scale: h1 `text-3xl sm:text-5xl` (never fixed huge sizes that overflow mobile), h2 `text-2xl sm:text-3xl`, section kicker `text-xs font-semibold uppercase tracking-[0.2em] text-emerald-400`.
-- Body copy `text-stone-300`, muted `text-stone-400`, max line length `max-w-prose` for paragraphs. Numbers/stats in `font-semibold tabular-nums`.
+- Display/headings: "Space Grotesk" (`font-display`); body/UI: "Inter". Both self-hosted in `app/public/fonts/` via `@font-face` in `app/index.html` (`font-display: swap` + system fallbacks). NEVER load fonts from a CDN — no third-party runtime fetches anywhere on the site.
+- Scale: h1 `text-3xl sm:text-5xl`, h2 `text-2xl sm:text-3xl` (`font-display font-semibold tracking-tight text-stone-900`); section kicker `text-xs font-semibold uppercase tracking-[0.2em] text-emerald-700`.
+- Body copy `text-stone-600`/`text-stone-700`, muted `text-stone-500`, max line length `max-w-prose`. Numbers/stats in `font-semibold tabular-nums`.
 
 ## Color
 
-- Base: `stone-950` page bg, `stone-900` cards, borders `stone-800`.
-- ONE accent: emerald/teal (`emerald-400`/`teal-400`) for links, active states, key stats. Amber = warnings/unverified ONLY. Rose = danger/video badges ONLY. Style badges use the fixed `styleColor` map — do not invent new colors.
-- Never put pure white large blocks on the dark bg; use `stone-100` for primary text.
+- Base: `bg-white` page, `bg-stone-50` alternating section bands/footer, cards `bg-white border-stone-200 shadow-sm`, hairline borders `stone-200` (stronger inputs `stone-300`).
+- Text: `stone-900` primary, `stone-600`/`stone-700` body, `stone-500` secondary, `stone-400` faint.
+- ONE accent: teal/emerald — darker shades for contrast on white. Links & active states `text-teal-700` (hover `teal-600` or underline), icons `text-teal-600`, primary buttons `bg-teal-700 text-white hover:bg-teal-600`, kickers `text-emerald-700`. Never teal-300/400 as text on white.
+- Amber = warnings/unverified ONLY (`amber-50` bg, `amber-700`/`amber-800` text, `amber-300`/`amber-500` border). Rose = danger/video badges ONLY (`rose-50`/`rose-700`). Style badges ALWAYS come from `app/src/lib/badges.ts` (`styleBadge` / `styleBadgeFor`, `verifiedBadge`, `unverifiedBadge`) — the `styleColor` map in the data layer is dark-themed and the data is READ-ONLY; never use it in UI.
 
 ## Layout & spacing
 
-- Page container: `mx-auto max-w-6xl px-4` (content), `max-w-7xl` (wide tables/map). Section rhythm: `py-12 sm:py-16`, section header pattern = kicker + h2 + one-line lede, then `mt-8` content.
-- Cards: `rounded-xl border border-stone-800 bg-stone-900`, hover `transition hover:-translate-y-0.5 hover:border-stone-700`, image `aspect-[4/3] w-full object-cover` (never mixed aspect ratios in a grid).
-- Tables: `overflow-x-auto` wrapper on md+, replaced by card lists below md (established pattern in RouteCard.tsx — reuse it).
+- Page container: `mx-auto max-w-6xl px-4`. Section rhythm `py-12 sm:py-16`; section header pattern = kicker + h2 + one-line lede (SectionHeader component), then `mt-8` content. Alternate white / `bg-stone-50` bands separated by hairlines (`border-y border-stone-200`).
+- Header: sticky white (`bg-white/90 backdrop-blur-md`, hairline `border-b`), display wordmark, desktop nav links with accent underline on active (`after:` bar in teal-600).
+- Mobile: fixed bottom tab bar below md (Home, Crags, Routes, Community, Plan; lucide icon + 10px label, `h-14`, `pb-[env(safe-area-inset-bottom)]`, active = teal-700). Page content gets matching bottom padding: `pb-[calc(3.5rem+env(safe-area-inset-bottom))] md:pb-0` on `<main>`. index.html viewport must keep `viewport-fit=cover`. Secondary destinations (Services, Sources) live in desktop nav + footer only.
+- Footer: `bg-stone-50 border-t border-stone-200`, wordmark + disclaimer + credits links.
+- Cards: `rounded-xl border border-stone-200 bg-white shadow-sm`, hover `transition duration-200 hover:-translate-y-0.5 hover:shadow-md`. The one big crag card (CragCard component): photo `aspect-[16/10]`, name + grade range, area, line-clamp-2 summary, style chips, Fact-checked line + "Read more →". Never mixed aspect ratios in a grid.
+- Editorial facts/meta: inline `dl` rows with hairline separators (`border-b border-stone-200`), icon + uppercase micro-label + value — not boxed stat tiles.
+- Tables: light — header row `bg-stone-100`, hairline `border-stone-200` rows, `hover:bg-stone-50`; `overflow-x-auto` wrapper on md+, replaced by RouteCard stacked cards below md.
+- Callouts: access warnings = `border-l-4 border-amber-500 bg-amber-50` (left-border, not a loud alert box); fact-check status = a small "Fact-checked (date)" line with ShieldCheck icon.
+- Filter pills: rounded-full; active `border-teal-600 bg-teal-50 text-teal-700`, inactive `border-stone-300 text-stone-600 hover:bg-stone-100`.
 
 ## Imagery (binding)
 
-- Content imagery = REAL photos only (guide topos, community photos), always with their attribution line. Never remove credits.
+- Content imagery = REAL photos only (guide topos, community photos), always with their attribution line. Never remove credits; card/hero credit chips are `bg-white/75 backdrop-blur-sm` on light overlays.
 - AI-generated images are allowed ONLY for decorative purposes (hero backdrop treatment, section background textures, empty-state illustrations) and must live in `app/public/images/decor/` with a note in the Sources page credits. Never present generated art as a crag/route photo. Never generate a fake topo.
-- Hero: real crag photo, full-bleed, dark gradient overlay (`from-stone-950/80 via-stone-950/40`), content bottom-left aligned, credit line visible.
-- Empty states: one consistent illustration/icon treatment (lucide `Mountain`), not per-page improvisation.
+- Hero: real destination photo, full-bleed, LIGHT scrim (`bg-gradient-to-t from-white via-white/55 to-white/5`) with dark display text over the bottom — not a dark overlay. Credit line visible.
+- CC-ND images: `object-contain` on a `bg-stone-50` matte, never cropped (isNdLicense helper).
+- Empty states: one consistent treatment (EmptyState component: dashed stone-300 panel + lucide Mountain), not per-page improvisation.
+- Map: self-hosted OSM tiles only (`public/tiles/`, no third-party requests); Leaflet chrome styled light in index.css (`.crag-map` overrides: white bars/popups, teal-600 markers, amber-600 selected).
 
 ## Components & motion
 
-- shadcn primitives only; Buttons default size ≥40px touch target (already customized — don't regress).
-- Motion: `transition-colors`/`transition-transform` 150–250ms; no parallax, no autoplay carousels, no scroll-jacking.
-- Map, lightbox, carousel: already styled — match them instead of restyling.
+- shadcn primitives only; touch targets ≥40px (already customized — don't regress).
+- Motion: `transition-colors`/`transition-transform`/`shadow` 150–250ms; no parallax, no autoplay carousels, no scroll-jacking.
+- Map, lightbox (white Dialog), carousel: already styled — match them instead of restyling.
 
 ## Accessibility floor
 
-- Contrast AA on dark bg (stone-300+ on stone-900 is fine; stone-500 on stone-900 is not for body text).
+- Contrast AA on white: stone-600+ for body text; teal-700+ for text links (teal-600 only for icons/large elements); stone-500 only for secondary/meta text.
 - Every `<img>` has meaningful `alt`; decorative-only images get `alt=""`.
-- Interactive elements have `focus-visible` ring; icon-only buttons have `aria-label`.
+- Interactive elements have `focus-visible` ring (index.css default: teal-600 outline); icon-only buttons have `aria-label`.
 
 ## Done means
 
-Mobile (375px) and desktop both pass: no horizontal scroll, no text overflow, consistent section rhythm, credits intact, `npm run build` green.
+Mobile (375px) and desktop both pass: no horizontal scroll, nothing hidden under the bottom tab bar, consistent section rhythm, credits intact, `npm run build` green.

@@ -16,10 +16,10 @@ export default function RouteDetails({ route: r }: { route: RouteRecord }) {
 
   return (
     <div className="space-y-2 text-left">
-      {r.description && <p className="text-sm text-stone-300">{r.description}</p>}
+      {r.description && <p className="text-sm text-stone-700">{r.description}</p>}
       {r.protection && (
-        <p className="text-sm text-stone-400">
-          <span className="font-medium text-stone-300">Protection: </span>
+        <p className="text-sm text-stone-500">
+          <span className="font-medium text-stone-700">Protection: </span>
           {r.protection}
         </p>
       )}
@@ -28,7 +28,7 @@ export default function RouteDetails({ route: r }: { route: RouteRecord }) {
           {meta.map((m) => (
             <div key={m.label} className="flex gap-1.5 text-xs">
               <dt className="uppercase tracking-wide text-stone-500">{m.label}</dt>
-              <dd className="text-stone-300">{m.value}</dd>
+              <dd className="text-stone-700">{m.value}</dd>
             </div>
           ))}
         </dl>

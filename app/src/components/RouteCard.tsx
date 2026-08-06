@@ -1,7 +1,7 @@
 import { Link } from 'react-router'
-import { styleColor, type Style } from '@/data/climbing'
 import type { RouteRecord } from '@/data/routes'
 import { gradeSystemLabel, styleLabel, styleList } from '@/lib/photo'
+import { styleBadgeFor, verifiedBadge, unverifiedBadge } from '@/lib/badges'
 import RouteDetails, { hasRouteDetails } from '@/components/RouteDetails'
 import { AlertTriangle, Check, ChevronRight } from 'lucide-react'
 
@@ -23,41 +23,41 @@ export default function RouteCard({
     <button
       type="button"
       onClick={onOpen}
-      className="py-1 text-left font-medium text-teal-300 hover:text-teal-200 hover:underline"
+      className="py-1 text-left font-medium text-teal-700 hover:text-teal-600 hover:underline"
     >
       {r.name}
     </button>
   ) : cragSlug ? (
     <Link
       to={`/crags/${cragSlug}?route=${encodeURIComponent(r.name)}`}
-      className="inline-block py-1 font-medium text-teal-300 hover:text-teal-200 hover:underline"
+      className="inline-block py-1 font-medium text-teal-700 hover:text-teal-600 hover:underline"
     >
       {r.name}
     </Link>
   ) : (
-    <span className="font-medium text-stone-100">{r.name}</span>
+    <span className="font-medium text-stone-900">{r.name}</span>
   )
 
   return (
-    <div className="rounded-xl border border-stone-800 bg-stone-900 p-3.5">
+    <div className="rounded-xl border border-stone-200 bg-white p-3.5 shadow-sm">
       <div className="flex items-baseline justify-between gap-2">
         <div>
           {name}
           {r.sector && (
-            <span className="ml-2 rounded bg-stone-800 px-1.5 py-0.5 text-[10px] text-stone-400">
+            <span className="ml-2 rounded bg-stone-100 px-1.5 py-0.5 text-[10px] text-stone-500">
               {r.sector}
             </span>
           )}
         </div>
         <div className="shrink-0 whitespace-nowrap">
-          <span className="font-semibold tabular-nums text-teal-400">{r.grade}</span>{' '}
-          <span className="rounded bg-stone-800 px-1 py-0.5 text-[10px] uppercase text-stone-400">
+          <span className="font-semibold tabular-nums text-teal-700">{r.grade}</span>{' '}
+          <span className="rounded bg-stone-100 px-1 py-0.5 text-[10px] uppercase text-stone-500">
             {gradeSystemLabel[r.gradeSystem] ?? r.gradeSystem}
           </span>
         </div>
       </div>
       {r.note && (
-        <p className="mt-1 flex items-start gap-1 text-xs text-amber-300/80">
+        <p className="mt-1 flex items-start gap-1 text-xs text-amber-700">
           <AlertTriangle className="mt-0.5 h-3 w-3 shrink-0" /> {r.note}
         </p>
       )}
@@ -65,7 +65,7 @@ export default function RouteCard({
         {styleList(r.style).map((s) => (
           <span
             key={s}
-            className={`rounded-full border px-2 py-0.5 text-xs ${styleColor[s as Style] ?? 'bg-stone-500/15 text-stone-300 border-stone-500/30'}`}
+            className={`rounded-full border px-2 py-0.5 text-xs ${styleBadgeFor(s)}`}
           >
             {styleLabel[s] ?? s}
           </span>
@@ -81,22 +81,26 @@ export default function RouteCard({
         ) : (
           <span>{r.crag}</span>
         )}
-        {r.stars != null && r.stars > 0 && <span className="text-amber-400">★ {r.stars}</span>}
+        {r.stars != null && r.stars > 0 && <span className="text-amber-600">★ {r.stars}</span>}
         {r.ticks != null && r.ticks > 0 && <span>{r.ticks} ticks</span>}
         {r.verified ? (
-          <span className="ml-auto inline-flex items-center gap-1 rounded-full border border-teal-500/30 bg-teal-500/10 px-2 py-0.5 text-teal-300">
+          <span
+            className={`ml-auto inline-flex items-center gap-1 rounded-full border px-2 py-0.5 ${verifiedBadge}`}
+          >
             <Check className="h-3 w-3" /> verified
           </span>
         ) : (
-          <span className="ml-auto inline-flex items-center rounded-full border border-amber-500/30 bg-amber-500/10 px-2 py-0.5 text-amber-300">
+          <span
+            className={`ml-auto inline-flex items-center rounded-full border px-2 py-0.5 ${unverifiedBadge}`}
+          >
             unverified
           </span>
         )}
       </div>
       {hasRouteDetails(r) && (
-        <details className="group mt-2 rounded-lg border border-stone-800 bg-stone-950/60">
-          <summary className="flex min-h-10 cursor-pointer list-none items-center gap-2 px-3 text-xs font-medium text-stone-400 transition-colors hover:text-teal-300 [&::-webkit-details-marker]:hidden">
-            <ChevronRight className="h-3.5 w-3.5 text-stone-500 transition-transform group-open:rotate-90" />
+        <details className="group mt-2 rounded-lg border border-stone-200 bg-stone-50">
+          <summary className="flex min-h-10 cursor-pointer list-none items-center gap-2 px-3 text-xs font-medium text-stone-500 transition-colors hover:text-teal-700 [&::-webkit-details-marker]:hidden">
+            <ChevronRight className="h-3.5 w-3.5 text-stone-400 transition-transform group-open:rotate-90" />
             Route details
           </summary>
           <div className="px-3 pb-3">

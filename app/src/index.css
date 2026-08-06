@@ -83,51 +83,47 @@
   /* Body/display faces come from tailwind fontFamily (Inter / Space Grotesk
      with system fallbacks); preflight applies fontFamily.sans globally. */
   ::selection {
-    background: rgb(45 212 191 / 0.25); /* teal-400 */
-    color: #f5f5f4; /* stone-100 */
+    background: rgb(13 148 136 / 0.18); /* teal-600 wash */
+    color: #1c1917; /* stone-900 */
   }
   /* Default focus ring for elements that don't manage their own — shadcn
      components set outline-none + focus-visible:ring themselves. */
   :focus-visible {
-    outline: 2px solid rgb(45 212 191 / 0.6);
+    outline: 2px solid rgb(13 148 136 / 0.7); /* teal-600 */
     outline-offset: 2px;
   }
 }
 
-/* Subtle dark scrollbar (WebKit + Firefox). */
+/* Subtle light scrollbar (WebKit + Firefox). */
 * {
   scrollbar-width: thin;
-  scrollbar-color: #44403c #0c0a09; /* stone-700 thumb on stone-950 track */
+  scrollbar-color: #d6d3d1 #fafaf9; /* stone-300 thumb on stone-50 track */
 }
 ::-webkit-scrollbar {
   width: 10px;
   height: 10px;
 }
 ::-webkit-scrollbar-track {
-  background: #0c0a09; /* stone-950 */
+  background: #fafaf9; /* stone-50 */
 }
 ::-webkit-scrollbar-thumb {
-  background: #44403c; /* stone-700 */
+  background: #d6d3d1; /* stone-300 */
   border-radius: 9999px;
-  border: 2px solid #0c0a09;
+  border: 2px solid #fafaf9;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #57534e; /* stone-600 */
+  background: #a8a29e; /* stone-400 */
 }
 
-/* --- CragMap (Leaflet) dark-theme overrides --- */
+/* --- CragMap (Leaflet) light-theme chrome --- */
 
-/* Subtle dark filter so the tiles sit comfortably on the dark page while
-   keeping the satellite imagery legible. */
-.crag-map .leaflet-tile-pane {
-  filter: brightness(0.92) saturate(0.95);
-}
-
-/* divIcon crag markers: teal dot with a pulsing ring, amber when selected. */
+/* Keep the self-hosted OSM tiles crisp on the light page — no dark filter. */
 .crag-leaflet-marker {
   background: transparent;
   border: none;
 }
+
+/* divIcon crag markers: teal dot with a pulsing ring, amber when selected. */
 .crag-marker-dot {
   position: relative;
   display: block;
@@ -135,22 +131,23 @@
   height: 14px;
   margin: 3px;
   border-radius: 9999px;
-  background: #2dd4bf; /* teal-400 */
-  border: 2px solid #0c0a09; /* stone-950 */
+  background: #0d9488; /* teal-600 */
+  border: 2px solid #ffffff;
+  box-shadow: 0 1px 3px rgb(0 0 0 / 0.35);
 }
 .crag-marker-dot::after {
   content: '';
   position: absolute;
   inset: -4px;
   border-radius: 9999px;
-  border: 2px solid rgb(45 212 191 / 0.5);
+  border: 2px solid rgb(13 148 136 / 0.5);
   animation: crag-marker-pulse 2.4s ease-out infinite;
 }
 .crag-marker-dot-selected {
-  background: #fbbf24; /* amber-400 */
+  background: #d97706; /* amber-600 */
 }
 .crag-marker-dot-selected::after {
-  border-color: rgb(251 191 36 / 0.55);
+  border-color: rgb(217 119 6 / 0.55);
 }
 @keyframes crag-marker-pulse {
   0% {
@@ -163,52 +160,55 @@
   }
 }
 
-/* Leaflet chrome (zoom, layer toggle, attribution, popup) in stone/teal. */
+/* Leaflet chrome (zoom, layer toggle, attribution, popup) in light stone/teal. */
 .crag-map .leaflet-bar {
-  border-color: #44403c;
+  border-color: #e7e5e4; /* stone-200 */
+  box-shadow: 0 1px 4px rgb(0 0 0 / 0.12);
 }
 .crag-map .leaflet-bar a {
-  background: #1c1917;
-  color: #e7e5e4;
-  border-bottom-color: #44403c;
+  background: #ffffff;
+  color: #44403c; /* stone-700 */
+  border-bottom-color: #e7e5e4;
 }
 .crag-map .leaflet-bar a:hover {
-  background: #292524;
-  color: #2dd4bf;
+  background: #f5f5f4; /* stone-100 */
+  color: #0f766e; /* teal-700 */
 }
 .crag-map .leaflet-control-layers {
-  background: #1c1917;
-  color: #e7e5e4;
-  border: 1px solid #44403c;
+  background: #ffffff;
+  color: #44403c;
+  border: 1px solid #e7e5e4;
   border-radius: 8px;
-  box-shadow: 0 2px 8px rgb(0 0 0 / 0.5);
+  box-shadow: 0 2px 8px rgb(0 0 0 / 0.12);
 }
 .crag-map .leaflet-control-attribution {
-  background: rgb(12 10 9 / 0.75);
-  color: #a8a29e;
+  background: rgb(255 255 255 / 0.8);
+  color: #78716c; /* stone-500 */
 }
 .crag-map .leaflet-control-attribution a {
-  color: #2dd4bf;
+  color: #0f766e; /* teal-700 */
 }
 .crag-map .leaflet-popup-content-wrapper {
-  background: #1c1917;
-  color: #e7e5e4;
-  border: 1px solid #44403c;
+  background: #ffffff;
+  color: #292524; /* stone-800 */
+  border: 1px solid #e7e5e4;
   border-radius: 8px;
-  box-shadow: 0 4px 12px rgb(0 0 0 / 0.5);
+  box-shadow: 0 4px 12px rgb(0 0 0 / 0.15);
 }
 .crag-map .leaflet-popup-content {
   margin: 10px 12px;
   line-height: 1.4;
 }
 .crag-map .leaflet-popup-tip {
-  background: #1c1917;
+  background: #ffffff;
+  border: 1px solid #e7e5e4;
+  box-shadow: none;
 }
 .crag-map .leaflet-popup-close-button {
-  color: #a8a29e;
+  color: #a8a29e; /* stone-400 */
 }
 .crag-map .leaflet-popup-close-button:hover {
-  color: #2dd4bf;
+  color: #0f766e;
 }
 
 /* Mobile: keep popups inside small viewports and make map chrome finger-friendly. */

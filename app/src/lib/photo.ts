@@ -29,6 +29,27 @@ export function cragThumbnail(cragName: string): PhotoEntry | undefined {
   return all[0]
 }
 
+// Big editorial feature cards (Home, Crags) prefer REAL photographs — the crag
+// itself or community scenery — over drawn topos/diagrams.
+const FEATURE_PRIORITY = [
+  'crag-photo',
+  'community-photo',
+  'action-photo',
+  'scenic',
+  'photo-topo',
+  'topo-diagram',
+  'map',
+]
+
+export function cragFeaturePhoto(cragName: string): PhotoEntry | undefined {
+  const all = photosForCrag(cragName)
+  for (const kind of FEATURE_PRIORITY) {
+    const hit = all.find((p) => p.kind === kind)
+    if (hit) return hit
+  }
+  return all[0]
+}
+
 // Credit line required on all guide-guidebook imagery (topos, diagrams, photos).
 export const GUIDE_PHOTO_CREDIT = 'from the Goodtime Adventures free guidebook PDF'
 

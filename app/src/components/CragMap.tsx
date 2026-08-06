@@ -58,7 +58,7 @@ export default function CragMap({
 
   return (
     <div className={className}>
-      <div className="crag-map relative z-0 h-[350px] w-full overflow-hidden rounded-lg border border-stone-800 sm:h-[500px]">
+      <div className="crag-map relative z-0 h-[350px] w-full overflow-hidden rounded-xl border border-stone-200 sm:h-[500px]">
         <MapContainer
           center={KOH_TAO}
           zoom={13}
@@ -82,13 +82,13 @@ export default function CragMap({
             >
               <Popup>
                 <div className="min-w-36">
-                  <div className="text-sm font-semibold text-stone-100">{c.name}</div>
-                  <div className="mt-0.5 text-xs text-stone-400">
+                  <div className="text-sm font-semibold text-stone-900">{c.name}</div>
+                  <div className="mt-0.5 text-xs text-stone-500">
                     {c.area} · {c.grades}
                   </div>
                   <Link
                     to={`/crags/${c.slug}`}
-                    className="mt-2 inline-block text-xs font-medium text-teal-400 hover:underline"
+                    className="mt-2 inline-block text-xs font-medium text-teal-700 hover:underline"
                   >
                     Open crag guide →
                   </Link>
