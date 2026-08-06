@@ -50,7 +50,7 @@ const PAGE_SIZE = 50
 const cragSlugByName = new Map(crags.map((c) => [c.name, c.slug]))
 
 // One table-header treatment: uppercase micro-labels (per design skill).
-const headClass = 'text-[11px] font-semibold uppercase tracking-wider text-stone-500'
+const headClass = 'text-[11px] font-semibold uppercase tracking-wider text-stone-500 dark:text-stone-400'
 
 export default function Routes() {
   const [q, setQ] = useState('')
@@ -104,7 +104,7 @@ export default function Routes() {
 
       <div className="mt-8 flex flex-col gap-3 lg:flex-row lg:items-center">
         <div className="relative lg:w-72">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-stone-400" />
+          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-stone-400 dark:text-stone-500" />
           <Input
             value={q}
             onChange={(e) => {
@@ -112,7 +112,7 @@ export default function Routes() {
               resetPage()
             }}
             placeholder="Search routes, grades, sectors…"
-            className="border-stone-300 bg-white pl-9 text-stone-900 placeholder:text-stone-400"
+            className="border-stone-300 dark:border-stone-700 bg-white dark:bg-stone-950 pl-9 text-stone-900 dark:text-stone-100 placeholder:text-stone-400 dark:placeholder:text-stone-500"
           />
         </div>
         <Select
@@ -122,15 +122,15 @@ export default function Routes() {
             resetPage()
           }}
         >
-          <SelectTrigger className="border-stone-300 bg-white text-stone-900 lg:w-64">
+          <SelectTrigger className="border-stone-300 dark:border-stone-700 bg-white dark:bg-stone-950 text-stone-900 dark:text-stone-100 lg:w-64">
             <SelectValue placeholder="All crags" />
           </SelectTrigger>
-          <SelectContent className="border-stone-200 bg-white text-stone-900">
-            <SelectItem value="all" className="focus:bg-stone-100 focus:text-stone-900">
+          <SelectContent className="border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-950 text-stone-900 dark:text-stone-100">
+            <SelectItem value="all" className="focus:bg-stone-100 dark:focus:bg-stone-800 focus:text-stone-900 dark:focus:text-stone-100">
               All crags ({cragNames.length})
             </SelectItem>
             {cragNames.map((n) => (
-              <SelectItem key={n} value={n} className="focus:bg-stone-100 focus:text-stone-900">
+              <SelectItem key={n} value={n} className="focus:bg-stone-100 dark:focus:bg-stone-800 focus:text-stone-900 dark:focus:text-stone-100">
                 {n}
               </SelectItem>
             ))}
@@ -146,8 +146,8 @@ export default function Routes() {
               }}
               className={`inline-flex min-h-10 items-center rounded-full border px-3 py-1.5 text-sm transition-colors ${
                 style === f.key
-                  ? 'border-teal-600 bg-teal-50 text-teal-700'
-                  : 'border-stone-300 text-stone-600 hover:bg-stone-100'
+                  ? 'border-teal-600 dark:border-teal-500 bg-teal-50 dark:bg-teal-500/15 text-teal-700 dark:text-teal-400'
+                  : 'border-stone-300 dark:border-stone-700 text-stone-600 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-800'
               }`}
             >
               {f.label}
@@ -160,8 +160,8 @@ export default function Routes() {
             }}
             className={`inline-flex min-h-10 items-center gap-1 rounded-full border px-3 py-1.5 text-sm transition-colors ${
               verifiedOnly
-                ? 'border-teal-600 bg-teal-50 text-teal-700'
-                : 'border-stone-300 text-stone-600 hover:bg-stone-100'
+                ? 'border-teal-600 dark:border-teal-500 bg-teal-50 dark:bg-teal-500/15 text-teal-700 dark:text-teal-400'
+                : 'border-stone-300 dark:border-stone-700 text-stone-600 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-800'
             }`}
           >
             <Check className="h-3.5 w-3.5" /> Verified only
@@ -169,14 +169,14 @@ export default function Routes() {
         </div>
       </div>
 
-      <p className="mt-4 text-sm text-stone-500">
+      <p className="mt-4 text-sm text-stone-500 dark:text-stone-400">
         {list.length} matching routes{list.length > PAGE_SIZE && ` — page ${pageSafe + 1} of ${pageCount}`}
       </p>
 
-      <div className="mt-3 hidden overflow-hidden rounded-xl border border-stone-200 md:block">
+      <div className="mt-3 hidden overflow-hidden rounded-xl border border-stone-200 dark:border-stone-800 md:block">
         <Table>
           <TableHeader>
-            <TableRow className="border-stone-200 bg-stone-100 hover:bg-stone-100">
+            <TableRow className="border-stone-200 dark:border-stone-800 bg-stone-100 dark:bg-stone-900/80 hover:bg-stone-100 dark:hover:bg-stone-800">
               <TableHead className={headClass}>Route</TableHead>
               <TableHead className={headClass}>Grade</TableHead>
               <TableHead className={headClass}>Style</TableHead>
@@ -203,13 +203,13 @@ export default function Routes() {
                           }
                         : undefined
                     }
-                    className={`border-stone-200 hover:bg-stone-50 ${slug ? 'cursor-pointer' : ''}`}
+                    className={`border-stone-200 dark:border-stone-800 hover:bg-stone-50 dark:hover:bg-stone-900 ${slug ? 'cursor-pointer' : ''}`}
                   >
-                    <TableCell className="min-w-40 whitespace-normal font-medium text-stone-900">
+                    <TableCell className="min-w-40 whitespace-normal font-medium text-stone-900 dark:text-stone-100">
                       {slug ? (
                         <Link
                           to={`/crags/${slug}?route=${encodeURIComponent(r.name)}`}
-                          className="text-teal-700 hover:text-teal-600 hover:underline"
+                          className="text-teal-700 dark:text-teal-400 hover:text-teal-600 dark:hover:text-teal-300 hover:underline"
                         >
                           {r.name}
                         </Link>
@@ -227,35 +227,35 @@ export default function Routes() {
                           aria-label={`Route details for ${r.name}`}
                           title="Description, protection, first ascent"
                           className={`ml-2 inline-flex h-5 w-5 items-center justify-center rounded-full align-middle transition-colors ${
-                            open ? 'text-teal-700' : 'text-stone-400 hover:text-teal-700'
+                            open ? 'text-teal-700 dark:text-teal-400' : 'text-stone-400 dark:text-stone-500 hover:text-teal-700 dark:hover:text-teal-400'
                           }`}
                         >
                           <Info className="h-3.5 w-3.5" />
                         </button>
                       )}
                       {r.sector && (
-                        <span className="ml-2 rounded bg-stone-100 px-1.5 py-0.5 text-[10px] text-stone-500">
+                        <span className="ml-2 rounded bg-stone-100 dark:bg-stone-900/80 px-1.5 py-0.5 text-[10px] text-stone-500 dark:text-stone-400">
                           {r.sector}
                         </span>
                       )}
                       {r.ticks != null && r.ticks > 0 && (
-                        <span className="ml-2 text-[10px] font-normal text-stone-500">
+                        <span className="ml-2 text-[10px] font-normal text-stone-500 dark:text-stone-400">
                           {r.ticks} ticks
                         </span>
                       )}
                       {r.note && (
-                        <p className="mt-1 flex items-start gap-1 text-xs font-normal text-amber-700">
+                        <p className="mt-1 flex items-start gap-1 text-xs font-normal text-amber-700 dark:text-amber-400">
                           <AlertTriangle className="mt-0.5 h-3 w-3 shrink-0" /> {r.note}
                         </p>
                       )}
                     </TableCell>
                     <TableCell className="whitespace-nowrap">
-                      <span className="font-semibold tabular-nums text-teal-700">{r.grade}</span>{' '}
-                      <span className="rounded bg-stone-100 px-1 py-0.5 text-[10px] uppercase text-stone-500">
+                      <span className="font-semibold tabular-nums text-teal-700 dark:text-teal-400">{r.grade}</span>{' '}
+                      <span className="rounded bg-stone-100 dark:bg-stone-900/80 px-1 py-0.5 text-[10px] uppercase text-stone-500 dark:text-stone-400">
                         {gradeSystemLabel[r.gradeSystem] ?? r.gradeSystem}
                       </span>
                     </TableCell>
-                    <TableCell className="text-sm text-stone-700">
+                    <TableCell className="text-sm text-stone-700 dark:text-stone-300">
                       <span className="flex flex-wrap gap-1">
                         {styleList(r.style).map((s) => (
                           <span
@@ -271,15 +271,15 @@ export default function Routes() {
                       {slug ? (
                         <Link
                           to={`/crags/${slug}`}
-                          className="text-sm text-stone-700 hover:text-teal-700 hover:underline"
+                          className="text-sm text-stone-700 dark:text-stone-300 hover:text-teal-700 dark:hover:text-teal-400 hover:underline"
                         >
                           {r.crag}
                         </Link>
                       ) : (
-                        <span className="text-sm text-stone-700">{r.crag}</span>
+                        <span className="text-sm text-stone-700 dark:text-stone-300">{r.crag}</span>
                       )}
                     </TableCell>
-                    <TableCell className="text-sm text-amber-600">
+                    <TableCell className="text-sm text-amber-600 dark:text-amber-400">
                       {r.stars != null && r.stars > 0 ? r.stars : '—'}
                     </TableCell>
                     <TableCell>
@@ -299,20 +299,20 @@ export default function Routes() {
                           href={r.sourceUrl}
                           target="_blank"
                           rel="noreferrer"
-                          className="inline-flex items-center gap-1 text-xs text-teal-700 hover:underline"
+                          className="inline-flex items-center gap-1 text-xs text-teal-700 dark:text-teal-400 hover:underline"
                         >
                           {sourceLabel[r.source] ?? r.source}
                           <ExternalLink className="h-3 w-3" />
                         </a>
                       ) : (
-                        <span className="text-xs text-stone-500">
+                        <span className="text-xs text-stone-500 dark:text-stone-400">
                           {sourceLabel[r.source] ?? r.source}
                         </span>
                       )}
                     </TableCell>
                   </TableRow>
                   {open && expandable && (
-                    <TableRow className="border-stone-200 bg-stone-50 hover:bg-stone-50">
+                    <TableRow className="border-stone-200 dark:border-stone-800 bg-stone-50 dark:bg-stone-900 hover:bg-stone-50 dark:hover:bg-stone-900">
                       <TableCell colSpan={7} className="whitespace-normal py-3 pl-6">
                         <RouteDetails route={r} />
                       </TableCell>
@@ -344,18 +344,18 @@ export default function Routes() {
             variant="outline"
             disabled={pageSafe === 0}
             onClick={() => setPage(pageSafe - 1)}
-            className="border-stone-300 text-stone-700 hover:bg-stone-100"
+            className="border-stone-300 dark:border-stone-700 text-stone-700 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-800"
           >
             <ChevronLeft className="mr-1 h-4 w-4" /> Previous
           </Button>
-          <span className="text-sm tabular-nums text-stone-500">
+          <span className="text-sm tabular-nums text-stone-500 dark:text-stone-400">
             Page {pageSafe + 1} / {pageCount}
           </span>
           <Button
             variant="outline"
             disabled={pageSafe >= pageCount - 1}
             onClick={() => setPage(pageSafe + 1)}
-            className="border-stone-300 text-stone-700 hover:bg-stone-100"
+            className="border-stone-300 dark:border-stone-700 text-stone-700 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-800"
           >
             Next <ChevronRight className="ml-1 h-4 w-4" />
           </Button>

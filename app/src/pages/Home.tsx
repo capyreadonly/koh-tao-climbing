@@ -34,17 +34,17 @@ export default function Home() {
           the tiles, markers opening crag popups. */}
       <section aria-label="Island map">
         <CragMap fullBleed>
-          <div className="pointer-events-auto rounded-xl border border-stone-200 bg-white/95 px-3 py-2.5 shadow-sm backdrop-blur sm:px-4 sm:py-3.5">
-            <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-emerald-700 sm:text-xs">
+          <div className="pointer-events-auto rounded-xl border border-stone-200 dark:border-stone-800 bg-white/95 dark:bg-stone-950/90 px-3 py-2.5 shadow-sm backdrop-blur sm:px-4 sm:py-3.5">
+            <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-emerald-700 dark:text-emerald-400 sm:text-xs">
               Gulf of Thailand<span className="hidden sm:inline"> · Chumphon Archipelago</span>
             </p>
-            <h1 className="mt-1 font-display text-xl font-semibold tracking-tight text-stone-900 sm:text-3xl">
+            <h1 className="mt-1 font-display text-xl font-semibold tracking-tight text-stone-900 dark:text-stone-100 sm:text-3xl">
               Koh Tao
             </h1>
-            <p className="mt-0.5 text-xs text-stone-600 sm:mt-1 sm:text-sm">
-              <span className="font-semibold tabular-nums text-stone-900">{crags.length}</span>{' '}
+            <p className="mt-0.5 text-xs text-stone-600 dark:text-stone-300 sm:mt-1 sm:text-sm">
+              <span className="font-semibold tabular-nums text-stone-900 dark:text-stone-100">{crags.length}</span>{' '}
               crags ·{' '}
-              <span className="font-semibold tabular-nums text-stone-900">{routes.length}</span>{' '}
+              <span className="font-semibold tabular-nums text-stone-900 dark:text-stone-100">{routes.length}</span>{' '}
               routes — tap a marker
             </p>
           </div>
@@ -52,7 +52,7 @@ export default function Home() {
       </section>
 
       {/* Browse crags — the big photo cards, straight under the map */}
-      <section className="border-y border-stone-200 bg-stone-50">
+      <section className="border-y border-stone-200 dark:border-stone-800 bg-stone-50 dark:bg-stone-900">
         <div className="mx-auto max-w-6xl px-4 py-12 sm:py-16">
           <div className="flex items-end justify-between gap-4">
             <SectionHeader
@@ -62,7 +62,7 @@ export default function Home() {
             />
             <Link
               to="/crags"
-              className="hidden shrink-0 text-sm font-medium text-teal-700 hover:underline sm:block"
+              className="hidden shrink-0 text-sm font-medium text-teal-700 dark:text-teal-400 hover:underline sm:block"
             >
               All {crags.length} crags →
             </Link>
@@ -73,7 +73,7 @@ export default function Home() {
             ))}
           </div>
           <p className="mt-6 sm:hidden">
-            <Link to="/crags" className="text-sm font-medium text-teal-700 hover:underline">
+            <Link to="/crags" className="text-sm font-medium text-teal-700 dark:text-teal-400 hover:underline">
               All {crags.length} crags →
             </Link>
           </p>
@@ -89,10 +89,10 @@ export default function Home() {
         />
         <div className="mt-10 grid gap-10 lg:grid-cols-2 lg:gap-14">
           <div className="max-w-prose">
-            <h3 className="font-display text-lg font-semibold tracking-tight text-stone-900">
+            <h3 className="font-display text-lg font-semibold tracking-tight text-stone-900 dark:text-stone-100">
               The rock
             </h3>
-            <p className="mt-3 text-stone-600">
+            <p className="mt-3 text-stone-600 dark:text-stone-300">
               Koh Tao's climbing sits on coarse, crystalline granite — the same 200-million-year-old
               batholith that built the famous walls of nearby Koh Phangan and the Ang Thong marine
               park. Weathered into rounded domes, stacked boulders and seaside headlands, it
@@ -100,28 +100,28 @@ export default function Home() {
               friendly sport walls at Mek's Mountain, trad adventure lines on Mao Rock, and
               bouldering in the Secret Garden and on Sairee Beach.
             </p>
-            <h3 className="mt-8 font-display text-lg font-semibold tracking-tight text-stone-900">
+            <h3 className="mt-8 font-display text-lg font-semibold tracking-tight text-stone-900 dark:text-stone-100">
               The season
             </h3>
-            <p className="mt-3 text-stone-600">{seasons.climate}</p>
-            <p className="mt-3 text-stone-600">
+            <p className="mt-3 text-stone-600 dark:text-stone-300">{seasons.climate}</p>
+            <p className="mt-3 text-stone-600 dark:text-stone-300">
               December to March is cool, dry and reliable; October and November bring the monsoon.
               Whatever the month, the day has the same shape — climb from 7:00, match the crag to
               the shade, and surrender the midday hours to lunch, a snorkel and a siesta.
             </p>
           </div>
           <div className="max-w-prose">
-            <h3 className="font-display text-lg font-semibold tracking-tight text-stone-900">
+            <h3 className="font-display text-lg font-semibold tracking-tight text-stone-900 dark:text-stone-100">
               Getting there
             </h3>
-            <p className="mt-3 text-stone-600">{gettingThere.toIsland[0]}</p>
-            <p className="mt-3 text-stone-600">
+            <p className="mt-3 text-stone-600 dark:text-stone-300">{gettingThere.toIsland[0]}</p>
+            <p className="mt-3 text-stone-600 dark:text-stone-300">
               {gettingThere.toIsland[1]} {gettingThere.toIsland[2]}
             </p>
-            <h3 className="mt-8 font-display text-lg font-semibold tracking-tight text-stone-900">
+            <h3 className="mt-8 font-display text-lg font-semibold tracking-tight text-stone-900 dark:text-stone-100">
               Rest days
             </h3>
-            <p className="mt-3 text-stone-600">
+            <p className="mt-3 text-stone-600 dark:text-stone-300">
               This is one of the cheapest places on earth to learn to dive, and the snorkelling is
               a fin-kick from most crags — Jansom Bay's classic day is climb in the morning, snorkel
               the bay at lunch. Add freediving courses, viewpoint hikes, the Koh Nang Yuan
@@ -129,7 +129,7 @@ export default function Home() {
               day plans itself.
             </p>
             <p className="mt-6">
-              <Link to="/plan" className="font-medium text-teal-700 hover:underline">
+              <Link to="/plan" className="font-medium text-teal-700 dark:text-teal-400 hover:underline">
                 Read the full trip playbook →
               </Link>
             </p>
@@ -140,15 +140,15 @@ export default function Home() {
             src={imgSrc(DESTINATION_PHOTO.file)}
             alt={DESTINATION_PHOTO.caption}
             loading="lazy"
-            className="aspect-[16/10] w-full rounded-xl border border-stone-200 object-cover sm:aspect-[21/9]"
+            className="aspect-[16/10] w-full rounded-xl border border-stone-200 dark:border-stone-800 object-cover sm:aspect-[21/9]"
           />
-          <figcaption className="mt-2 text-[11px] text-stone-500">
+          <figcaption className="mt-2 text-[11px] text-stone-500 dark:text-stone-400">
             {DESTINATION_PHOTO.caption} © {DESTINATION_PHOTO.credit} ·{' '}
             <a
               href={DESTINATION_PHOTO.sourceUrl}
               target="_blank"
               rel="noreferrer"
-              className="text-teal-700 hover:underline"
+              className="text-teal-700 dark:text-teal-400 hover:underline"
             >
               source
             </a>
@@ -157,7 +157,7 @@ export default function Home() {
       </section>
 
       {/* Latest from the community */}
-      <section className="border-y border-stone-200 bg-stone-50">
+      <section className="border-y border-stone-200 dark:border-stone-800 bg-stone-50 dark:bg-stone-900">
         <div className="mx-auto max-w-6xl px-4 py-12 sm:py-16">
           <div className="flex items-end justify-between gap-4">
             <SectionHeader
@@ -167,7 +167,7 @@ export default function Home() {
             />
             <Link
               to="/community"
-              className="hidden shrink-0 text-sm font-medium text-teal-700 hover:underline sm:block"
+              className="hidden shrink-0 text-sm font-medium text-teal-700 dark:text-teal-400 hover:underline sm:block"
             >
               All {reports.length} reports →
             </Link>
@@ -175,23 +175,23 @@ export default function Home() {
           <div className="mt-8 grid gap-6 md:grid-cols-3">
             {latestReports.map((r) => (
               <a key={r.url + r.title} href={r.url} target="_blank" rel="noreferrer" className="group block h-full">
-                <article className="flex h-full flex-col rounded-xl border border-stone-200 bg-white p-5 shadow-sm transition duration-200 hover:-translate-y-0.5 hover:shadow-md">
+                <article className="flex h-full flex-col rounded-xl border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-950 p-5 shadow-sm transition duration-200 hover:-translate-y-0.5 hover:shadow-md">
                   <div className="flex items-start justify-between gap-2">
-                    <h3 className="line-clamp-2 font-display text-base font-semibold leading-snug tracking-tight text-stone-900">
+                    <h3 className="line-clamp-2 font-display text-base font-semibold leading-snug tracking-tight text-stone-900 dark:text-stone-100">
                       {r.title}
                     </h3>
-                    <ExternalLink className="h-4 w-4 shrink-0 text-stone-400 transition-colors group-hover:text-teal-600" />
+                    <ExternalLink className="h-4 w-4 shrink-0 text-stone-400 dark:text-stone-500 transition-colors group-hover:text-teal-600 dark:group-hover:text-teal-300" />
                   </div>
-                  <div className="mt-1.5 text-xs text-stone-500">
+                  <div className="mt-1.5 text-xs text-stone-500 dark:text-stone-400">
                     {r.author} · {r.date}
                   </div>
-                  <p className="mt-3 line-clamp-4 text-sm text-stone-600">{r.summary}</p>
+                  <p className="mt-3 line-clamp-4 text-sm text-stone-600 dark:text-stone-300">{r.summary}</p>
                 </article>
               </a>
             ))}
           </div>
           <p className="mt-6 sm:hidden">
-            <Link to="/community" className="text-sm font-medium text-teal-700 hover:underline">
+            <Link to="/community" className="text-sm font-medium text-teal-700 dark:text-teal-400 hover:underline">
               All {reports.length} reports →
             </Link>
           </p>
@@ -213,15 +213,15 @@ export default function Home() {
               const c = crags.find((x) => x.slug === r.cragSlug)!
               return (
                 <Link key={r.slug} to={`/crags/${r.cragSlug}`} className="group block h-full">
-                  <article className="h-full rounded-xl border border-stone-200 bg-white p-4 shadow-sm transition duration-200 hover:-translate-y-0.5 hover:shadow-md">
+                  <article className="h-full rounded-xl border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-950 p-4 shadow-sm transition duration-200 hover:-translate-y-0.5 hover:shadow-md">
                     <div className="flex items-baseline justify-between gap-2">
-                      <span className="font-medium text-stone-900">{r.name}</span>
-                      <span className="font-semibold tabular-nums text-teal-700">{r.grade}</span>
+                      <span className="font-medium text-stone-900 dark:text-stone-100">{r.name}</span>
+                      <span className="font-semibold tabular-nums text-teal-700 dark:text-teal-400">{r.grade}</span>
                     </div>
-                    <div className="mt-1 flex items-center gap-1 text-xs text-stone-500">
+                    <div className="mt-1 flex items-center gap-1 text-xs text-stone-500 dark:text-stone-400">
                       <Mountain className="h-3 w-3" /> {c.name} · {r.style}
                     </div>
-                    <p className="mt-2 line-clamp-2 text-sm text-stone-600">{r.note}</p>
+                    <p className="mt-2 line-clamp-2 text-sm text-stone-600 dark:text-stone-300">{r.note}</p>
                   </article>
                 </Link>
               )

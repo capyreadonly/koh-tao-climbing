@@ -46,12 +46,12 @@ export default function Crags() {
 
       <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
         <div className="relative sm:w-72">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-stone-400" />
+          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-stone-400 dark:text-stone-500" />
           <Input
             value={q}
             onChange={(e) => setQ(e.target.value)}
             placeholder="Search crags…"
-            className="border-stone-300 bg-white pl-9 text-stone-900 placeholder:text-stone-400"
+            className="border-stone-300 dark:border-stone-700 bg-white dark:bg-stone-950 pl-9 text-stone-900 dark:text-stone-100 placeholder:text-stone-400 dark:placeholder:text-stone-500"
           />
         </div>
         <div className="flex flex-wrap gap-1.5">
@@ -61,8 +61,8 @@ export default function Crags() {
               onClick={() => setStyle(f.key)}
               className={`inline-flex min-h-10 items-center rounded-full border px-3 py-1.5 text-sm transition-colors ${
                 style === f.key
-                  ? 'border-teal-600 bg-teal-50 text-teal-700'
-                  : 'border-stone-300 text-stone-600 hover:bg-stone-100'
+                  ? 'border-teal-600 dark:border-teal-500 bg-teal-50 dark:bg-teal-500/15 text-teal-700 dark:text-teal-400'
+                  : 'border-stone-300 dark:border-stone-700 text-stone-600 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-800'
               }`}
             >
               {f.label}

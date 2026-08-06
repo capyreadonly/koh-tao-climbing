@@ -55,8 +55,8 @@ export default function Community() {
             onClick={() => setGroup(f.key)}
             className={`inline-flex min-h-10 items-center rounded-full border px-3 py-1.5 text-sm transition-colors ${
               group === f.key
-                ? 'border-teal-600 bg-teal-50 text-teal-700'
-                : 'border-stone-300 text-stone-600 hover:bg-stone-100'
+                ? 'border-teal-600 dark:border-teal-500 bg-teal-50 dark:bg-teal-500/15 text-teal-700 dark:text-teal-400'
+                : 'border-stone-300 dark:border-stone-700 text-stone-600 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-800'
             }`}
           >
             {f.label} ({countFor(f.key)})
@@ -70,7 +70,7 @@ export default function Community() {
           return (
             <Card
               key={r.url + r.title}
-              className="flex flex-col rounded-xl border-stone-200 bg-white shadow-sm transition hover:shadow-md"
+              className="flex flex-col rounded-xl border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-950 shadow-sm transition hover:shadow-md"
             >
               <CardHeader>
                 <div className="flex items-start justify-between gap-3">
@@ -80,25 +80,25 @@ export default function Community() {
                   <Badge
                     variant="outline"
                     className={`shrink-0 text-xs ${
-                      video ? 'border-rose-300 bg-rose-50 text-rose-700' : 'border-teal-200 bg-teal-50 text-teal-700'
+                      video ? 'border-rose-300 dark:border-rose-500/30 bg-rose-50 dark:bg-rose-500/15 text-rose-700 dark:text-rose-300' : 'border-teal-200 dark:border-teal-500/30 bg-teal-50 dark:bg-teal-500/15 text-teal-700 dark:text-teal-400'
                     }`}
                   >
                     {video && <Play className="mr-1 h-3 w-3" />}
                     {r.type}
                   </Badge>
                 </div>
-                <div className="text-xs text-stone-500">
+                <div className="text-xs text-stone-500 dark:text-stone-400">
                   {r.author} · {r.date}
                 </div>
               </CardHeader>
               <CardContent className="flex flex-1 flex-col">
-                <p className="mb-4 text-sm text-stone-600">{r.summary}</p>
+                <p className="mb-4 text-sm text-stone-600 dark:text-stone-300">{r.summary}</p>
                 {r.photos && r.photos.length > 0 && (
                   <div className="mb-4 grid grid-cols-1 gap-2 sm:grid-cols-2">
                     {r.photos.map((file) => {
                       const p = photoByFile.get(file)
                       return (
-                        <figure key={file} className="overflow-hidden rounded-lg border border-stone-200">
+                        <figure key={file} className="overflow-hidden rounded-lg border border-stone-200 dark:border-stone-800">
                           <img
                             src={imgSrc(file)}
                             alt={p?.caption ?? r.title}
@@ -106,7 +106,7 @@ export default function Community() {
                             className="aspect-[4/3] w-full object-cover"
                           />
                           {p && (
-                            <figcaption className="p-2 text-[11px] text-stone-500">
+                            <figcaption className="p-2 text-[11px] text-stone-500 dark:text-stone-400">
                               © {p.credit} · {p.license}
                             </figcaption>
                           )}
@@ -119,7 +119,7 @@ export default function Community() {
                   <Button
                     asChild
                     variant="outline"
-                    className="border-stone-300 text-stone-700 hover:bg-stone-100"
+                    className="border-stone-300 dark:border-stone-700 text-stone-700 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-800"
                   >
                     <a href={r.url} target="_blank" rel="noreferrer">
                       {video ? (
@@ -146,13 +146,13 @@ export default function Community() {
         </EmptyState>
       )}
 
-      <p className="mt-8 text-sm text-stone-500">
+      <p className="mt-8 text-sm text-stone-500 dark:text-stone-400">
         Climbed Koh Tao yourself? Share conditions with the{' '}
         <a
           href="https://www.facebook.com/Climbingkohtao/"
           target="_blank"
           rel="noreferrer"
-          className="text-teal-700 hover:underline"
+          className="text-teal-700 dark:text-teal-400 hover:underline"
         >
           Koh Tao Climbing Club
         </a>{' '}
@@ -161,11 +161,11 @@ export default function Community() {
           href="https://www.thecrag.com/en/climbing/thailand/koh-tao"
           target="_blank"
           rel="noreferrer"
-          className="text-teal-700 hover:underline"
+          className="text-teal-700 dark:text-teal-400 hover:underline"
         >
           theCrag
         </a>
-        . Full image attribution lives on the <Link to="/sources" className="text-teal-700 hover:underline">Sources</Link> page.
+        . Full image attribution lives on the <Link to="/sources" className="text-teal-700 dark:text-teal-400 hover:underline">Sources</Link> page.
       </p>
     </div>
   )

@@ -69,7 +69,7 @@ const topoForRoute = (routeName: string, topos: PhotoEntry[]) => {
 }
 
 // One table-header treatment: uppercase micro-labels (per design skill).
-const headClass = 'text-[11px] font-semibold uppercase tracking-wider text-stone-500'
+const headClass = 'text-[11px] font-semibold uppercase tracking-wider text-stone-500 dark:text-stone-400'
 
 // The `verified` note says what the 2026-08-02 fact-check confirmed; notes that
 // open with "Unverified" mean nothing could be corroborated.
@@ -119,7 +119,7 @@ export default function CragDetail() {
     return (
       <div className="mx-auto max-w-6xl px-4 py-16">
         <EmptyState title="Crag not found">
-          <Link to="/crags" className="text-teal-700 hover:underline">
+          <Link to="/crags" className="text-teal-700 dark:text-teal-400 hover:underline">
             ← Back to all crags
           </Link>
         </EmptyState>
@@ -181,21 +181,21 @@ export default function CragDetail() {
     <div>
       {/* Hero photo band (topo-first fallback when no real photo exists) */}
       {hero && (
-        <section className="relative flex min-h-[46svh] items-end overflow-hidden border-b border-stone-200 sm:min-h-[58svh]">
+        <section className="relative flex min-h-[46svh] items-end overflow-hidden border-b border-stone-200 dark:border-stone-800 sm:min-h-[58svh]">
           <img
             src={imgSrc(hero.file)}
             alt={hero.caption}
-            className={`absolute inset-0 h-full w-full ${isNdLicense(hero) ? 'bg-stone-50 object-contain' : 'object-cover'}`}
+            className={`absolute inset-0 h-full w-full ${isNdLicense(hero) ? 'bg-stone-50 dark:bg-stone-900 object-contain' : 'object-cover'}`}
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-white via-white/45 to-white/5" />
+          <div className="absolute inset-0 bg-gradient-to-t from-white dark:from-stone-950 via-white/45 dark:via-stone-950/45 to-white/5 dark:to-stone-950/5" />
           <div className="relative mx-auto w-full max-w-6xl px-4 pb-8 pt-28 sm:pb-10 sm:pt-36">
             <Link
               to="/crags"
-              className="mb-4 inline-flex items-center gap-1 text-sm text-stone-600 transition-colors hover:text-teal-700"
+              className="mb-4 inline-flex items-center gap-1 text-sm text-stone-600 dark:text-stone-300 transition-colors hover:text-teal-700 dark:hover:text-teal-400"
             >
               <ArrowLeft className="h-4 w-4" /> All crags
             </Link>
-            <h1 className="font-display text-3xl font-semibold tracking-tight text-stone-900 sm:text-5xl">
+            <h1 className="font-display text-3xl font-semibold tracking-tight text-stone-900 dark:text-stone-100 sm:text-5xl">
               {crag.name}
             </h1>
             <div className="mt-3 flex flex-wrap items-center gap-2">
@@ -205,12 +205,12 @@ export default function CragDetail() {
                 </span>
               ))}
               {crag.highlight && (
-                <span className="rounded-full border border-stone-300 bg-white/80 px-2.5 py-0.5 text-xs text-stone-600">
+                <span className="rounded-full border border-stone-300 dark:border-stone-700 bg-white/80 dark:bg-stone-950/80 px-2.5 py-0.5 text-xs text-stone-600 dark:text-stone-300">
                   {crag.highlight}
                 </span>
               )}
             </div>
-            <p className="mt-6 inline-block rounded bg-white/75 px-2 py-1 text-[11px] text-stone-500 backdrop-blur-sm">
+            <p className="mt-6 inline-block rounded bg-white/75 dark:bg-stone-950/75 px-2 py-1 text-[11px] text-stone-500 dark:text-stone-400 backdrop-blur-sm">
               {hero.caption}
               {hero.credit ? (
                 <>
@@ -218,7 +218,7 @@ export default function CragDetail() {
                   {hero.sourceUrl && (
                     <>
                       {' · '}
-                      <a href={hero.sourceUrl} target="_blank" rel="noreferrer" className="text-teal-700 hover:underline">
+                      <a href={hero.sourceUrl} target="_blank" rel="noreferrer" className="text-teal-700 dark:text-teal-400 hover:underline">
                         source
                       </a>
                     </>
@@ -237,12 +237,12 @@ export default function CragDetail() {
           <>
             <Link
               to="/crags"
-              className="mb-6 inline-flex items-center gap-1 text-sm text-stone-600 transition-colors hover:text-teal-700"
+              className="mb-6 inline-flex items-center gap-1 text-sm text-stone-600 dark:text-stone-300 transition-colors hover:text-teal-700 dark:hover:text-teal-400"
             >
               <ArrowLeft className="h-4 w-4" /> All crags
             </Link>
             <div className="flex flex-wrap items-center gap-3">
-              <h1 className="font-display text-3xl font-semibold tracking-tight text-stone-900 sm:text-4xl">
+              <h1 className="font-display text-3xl font-semibold tracking-tight text-stone-900 dark:text-stone-100 sm:text-4xl">
                 {crag.name}
               </h1>
               {crag.styles.map((s) => (
@@ -251,7 +251,7 @@ export default function CragDetail() {
                 </span>
               ))}
               {crag.highlight && (
-                <span className="rounded-full border border-stone-300 px-2.5 py-0.5 text-xs text-stone-600">
+                <span className="rounded-full border border-stone-300 dark:border-stone-700 px-2.5 py-0.5 text-xs text-stone-600 dark:text-stone-300">
                   {crag.highlight}
                 </span>
               )}
@@ -259,38 +259,38 @@ export default function CragDetail() {
           </>
         )}
 
-        <p className="max-w-prose text-lg text-stone-600">{crag.summary}</p>
+        <p className="max-w-prose text-lg text-stone-600 dark:text-stone-300">{crag.summary}</p>
 
         {crag.accessWarning && (
-          <div className="mt-6 max-w-prose rounded-r-lg border-l-4 border-amber-500 bg-amber-50 px-4 py-3">
-            <p className="flex items-center gap-1.5 text-sm font-semibold text-amber-800">
+          <div className="mt-6 max-w-prose rounded-r-lg border-l-4 border-amber-500 bg-amber-50 dark:bg-amber-950/40 px-4 py-3">
+            <p className="flex items-center gap-1.5 text-sm font-semibold text-amber-800 dark:text-amber-300">
               <ShieldAlert className="h-4 w-4" /> Access warning
             </p>
-            <p className="mt-1 text-sm text-amber-800/90">{crag.accessWarning}</p>
+            <p className="mt-1 text-sm text-amber-800/90 dark:text-amber-300/90">{crag.accessWarning}</p>
           </div>
         )}
 
         {/* Facts — clean inline meta (icons + values, hairline separators, no boxes) */}
         <dl className="mt-10 grid gap-x-10 gap-y-5 sm:grid-cols-2 lg:grid-cols-3">
           {facts.map((f) => (
-            <div key={f.label} className="border-b border-stone-200 pb-4">
-              <dt className="flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wider text-stone-500">
-                <f.icon className="h-3.5 w-3.5 text-teal-600" /> {f.label}
+            <div key={f.label} className="border-b border-stone-200 dark:border-stone-800 pb-4">
+              <dt className="flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wider text-stone-500 dark:text-stone-400">
+                <f.icon className="h-3.5 w-3.5 text-teal-600 dark:text-teal-400" /> {f.label}
               </dt>
-              <dd className="mt-1.5 text-sm text-stone-800">{f.value}</dd>
+              <dd className="mt-1.5 text-sm text-stone-800 dark:text-stone-200">{f.value}</dd>
             </div>
           ))}
           {crag.coords && (
-            <div className="border-b border-stone-200 pb-4">
-              <dt className="flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wider text-stone-500">
-                <MapPin className="h-3.5 w-3.5 text-teal-600" /> Coordinates
+            <div className="border-b border-stone-200 dark:border-stone-800 pb-4">
+              <dt className="flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wider text-stone-500 dark:text-stone-400">
+                <MapPin className="h-3.5 w-3.5 text-teal-600 dark:text-teal-400" /> Coordinates
               </dt>
               <dd className="mt-1.5">
                 <a
                   href={`https://www.google.com/maps?q=${crag.coords.lat},${crag.coords.lng}`}
                   target="_blank"
                   rel="noreferrer"
-                  className="inline-flex items-center gap-1.5 font-mono text-sm tabular-nums text-teal-700 hover:underline"
+                  className="inline-flex items-center gap-1.5 font-mono text-sm tabular-nums text-teal-700 dark:text-teal-400 hover:underline"
                 >
                   {crag.coords.lat.toFixed(5)}, {crag.coords.lng.toFixed(5)}
                   <ExternalLink className="h-3.5 w-3.5" />
@@ -303,7 +303,7 @@ export default function CragDetail() {
         {crag.verified && (
           <p
             className={`mt-6 flex max-w-prose items-start gap-1.5 text-xs ${
-              checked ? 'text-teal-700' : 'text-amber-700'
+              checked ? 'text-teal-700 dark:text-teal-400' : 'text-amber-700 dark:text-amber-400'
             }`}
           >
             {checked ? (
@@ -313,7 +313,7 @@ export default function CragDetail() {
             )}
             <span>
               <span className="font-semibold">{checked ? 'Fact-checked' : 'Unverified'} (2026-08-02).</span>{' '}
-              <span className="text-stone-500">{crag.verified}</span>
+              <span className="text-stone-500 dark:text-stone-400">{crag.verified}</span>
             </span>
           </p>
         )}
@@ -323,7 +323,7 @@ export default function CragDetail() {
           <section ref={topoSectionRef} className="mt-12 scroll-mt-20 sm:mt-16">
             <div
               className={`-mx-2 rounded-md px-2 py-1 transition-colors duration-500 ${
-                topoFlash ? 'bg-teal-100' : ''
+                topoFlash ? 'bg-teal-100 dark:bg-teal-500/20' : ''
               }`}
             >
               <SectionHeader
@@ -345,13 +345,13 @@ export default function CragDetail() {
                         src={imgSrc(p.file)}
                         alt={p.caption}
                         loading="lazy"
-                        className="max-h-[60vh] w-full rounded-xl border border-stone-200 bg-stone-50 object-contain"
+                        className="max-h-[60vh] w-full rounded-xl border border-stone-200 dark:border-stone-800 bg-stone-50 dark:bg-stone-900 object-contain"
                       />
                     </button>
-                    <p className="mx-auto mt-3 max-w-3xl text-center text-sm text-stone-600">
+                    <p className="mx-auto mt-3 max-w-3xl text-center text-sm text-stone-600 dark:text-stone-300">
                       {p.caption}
                     </p>
-                    <p className="mt-1 text-center text-xs text-stone-500">
+                    <p className="mt-1 text-center text-xs text-stone-500 dark:text-stone-400">
                       Image {GUIDE_PHOTO_CREDIT} · click to enlarge
                     </p>
                   </CarouselItem>
@@ -359,8 +359,8 @@ export default function CragDetail() {
               </CarouselContent>
               {topos.length > 1 && (
                 <>
-                  <CarouselPrevious className="left-2 border-stone-300 bg-white/90 text-stone-700 hover:bg-white" />
-                  <CarouselNext className="right-2 border-stone-300 bg-white/90 text-stone-700 hover:bg-white" />
+                  <CarouselPrevious className="left-2 border-stone-300 dark:border-stone-700 bg-white/90 dark:bg-stone-950/90 text-stone-700 dark:text-stone-300 hover:bg-white dark:hover:bg-stone-900" />
+                  <CarouselNext className="right-2 border-stone-300 dark:border-stone-700 bg-white/90 dark:bg-stone-950/90 text-stone-700 dark:text-stone-300 hover:bg-white dark:hover:bg-stone-900" />
                 </>
               )}
             </Carousel>
@@ -384,9 +384,9 @@ export default function CragDetail() {
             )}
             {atmosphere.length > 0 &&
               (atmosphereCollapsed ? (
-                <details className="group mt-6 rounded-xl border border-stone-200 bg-stone-50">
-                  <summary className="flex cursor-pointer list-none items-center gap-2 p-4 text-sm font-medium text-stone-700 transition-colors hover:text-teal-700 [&::-webkit-details-marker]:hidden">
-                    <ChevronRight className="h-4 w-4 text-stone-400 transition-transform group-open:rotate-90" />
+                <details className="group mt-6 rounded-xl border border-stone-200 dark:border-stone-800 bg-stone-50 dark:bg-stone-900">
+                  <summary className="flex cursor-pointer list-none items-center gap-2 p-4 text-sm font-medium text-stone-700 dark:text-stone-300 transition-colors hover:text-teal-700 dark:hover:text-teal-400 [&::-webkit-details-marker]:hidden">
+                    <ChevronRight className="h-4 w-4 text-stone-400 dark:text-stone-500 transition-transform group-open:rotate-90" />
                     Action &amp; atmosphere ({atmosphere.length})
                   </summary>
                   <div className="grid gap-4 p-4 pt-0 sm:grid-cols-2 lg:grid-cols-3">
@@ -424,10 +424,10 @@ export default function CragDetail() {
             </EmptyState>
           ) : (
             <>
-              <div className="mt-8 hidden overflow-hidden rounded-xl border border-stone-200 md:block">
+              <div className="mt-8 hidden overflow-hidden rounded-xl border border-stone-200 dark:border-stone-800 md:block">
                 <Table>
                   <TableHeader>
-                    <TableRow className="border-stone-200 bg-stone-100 hover:bg-stone-100">
+                    <TableRow className="border-stone-200 dark:border-stone-800 bg-stone-100 dark:bg-stone-900/80 hover:bg-stone-100 dark:hover:bg-stone-800">
                       <TableHead className={headClass}>Route</TableHead>
                       <TableHead className={headClass}>Grade</TableHead>
                       <TableHead className={headClass}>Style</TableHead>
@@ -449,10 +449,10 @@ export default function CragDetail() {
                               if ((e.target as HTMLElement).closest('a,button')) return
                               openRouteTopo(r.name)
                             }}
-                            className="group cursor-pointer border-stone-200 hover:bg-stone-50"
+                            className="group cursor-pointer border-stone-200 dark:border-stone-800 hover:bg-stone-50 dark:hover:bg-stone-900"
                           >
-                            <TableCell className="min-w-40 whitespace-normal font-medium text-stone-900">
-                              <span className="text-teal-700 group-hover:underline">{r.name}</span>
+                            <TableCell className="min-w-40 whitespace-normal font-medium text-stone-900 dark:text-stone-100">
+                              <span className="text-teal-700 dark:text-teal-400 group-hover:underline">{r.name}</span>
                               {expandable && (
                                 <button
                                   type="button"
@@ -464,35 +464,35 @@ export default function CragDetail() {
                                   aria-label={`Route details for ${r.name}`}
                                   title="Description, protection, first ascent"
                                   className={`ml-2 inline-flex h-5 w-5 items-center justify-center rounded-full align-middle transition-colors ${
-                                    open ? 'text-teal-700' : 'text-stone-400 hover:text-teal-700'
+                                    open ? 'text-teal-700 dark:text-teal-400' : 'text-stone-400 dark:text-stone-500 hover:text-teal-700 dark:hover:text-teal-400'
                                   }`}
                                 >
                                   <Info className="h-3.5 w-3.5" />
                                 </button>
                               )}
                               {r.sector && (
-                                <span className="ml-2 rounded bg-stone-100 px-1.5 py-0.5 text-[10px] text-stone-500">
+                                <span className="ml-2 rounded bg-stone-100 dark:bg-stone-900/80 px-1.5 py-0.5 text-[10px] text-stone-500 dark:text-stone-400">
                                   {r.sector}
                                 </span>
                               )}
                               {r.ticks != null && r.ticks > 0 && (
-                                <span className="ml-2 text-[10px] font-normal text-stone-500">
+                                <span className="ml-2 text-[10px] font-normal text-stone-500 dark:text-stone-400">
                                   {r.ticks} ticks
                                 </span>
                               )}
                               {r.note && (
-                                <p className="mt-1 flex items-start gap-1 text-xs font-normal text-amber-700">
+                                <p className="mt-1 flex items-start gap-1 text-xs font-normal text-amber-700 dark:text-amber-400">
                                   <AlertTriangle className="mt-0.5 h-3 w-3 shrink-0" /> {r.note}
                                 </p>
                               )}
                             </TableCell>
                             <TableCell className="whitespace-nowrap">
-                              <span className="font-semibold tabular-nums text-teal-700">{r.grade}</span>{' '}
-                              <span className="rounded bg-stone-100 px-1 py-0.5 text-[10px] uppercase text-stone-500">
+                              <span className="font-semibold tabular-nums text-teal-700 dark:text-teal-400">{r.grade}</span>{' '}
+                              <span className="rounded bg-stone-100 dark:bg-stone-900/80 px-1 py-0.5 text-[10px] uppercase text-stone-500 dark:text-stone-400">
                                 {gradeSystemLabel[r.gradeSystem] ?? r.gradeSystem}
                               </span>
                             </TableCell>
-                            <TableCell className="text-sm text-stone-700">
+                            <TableCell className="text-sm text-stone-700 dark:text-stone-300">
                               <span className="flex flex-wrap gap-1">
                                 {styleList(r.style).map((s) => (
                                   <span
@@ -504,10 +504,10 @@ export default function CragDetail() {
                                 ))}
                               </span>
                             </TableCell>
-                            <TableCell className="text-sm text-amber-600">
+                            <TableCell className="text-sm text-amber-600 dark:text-amber-400">
                               {r.stars != null && r.stars > 0 ? r.stars : '—'}
                             </TableCell>
-                            <TableCell className="hidden text-sm text-stone-500 md:table-cell">
+                            <TableCell className="hidden text-sm text-stone-500 dark:text-stone-400 md:table-cell">
                               {r.lengthM ? `${r.lengthM} m` : ''}
                               {r.bolts ? `${r.lengthM ? ' · ' : ''}${r.bolts} bolts` : ''}
                               {!r.lengthM && !r.bolts && '—'}
@@ -529,20 +529,20 @@ export default function CragDetail() {
                                   href={r.sourceUrl}
                                   target="_blank"
                                   rel="noreferrer"
-                                  className="inline-flex items-center gap-1 text-xs text-teal-700 hover:underline"
+                                  className="inline-flex items-center gap-1 text-xs text-teal-700 dark:text-teal-400 hover:underline"
                                 >
                                   {sourceLabel[r.source] ?? r.source}
                                   <ExternalLink className="h-3 w-3" />
                                 </a>
                               ) : (
-                                <span className="text-xs text-stone-500">
+                                <span className="text-xs text-stone-500 dark:text-stone-400">
                                   {sourceLabel[r.source] ?? r.source}
                                 </span>
                               )}
                             </TableCell>
                           </TableRow>
                           {open && expandable && (
-                            <TableRow className="border-stone-200 bg-stone-50 hover:bg-stone-50">
+                            <TableRow className="border-stone-200 dark:border-stone-800 bg-stone-50 dark:bg-stone-900 hover:bg-stone-50 dark:hover:bg-stone-900">
                               <TableCell colSpan={7} className="whitespace-normal py-3 pl-6">
                                 <RouteDetails route={r} />
                               </TableCell>
@@ -567,10 +567,10 @@ export default function CragDetail() {
         {/* Beta + sectors */}
         <div className="mt-12 grid gap-6 sm:mt-16 lg:grid-cols-3">
           <section className="lg:col-span-2">
-            <h2 className="font-display text-2xl font-semibold tracking-tight text-stone-900">Beta</h2>
+            <h2 className="font-display text-2xl font-semibold tracking-tight text-stone-900 dark:text-stone-100">Beta</h2>
             <ul className="mt-6 space-y-3">
               {crag.details.map((d, i) => (
-                <li key={i} className="flex gap-3 text-sm text-stone-700">
+                <li key={i} className="flex gap-3 text-sm text-stone-700 dark:text-stone-300">
                   <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-teal-600" />
                   {d}
                 </li>
@@ -578,14 +578,14 @@ export default function CragDetail() {
             </ul>
             {crag.sectors && (
               <div className="mt-8">
-                <h3 className="mb-3 text-[11px] font-semibold uppercase tracking-wider text-stone-500">
+                <h3 className="mb-3 text-[11px] font-semibold uppercase tracking-wider text-stone-500 dark:text-stone-400">
                   Sectors
                 </h3>
                 <div className="grid gap-2 sm:grid-cols-2">
                   {crag.sectors.map((s) => (
-                    <div key={s.name} className="rounded-lg border border-stone-200 bg-stone-50 p-3">
-                      <div className="text-sm font-medium text-stone-800">{s.name}</div>
-                      {s.note && <div className="mt-0.5 text-xs text-stone-500">{s.note}</div>}
+                    <div key={s.name} className="rounded-lg border border-stone-200 dark:border-stone-800 bg-stone-50 dark:bg-stone-900 p-3">
+                      <div className="text-sm font-medium text-stone-800 dark:text-stone-200">{s.name}</div>
+                      {s.note && <div className="mt-0.5 text-xs text-stone-500 dark:text-stone-400">{s.note}</div>}
                     </div>
                   ))}
                 </div>
@@ -593,9 +593,9 @@ export default function CragDetail() {
             )}
           </section>
 
-          <aside className="h-fit rounded-xl border border-stone-200 bg-stone-50 p-5">
-            <h2 className="font-display text-lg font-semibold tracking-tight text-stone-900">Good to know</h2>
-            <div className="mt-3 space-y-3 text-sm text-stone-600">
+          <aside className="h-fit rounded-xl border border-stone-200 dark:border-stone-800 bg-stone-50 dark:bg-stone-900 p-5">
+            <h2 className="font-display text-lg font-semibold tracking-tight text-stone-900 dark:text-stone-100">Good to know</h2>
+            <div className="mt-3 space-y-3 text-sm text-stone-600 dark:text-stone-300">
               <p>
                 Grades and bolt counts come from Mountain Project, 27crags, the Goodtime
                 Adventures PDF and vault notes — scales and reliability differ per source. Amber
@@ -605,7 +605,7 @@ export default function CragDetail() {
                 Near-coast hardware can be suspect — inspect before trusting and ask the Koh Tao
                 Climbing Club when in doubt.
               </p>
-              <Link to="/routes" className="inline-block font-medium text-teal-700 hover:underline">
+              <Link to="/routes" className="inline-block font-medium text-teal-700 dark:text-teal-400 hover:underline">
                 Full route database →
               </Link>
             </div>
@@ -615,19 +615,19 @@ export default function CragDetail() {
 
       {/* Lightbox */}
       <Dialog open={lightbox !== null} onOpenChange={(open) => !open && setLightbox(null)}>
-        <DialogContent className="max-h-[92vh] max-w-[calc(100vw-2rem)] overflow-y-auto border-stone-200 bg-white p-4 text-stone-900 sm:max-w-4xl sm:p-6">
+        <DialogContent className="max-h-[92vh] max-w-[calc(100vw-2rem)] overflow-y-auto border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-950 p-4 text-stone-900 dark:text-stone-100 sm:max-w-4xl sm:p-6">
           {lightbox && (
             <>
               <DialogTitle className="sr-only">Photo viewer</DialogTitle>
               <img
                 src={imgSrc(lightbox.file)}
                 alt={lightbox.caption}
-                className="max-h-[75vh] w-full rounded-md bg-stone-50 object-contain"
+                className="max-h-[75vh] w-full rounded-md bg-stone-50 dark:bg-stone-900 object-contain"
               />
-              <DialogDescription className="text-sm text-stone-600">
+              <DialogDescription className="text-sm text-stone-600 dark:text-stone-300">
                 {lightbox.caption}
               </DialogDescription>
-              <p className="text-xs text-stone-500">
+              <p className="text-xs text-stone-500 dark:text-stone-400">
                 {lightbox.credit ? (
                   <>
                     © {lightbox.credit} · {lightbox.license}
@@ -638,7 +638,7 @@ export default function CragDetail() {
                           href={lightbox.sourceUrl}
                           target="_blank"
                           rel="noreferrer"
-                          className="text-teal-700 hover:underline"
+                          className="text-teal-700 dark:text-teal-400 hover:underline"
                         >
                           source
                         </a>
@@ -652,7 +652,7 @@ export default function CragDetail() {
                       href={GUIDE_PDF_URL}
                       target="_blank"
                       rel="noreferrer"
-                      className="text-teal-700 hover:underline"
+                      className="text-teal-700 dark:text-teal-400 hover:underline"
                     >
                       PDF source
                     </a>

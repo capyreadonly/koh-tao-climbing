@@ -72,7 +72,7 @@ export default function CragMap({
         className={
           fullBleed
             ? 'crag-map relative z-0 h-[72svh] w-full overflow-hidden sm:h-[80svh]'
-            : 'crag-map relative z-0 h-[350px] w-full overflow-hidden rounded-xl border border-stone-200 sm:h-[500px]'
+            : 'crag-map relative z-0 h-[350px] w-full overflow-hidden rounded-xl border border-stone-200 dark:border-stone-800 sm:h-[500px]'
         }
       >
         <MapContainer
@@ -101,13 +101,13 @@ export default function CragMap({
             >
               <Popup>
                 <div className="min-w-36">
-                  <div className="text-sm font-semibold text-stone-900">{c.name}</div>
-                  <div className="mt-0.5 text-xs text-stone-500">
+                  <div className="text-sm font-semibold text-stone-900 dark:text-stone-100">{c.name}</div>
+                  <div className="mt-0.5 text-xs text-stone-500 dark:text-stone-400">
                     {c.area} · {c.grades}
                   </div>
                   <Link
                     to={`/crags/${c.slug}`}
-                    className="mt-2 inline-block text-xs font-medium text-teal-700 hover:underline"
+                    className="mt-2 inline-block text-xs font-medium text-teal-700 dark:text-teal-400 hover:underline"
                   >
                     Open crag guide →
                   </Link>
@@ -123,7 +123,7 @@ export default function CragMap({
         )}
       </div>
       {!fullBleed && unmapped.length > 0 && (
-        <p className="mt-2 text-xs text-stone-500">
+        <p className="mt-2 text-xs text-stone-500 dark:text-stone-400">
           No verified coordinates yet: {unmapped.map((c) => c.name).join(' · ')}
         </p>
       )}

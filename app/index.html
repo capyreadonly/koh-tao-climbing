@@ -8,7 +8,23 @@
     <meta name="description" content="The complete climbing database for Koh Tao, Thailand — every crag, route, season tip and access rule, fact-checked against 2026 sources." />
     <!-- PWA (vite-plugin-pwa injects the manifest link + SW registration;
          icons are relative for subpath deploys) -->
-    <meta name="theme-color" content="#ffffff" />
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0c0a09" media="(prefers-color-scheme: dark)" />
+    <script>
+      // Apply the theme class before first paint so dark-mode users don't get
+      // a light flash. Mirrors next-themes: localStorage key "theme", values
+      // 'light' | 'dark' | 'system' (default 'system').
+      (function () {
+        try {
+          var t = localStorage.getItem('theme') || 'system';
+          var dark =
+            t === 'dark' ||
+            (t === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+          document.documentElement.classList.toggle('dark', dark);
+          document.documentElement.style.colorScheme = dark ? 'dark' : 'light';
+        } catch (e) {}
+      })();
+    </script>
     <link rel="icon" type="image/png" href="icons/icon-192.png" />
     <link rel="apple-touch-icon" href="icons/icon-192.png" />
     <meta name="apple-mobile-web-app-capable" content="yes" />

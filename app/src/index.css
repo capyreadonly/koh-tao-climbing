@@ -228,3 +228,69 @@
   height: 40px;
   background-size: 22px 22px;
 }
+
+/* --- CragMap dark chrome (mirrors the light rules above) + dimmed tiles --- */
+
+/* Subtle dark-mode tile treatment — keeps the self-hosted OSM tiles readable
+   against the stone-950 page without a full invert. */
+.dark .leaflet-tile-pane {
+  filter: brightness(0.9) saturate(0.9);
+}
+
+.dark .crag-map .leaflet-bar {
+  border-color: #292524; /* stone-800 */
+  box-shadow: 0 1px 4px rgb(0 0 0 / 0.5);
+}
+.dark .crag-map .leaflet-bar a {
+  background: #1c1917; /* stone-900 */
+  color: #d6d3d1; /* stone-300 */
+  border-bottom-color: #292524;
+}
+.dark .crag-map .leaflet-bar a:hover {
+  background: #292524; /* stone-800 */
+  color: #2dd4bf; /* teal-400 */
+}
+.dark .crag-map .leaflet-control-layers {
+  background: #1c1917;
+  color: #d6d3d1;
+  border-color: #292524;
+  box-shadow: 0 2px 8px rgb(0 0 0 / 0.5);
+}
+.dark .crag-map .leaflet-control-attribution {
+  background: rgb(12 10 9 / 0.8); /* stone-950 */
+  color: #78716c; /* stone-500 */
+}
+.dark .crag-map .leaflet-control-attribution a {
+  color: #2dd4bf; /* teal-400 */
+}
+.dark .crag-map .leaflet-popup-content-wrapper {
+  background: #1c1917;
+  color: #e7e5e4; /* stone-200 */
+  border-color: #292524;
+  box-shadow: 0 4px 12px rgb(0 0 0 / 0.5);
+}
+.dark .crag-map .leaflet-popup-tip {
+  background: #1c1917;
+  border-color: #292524;
+}
+.dark .crag-map .leaflet-popup-close-button {
+  color: #78716c; /* stone-500 */
+}
+.dark .crag-map .leaflet-popup-close-button:hover {
+  color: #2dd4bf;
+}
+
+/* Dark scrollbar (WebKit + Firefox). */
+.dark * {
+  scrollbar-color: #44403c #0c0a09; /* stone-700 thumb on stone-950 track */
+}
+.dark ::-webkit-scrollbar-track {
+  background: #0c0a09; /* stone-950 */
+}
+.dark ::-webkit-scrollbar-thumb {
+  background: #44403c; /* stone-700 */
+  border-color: #0c0a09;
+}
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: #57534e; /* stone-600 */
+}

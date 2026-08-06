@@ -14,13 +14,13 @@ export default function EmptyState({
 }) {
   return (
     <div
-      className={`flex flex-col items-center gap-3 rounded-xl border border-dashed border-stone-300 px-6 py-12 text-center ${className ?? ''}`}
+      className={`flex flex-col items-center gap-3 rounded-xl border border-dashed border-stone-300 dark:border-stone-700 px-6 py-12 text-center ${className ?? ''}`}
     >
-      <span className="flex h-12 w-12 items-center justify-center rounded-full border border-stone-200 bg-stone-50">
-        <Mountain className="h-6 w-6 text-stone-400" />
+      <span className="flex h-12 w-12 items-center justify-center rounded-full border border-stone-200 dark:border-stone-800 bg-stone-50 dark:bg-stone-900">
+        <Mountain className="h-6 w-6 text-stone-400 dark:text-stone-500" />
       </span>
-      <p className="font-medium text-stone-700">{title}</p>
-      {children && <div className="max-w-prose text-sm text-stone-500">{children}</div>}
+      <p className="font-medium text-stone-700 dark:text-stone-300">{title}</p>
+      {children && <div className="max-w-prose text-sm text-stone-500 dark:text-stone-400">{children}</div>}
     </div>
   )
 }

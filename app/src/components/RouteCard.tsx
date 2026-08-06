@@ -23,41 +23,41 @@ export default function RouteCard({
     <button
       type="button"
       onClick={onOpen}
-      className="py-1 text-left font-medium text-teal-700 hover:text-teal-600 hover:underline"
+      className="py-1 text-left font-medium text-teal-700 dark:text-teal-400 hover:text-teal-600 dark:hover:text-teal-300 hover:underline"
     >
       {r.name}
     </button>
   ) : cragSlug ? (
     <Link
       to={`/crags/${cragSlug}?route=${encodeURIComponent(r.name)}`}
-      className="inline-block py-1 font-medium text-teal-700 hover:text-teal-600 hover:underline"
+      className="inline-block py-1 font-medium text-teal-700 dark:text-teal-400 hover:text-teal-600 dark:hover:text-teal-300 hover:underline"
     >
       {r.name}
     </Link>
   ) : (
-    <span className="font-medium text-stone-900">{r.name}</span>
+    <span className="font-medium text-stone-900 dark:text-stone-100">{r.name}</span>
   )
 
   return (
-    <div className="rounded-xl border border-stone-200 bg-white p-3.5 shadow-sm">
+    <div className="rounded-xl border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-950 p-3.5 shadow-sm">
       <div className="flex items-baseline justify-between gap-2">
         <div>
           {name}
           {r.sector && (
-            <span className="ml-2 rounded bg-stone-100 px-1.5 py-0.5 text-[10px] text-stone-500">
+            <span className="ml-2 rounded bg-stone-100 dark:bg-stone-900/80 px-1.5 py-0.5 text-[10px] text-stone-500 dark:text-stone-400">
               {r.sector}
             </span>
           )}
         </div>
         <div className="shrink-0 whitespace-nowrap">
-          <span className="font-semibold tabular-nums text-teal-700">{r.grade}</span>{' '}
-          <span className="rounded bg-stone-100 px-1 py-0.5 text-[10px] uppercase text-stone-500">
+          <span className="font-semibold tabular-nums text-teal-700 dark:text-teal-400">{r.grade}</span>{' '}
+          <span className="rounded bg-stone-100 dark:bg-stone-900/80 px-1 py-0.5 text-[10px] uppercase text-stone-500 dark:text-stone-400">
             {gradeSystemLabel[r.gradeSystem] ?? r.gradeSystem}
           </span>
         </div>
       </div>
       {r.note && (
-        <p className="mt-1 flex items-start gap-1 text-xs text-amber-700">
+        <p className="mt-1 flex items-start gap-1 text-xs text-amber-700 dark:text-amber-400">
           <AlertTriangle className="mt-0.5 h-3 w-3 shrink-0" /> {r.note}
         </p>
       )}
@@ -71,7 +71,7 @@ export default function RouteCard({
           </span>
         ))}
       </div>
-      <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-stone-500">
+      <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-stone-500 dark:text-stone-400">
         {onOpen !== undefined ? (
           <span>
             {r.lengthM ? `${r.lengthM} m` : ''}
@@ -81,7 +81,7 @@ export default function RouteCard({
         ) : (
           <span>{r.crag}</span>
         )}
-        {r.stars != null && r.stars > 0 && <span className="text-amber-600">★ {r.stars}</span>}
+        {r.stars != null && r.stars > 0 && <span className="text-amber-600 dark:text-amber-400">★ {r.stars}</span>}
         {r.ticks != null && r.ticks > 0 && <span>{r.ticks} ticks</span>}
         {r.verified ? (
           <span
@@ -98,9 +98,9 @@ export default function RouteCard({
         )}
       </div>
       {hasRouteDetails(r) && (
-        <details className="group mt-2 rounded-lg border border-stone-200 bg-stone-50">
-          <summary className="flex min-h-10 cursor-pointer list-none items-center gap-2 px-3 text-xs font-medium text-stone-500 transition-colors hover:text-teal-700 [&::-webkit-details-marker]:hidden">
-            <ChevronRight className="h-3.5 w-3.5 text-stone-400 transition-transform group-open:rotate-90" />
+        <details className="group mt-2 rounded-lg border border-stone-200 dark:border-stone-800 bg-stone-50 dark:bg-stone-900">
+          <summary className="flex min-h-10 cursor-pointer list-none items-center gap-2 px-3 text-xs font-medium text-stone-500 dark:text-stone-400 transition-colors hover:text-teal-700 dark:hover:text-teal-400 [&::-webkit-details-marker]:hidden">
+            <ChevronRight className="h-3.5 w-3.5 text-stone-400 dark:text-stone-500 transition-transform group-open:rotate-90" />
             Route details
           </summary>
           <div className="px-3 pb-3">
