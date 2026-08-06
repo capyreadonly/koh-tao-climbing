@@ -1,0 +1,61 @@
+[
+  {
+    "name": "Goodtime Adventures",
+    "role": "Guiding · Courses · Gear rental",
+    "since": "2008",
+    "summary": "The island's oldest climbing operation and the driving force behind route development — 200+ routes maintained, 4.9 rating from 1,522 Google reviews. Run by Tim and Charly Severino; also an SSI dive school with a Mae Haad beachfront beach club.",
+    "bullets": [
+      "Discover Rock Climbing half-day from ฿2,600 · Rock 1 Intro to Top Rope 1 day from ฿3,600 · Rock 2 Sport Leading 2 days from ฿6,200",
+      "Pathway continues through Rock 5 (trad/multipitch) plus a Rockmaster professional guide-training program",
+      "Guide service from ฿2,000 with discounted gear rental (harness ฿100, shoes ฿200, chalk ฿100)",
+      "Experienced climbers can rent gear and head out independently",
+      "Home crags: Mek’s Mountain and Jansom Bay; climb + dive bundles save 10%"
+    ],
+    "contact": "Book via the website (vault-listed +66 (0) 80 658 0944 / info@goodtimethailand.com not confirmed on current pages)",
+    "url": "https://goodtimethailand.com/climbing/",
+    "verified": "Operating status, course pathway and prices verified on goodtimethailand.com, 2026-08-02; phone/email unverified. Owners' names (Tim and Charly Severino) trace to the Mapo Tapo blog only — unverified against the operator site."
+  },
+  {
+    "name": "The Bunker",
+    "role": "Bouldering gym · Outdoor courses · Hostel",
+    "since": "current",
+    "summary": "The one and only indoor climbing/bouldering gym on Koh Tao — with Bunker Cafe and the 24-bed Warehouse Hostel next door; outdoor trips and courses with all equipment included.",
+    "bullets": [
+      "Day pass 250 THB — reported by secondary sources, not confirmed on the operator site",
+      "Outdoor beginner trips/courses and toprope coaching, all equipment included",
+      "Intermediate lead course → independent climbing skills",
+      "Warehouse Hostel 5D4N package: stay + 4 free gym day passes + 15% off the lead course (+10% off the cafe)",
+      "The Warehouse Hostel is The Bunker's own adjacent 24-bed dorm — not a separate gym (the legacy draft listed a phantom \"The Warehouse\" gym/shop by conflation)",
+      "The practical fallback for rainy days, pad rental, and current beta on crag conditions"
+    ],
+    "contact": "@rockclimbingkohtao",
+    "url": "https://kohtao-rockclimbing.com/",
+    "verified": "Operating status, gym, courses and the 5D4N package verified 2026-08-02 (package page updated 2025-10-28); the 250 THB day-pass price is not confirmed on the operator site."
+  },
+  {
+    "name": "Koh Tao Climbing Club",
+    "role": "Access & bolting stewardship",
+    "since": "community",
+    "summary": "The community steward of climbing on the island. Sensitive access at some crags — ask before exploring; never bolt without the club's permission.",
+    "bullets": [
+      "Contact for sensitive crags (Tao Tower, Phillips Secret Spot…)",
+      "Bolting requires club permission",
+      "Don’t litter — every crag is somebody’s backyard"
+    ],
+    "contact": "facebook.com/Climbingkohtao",
+    "url": "https://www.facebook.com/Climbingkohtao/",
+    "verified": "Role confirmed via theCrag's live Koh Tao access/ethics sections, 2026-08-02."
+  },
+  {
+    "name": "Evasion Koh Tao",
+    "role": "Shop · small bouldering wall (unverified)",
+    "since": "unverified",
+    "summary": "Listed in the legacy static draft (indoor bouldering wall, kids climbing, shop) and in a 2018 Mountain Project note as the home of the small relocated bouldering wall, primarily for kids. theCrag credits Evasion with rebolting Golden View.",
+    "bullets": [
+      "Current operating status unverified — no 2026 confirmation found"
+    ],
+    "contact": "unverified",
+    "url": "https://www.mountainproject.com/area/108569570/koh-tao",
+    "verified": "Unverified: legacy draft + a January 2018 MP note only."
+  }
+]
