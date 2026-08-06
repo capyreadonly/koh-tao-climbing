@@ -23,7 +23,7 @@ export default function PhotoCard({
   return (
     <figure
       className={cn(
-        'overflow-hidden rounded-lg border border-stone-800 bg-stone-900/60',
+        'overflow-hidden rounded-xl border border-stone-800 bg-stone-900',
         onClick && 'cursor-zoom-in transition-colors hover:border-teal-500/50',
         className,
       )}

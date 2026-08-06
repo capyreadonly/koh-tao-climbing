@@ -18,6 +18,8 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
+import SectionHeader from '@/components/SectionHeader'
+import EmptyState from '@/components/EmptyState'
 import { cragBySlug, styleColor, type Style } from '@/data/climbing'
 import { routesForCrag } from '@/data/routes'
 import {
@@ -41,9 +43,9 @@ import {
   Info,
   Check,
   ExternalLink,
-  Images,
   ChevronRight,
   Banknote,
+  AlertTriangle,
 } from 'lucide-react'
 
 // Guide imagery that belongs in the large topo viewer rather than the gallery.
@@ -64,6 +66,9 @@ const topoForRoute = (routeName: string, topos: PhotoEntry[]) => {
   const needle = routeName.toLowerCase()
   return topos.find((p) => p.caption.toLowerCase().includes(needle))
 }
+
+// One table-header treatment: uppercase micro-labels (per design skill).
+const headClass = 'text-[11px] font-semibold uppercase tracking-wider text-stone-500'
 
 export default function CragDetail() {
   const { slug } = useParams()
@@ -106,11 +111,12 @@ export default function CragDetail() {
 
   if (!crag) {
     return (
-      <div className="mx-auto max-w-6xl px-4 py-16 text-center">
-        <p className="text-stone-400">Crag not found.</p>
-        <Link to="/crags" className="mt-4 inline-block text-teal-400 hover:underline">
-          ← Back to all crags
-        </Link>
+      <div className="mx-auto max-w-6xl px-4 py-16">
+        <EmptyState title="Crag not found">
+          <Link to="/crags" className="text-teal-400 hover:underline">
+            ← Back to all crags
+          </Link>
+        </EmptyState>
       </div>
     )
   }
@@ -163,16 +169,18 @@ export default function CragDetail() {
     })
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-10">
+    <div className="mx-auto max-w-6xl px-4 py-12 sm:py-16">
       <Link
         to="/crags"
-        className="mb-6 inline-flex items-center gap-1 text-sm text-stone-400 hover:text-teal-400"
+        className="mb-6 inline-flex items-center gap-1 text-sm text-stone-400 transition-colors hover:text-teal-400"
       >
         <ArrowLeft className="h-4 w-4" /> All crags
       </Link>
 
       <div className="flex flex-wrap items-center gap-3">
-        <h1 className="text-3xl font-bold">{crag.name}</h1>
+        <h1 className="font-display text-3xl font-semibold tracking-tight sm:text-4xl">
+          {crag.name}
+        </h1>
         {crag.styles.map((s) => (
           <span key={s} className={`rounded-full border px-2.5 py-0.5 text-xs ${styleColor[s]}`}>
             {s}
@@ -184,10 +192,10 @@ export default function CragDetail() {
           </span>
         )}
       </div>
-      <p className="mt-3 max-w-3xl text-lg text-stone-400">{crag.summary}</p>
+      <p className="mt-3 max-w-prose text-lg text-stone-400">{crag.summary}</p>
 
       {crag.accessWarning && (
-        <Alert className="mt-6 border-amber-500/40 bg-amber-500/10 text-amber-100">
+        <Alert className="mt-6 rounded-xl border-amber-500/40 bg-amber-500/10 text-amber-100">
           <ShieldAlert className="h-4 w-4 text-amber-400" />
           <AlertTitle className="text-amber-300">Access warning</AlertTitle>
           <AlertDescription className="text-amber-100/80">{crag.accessWarning}</AlertDescription>
@@ -197,9 +205,9 @@ export default function CragDetail() {
       {/* Facts panel */}
       <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {facts.map((f) => (
-          <div key={f.label} className="rounded-lg border border-stone-800 bg-stone-900/60 p-4">
-            <div className="flex items-center gap-1.5 text-xs uppercase tracking-wide text-stone-500">
-              <f.icon className="h-3.5 w-3.5" /> {f.label}
+          <div key={f.label} className="rounded-xl border border-stone-800 bg-stone-900 p-4">
+            <div className="flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wider text-stone-500">
+              <f.icon className="h-3.5 w-3.5 text-teal-400" /> {f.label}
             </div>
             <div className="mt-1.5 text-sm text-stone-200">{f.value}</div>
           </div>
@@ -208,23 +216,23 @@ export default function CragDetail() {
 
       <div className="mt-3 grid gap-3 lg:grid-cols-2">
         {crag.routeCount && (
-          <div className="rounded-lg border border-stone-800 bg-stone-900/60 p-4">
-            <div className="flex items-center gap-1.5 text-xs uppercase tracking-wide text-stone-500">
-              <ListChecks className="h-3.5 w-3.5" /> Route counts per source
+          <div className="rounded-xl border border-stone-800 bg-stone-900 p-4">
+            <div className="flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wider text-stone-500">
+              <ListChecks className="h-3.5 w-3.5 text-teal-400" /> Route counts per source
             </div>
             <div className="mt-1.5 text-sm text-stone-200">{crag.routeCount}</div>
           </div>
         )}
         {crag.coords && (
-          <div className="rounded-lg border border-stone-800 bg-stone-900/60 p-4">
-            <div className="flex items-center gap-1.5 text-xs uppercase tracking-wide text-stone-500">
-              <MapPin className="h-3.5 w-3.5" /> Coordinates
+          <div className="rounded-xl border border-stone-800 bg-stone-900 p-4">
+            <div className="flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wider text-stone-500">
+              <MapPin className="h-3.5 w-3.5 text-teal-400" /> Coordinates
             </div>
             <a
               href={`https://www.google.com/maps?q=${crag.coords.lat},${crag.coords.lng}`}
               target="_blank"
               rel="noreferrer"
-              className="mt-1.5 inline-flex items-center gap-1.5 font-mono text-sm text-teal-400 hover:underline"
+              className="mt-1.5 inline-flex items-center gap-1.5 font-mono text-sm tabular-nums text-teal-400 hover:underline"
             >
               {crag.coords.lat.toFixed(5)}, {crag.coords.lng.toFixed(5)}
               <ExternalLink className="h-3.5 w-3.5" />
@@ -234,7 +242,7 @@ export default function CragDetail() {
       </div>
 
       {crag.verified && (
-        <Alert className="mt-3 border-teal-500/30 bg-teal-500/10 text-teal-100">
+        <Alert className="mt-3 rounded-xl border-teal-500/30 bg-teal-500/10 text-teal-100">
           <Info className="h-4 w-4 text-teal-400" />
           <AlertTitle className="text-teal-300">Fact-check status (2026-08-02)</AlertTitle>
           <AlertDescription className="text-teal-100/80">{crag.verified}</AlertDescription>
@@ -243,16 +251,19 @@ export default function CragDetail() {
 
       {/* Photo-topos */}
       {topos.length > 0 && (
-        <section ref={topoSectionRef} className="mt-12 scroll-mt-20">
+        <section ref={topoSectionRef} className="mt-12 scroll-mt-20 sm:mt-16">
           <div
-            className={`-mx-2 mb-4 flex items-center gap-2 rounded-md px-2 py-1 transition-colors duration-500 ${
-              topoFlash ? 'bg-teal-500/15 text-teal-300' : ''
+            className={`-mx-2 rounded-md px-2 py-1 transition-colors duration-500 ${
+              topoFlash ? 'bg-teal-500/15' : ''
             }`}
           >
-            <Images className="h-5 w-5 text-teal-400" />
-            <h2 className="text-2xl font-semibold">Photo-topos &amp; maps</h2>
+            <SectionHeader
+              kicker="Route finding"
+              title="Photo-topos & maps"
+              lede="Every topo page from the Goodtime guidebook that covers this crag — click any image to enlarge."
+            />
           </div>
-          <Carousel opts={{ loop: topos.length > 1 }} className="mx-auto max-w-4xl">
+          <Carousel opts={{ loop: topos.length > 1 }} className="mx-auto mt-8 max-w-4xl">
             <CarouselContent>
               {topos.map((p) => (
                 <CarouselItem key={p.file}>
@@ -265,7 +276,7 @@ export default function CragDetail() {
                       src={imgSrc(p.file)}
                       alt={p.caption}
                       loading="lazy"
-                      className="max-h-[60vh] w-full rounded-lg border border-stone-800 bg-stone-950 object-contain"
+                      className="max-h-[60vh] w-full rounded-xl border border-stone-800 bg-stone-950 object-contain"
                     />
                   </button>
                   <p className="mx-auto mt-3 max-w-3xl text-center text-sm text-stone-400">
@@ -289,10 +300,14 @@ export default function CragDetail() {
 
       {/* Gallery — crag context first; action/atmosphere shots collapsed at the end */}
       {(context.length > 0 || atmosphere.length > 0) && (
-        <section className="mt-12">
-          <h2 className="mb-4 text-2xl font-semibold">Gallery</h2>
+        <section className="mt-12 sm:mt-16">
+          <SectionHeader
+            kicker="On the rock"
+            title="Gallery"
+            lede="Crag context first, people and atmosphere last — every photo stays © its author."
+          />
           {context.length > 0 && (
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {context.map((p) => (
                 <PhotoCard key={p.file} photo={p} onClick={() => setLightbox(p)} />
               ))}
@@ -300,7 +315,7 @@ export default function CragDetail() {
           )}
           {atmosphere.length > 0 &&
             (atmosphereCollapsed ? (
-              <details className="group mt-6 rounded-lg border border-stone-800 bg-stone-900/60">
+              <details className="group mt-6 rounded-xl border border-stone-800 bg-stone-900">
                 <summary className="flex cursor-pointer list-none items-center gap-2 p-4 text-sm font-medium text-stone-300 transition-colors hover:text-teal-300 [&::-webkit-details-marker]:hidden">
                   <ChevronRight className="h-4 w-4 text-stone-500 transition-transform group-open:rotate-90" />
                   Action &amp; atmosphere ({atmosphere.length})
@@ -312,7 +327,7 @@ export default function CragDetail() {
                 </div>
               </details>
             ) : (
-              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 {atmosphere.map((p) => (
                   <PhotoCard key={p.file} photo={p} onClick={() => setLightbox(p)} />
                 ))}
@@ -322,37 +337,35 @@ export default function CragDetail() {
       )}
 
       {topos.length === 0 && galleryGuide.length === 0 && community.length === 0 && (
-        <p className="mt-12 rounded-lg border border-dashed border-stone-800 p-6 text-center text-sm text-stone-500">
-          No photos for this crag yet — contributions welcome via the Koh Tao Climbing Club.
-        </p>
+        <EmptyState className="mt-12" title="No photos for this crag yet">
+          Contributions welcome via the Koh Tao Climbing Club.
+        </EmptyState>
       )}
 
       {/* Routes table */}
-      <section className="mt-12">
-        <h2 className="mb-4 text-2xl font-semibold">
-          Routes &amp; problems{' '}
-          <span className="text-base font-normal text-stone-500">
-            ({cragRoutes.length} in the merged database)
-          </span>
-        </h2>
+      <section className="mt-12 sm:mt-16">
+        <SectionHeader
+          kicker="The lines"
+          title="Routes & problems"
+          lede={`${cragRoutes.length} in the merged database — click a route to open its photo-topo, or the info button for description and first-ascent beta.`}
+        />
         {cragRoutes.length === 0 ? (
-          <p className="rounded-lg border border-dashed border-stone-800 p-6 text-sm text-stone-500">
-            No individual routes from this crag in the merged database — see the Rakkup guide or
-            the route counts above, and verify locally.
-          </p>
+          <EmptyState className="mt-8" title="No individual routes in the merged database">
+            See the Rakkup guide or the route counts above, and verify locally.
+          </EmptyState>
         ) : (
           <>
-            <div className="hidden overflow-hidden rounded-lg border border-stone-800 md:block">
+            <div className="mt-8 hidden overflow-hidden rounded-xl border border-stone-800 md:block">
               <Table>
                 <TableHeader>
                   <TableRow className="border-stone-800 bg-stone-900/80 hover:bg-stone-900/80">
-                    <TableHead className="text-stone-400">Route</TableHead>
-                    <TableHead className="text-stone-400">Grade</TableHead>
-                    <TableHead className="text-stone-400">Style</TableHead>
-                    <TableHead className="text-stone-400">★</TableHead>
-                    <TableHead className="hidden text-stone-400 md:table-cell">Length</TableHead>
-                    <TableHead className="text-stone-400">Status</TableHead>
-                    <TableHead className="hidden text-stone-400 lg:table-cell">Source</TableHead>
+                    <TableHead className={headClass}>Route</TableHead>
+                    <TableHead className={headClass}>Grade</TableHead>
+                    <TableHead className={headClass}>Style</TableHead>
+                    <TableHead className={headClass}>★</TableHead>
+                    <TableHead className={`hidden md:table-cell ${headClass}`}>Length</TableHead>
+                    <TableHead className={headClass}>Status</TableHead>
+                    <TableHead className={`hidden lg:table-cell ${headClass}`}>Source</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -399,11 +412,13 @@ export default function CragDetail() {
                               </span>
                             )}
                             {r.note && (
-                              <p className="mt-1 text-xs font-normal text-amber-300/80">⚠ {r.note}</p>
+                              <p className="mt-1 flex items-start gap-1 text-xs font-normal text-amber-300/80">
+                                <AlertTriangle className="mt-0.5 h-3 w-3 shrink-0" /> {r.note}
+                              </p>
                             )}
                           </TableCell>
                           <TableCell className="whitespace-nowrap">
-                            <span className="font-semibold text-teal-400">{r.grade}</span>{' '}
+                            <span className="font-semibold tabular-nums text-teal-400">{r.grade}</span>{' '}
                             <span className="rounded bg-stone-800 px-1 py-0.5 text-[10px] uppercase text-stone-400">
                               {gradeSystemLabel[r.gradeSystem] ?? r.gradeSystem}
                             </span>
@@ -471,25 +486,20 @@ export default function CragDetail() {
             </Table>
             </div>
             {/* Stacked cards on small screens */}
-            <div className="space-y-3 md:hidden">
+            <div className="mt-8 space-y-3 md:hidden">
               {cragRoutes.map((r, i) => (
                 <RouteCard key={`${r.name}-${i}`} route={r} onOpen={() => openRouteTopo(r.name)} />
               ))}
             </div>
-            <p className="mt-2 text-xs text-stone-500">
-              Click a route to open its photo-topo (when a topo caption mentions it) or to jump to
-              the topo section. The ⓘ button expands description, protection and first-ascent beta
-              where the fact-checked sources have it.
-            </p>
           </>
         )}
       </section>
 
       {/* Beta + sectors */}
-      <div className="mt-12 grid gap-6 lg:grid-cols-3">
-        <Card className="border-stone-800 bg-stone-900/60 lg:col-span-2">
+      <div className="mt-12 grid gap-6 sm:mt-16 lg:grid-cols-3">
+        <Card className="rounded-xl border-stone-800 bg-stone-900 lg:col-span-2">
           <CardHeader>
-            <CardTitle>Beta</CardTitle>
+            <CardTitle className="font-display tracking-tight">Beta</CardTitle>
           </CardHeader>
           <CardContent>
             <ul className="space-y-3">
@@ -502,12 +512,12 @@ export default function CragDetail() {
             </ul>
             {crag.sectors && (
               <div className="mt-6">
-                <h3 className="mb-3 text-sm font-semibold uppercase tracking-wide text-stone-500">
+                <h3 className="mb-3 text-[11px] font-semibold uppercase tracking-wider text-stone-500">
                   Sectors
                 </h3>
                 <div className="grid gap-2 sm:grid-cols-2">
                   {crag.sectors.map((s) => (
-                    <div key={s.name} className="rounded-md border border-stone-800 bg-stone-950 p-3">
+                    <div key={s.name} className="rounded-lg border border-stone-800 bg-stone-950 p-3">
                       <div className="text-sm font-medium">{s.name}</div>
                       {s.note && <div className="mt-0.5 text-xs text-stone-500">{s.note}</div>}
                     </div>
@@ -518,9 +528,9 @@ export default function CragDetail() {
           </CardContent>
         </Card>
 
-        <Card className="border-stone-800 bg-stone-900/60">
+        <Card className="rounded-xl border-stone-800 bg-stone-900">
           <CardHeader>
-            <CardTitle>Good to know</CardTitle>
+            <CardTitle className="font-display tracking-tight">Good to know</CardTitle>
           </CardHeader>
           <CardContent className="space-y-3 text-sm text-stone-400">
             <p>

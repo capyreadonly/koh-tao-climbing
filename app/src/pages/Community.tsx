@@ -3,10 +3,12 @@ import { Link } from 'react-router'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
+import SectionHeader from '@/components/SectionHeader'
+import EmptyState from '@/components/EmptyState'
 import { reports, type CommunityReport } from '@/data/reports'
 import { communityPhotos, type PhotoEntry } from '@/data/photos'
 import { imgSrc } from '@/lib/photo'
-import { ExternalLink, Play, Users } from 'lucide-react'
+import { ExternalLink, Play } from 'lucide-react'
 
 const photoByFile = new Map<string, PhotoEntry>(communityPhotos.map((p) => [p.file, p]))
 
@@ -38,19 +40,15 @@ export default function Community() {
     key === 'all' ? reports.length : reports.filter((r) => groupOf(r) === key).length
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-10">
-      <div className="flex items-center gap-3">
-        <Users className="h-7 w-7 text-teal-400" />
-        <h1 className="text-3xl font-bold">Community reports</h1>
-      </div>
-      <p className="mt-2 max-w-3xl text-stone-400">
-        Trip reports, articles, videos and forum threads contributed by climbers who have been to
-        Koh Tao — first-hand experiences, dated prices and historical colour that no database
-        captures. Summaries are ours; every card links out to the original. Photos remain © their
-        authors and are shown with attribution.
-      </p>
+    <div className="mx-auto max-w-6xl px-4 py-12 sm:py-16">
+      <SectionHeader
+        as="h1"
+        kicker="Community"
+        title="Community reports"
+        lede="Trip reports, articles, videos and forum threads from climbers who have been to Koh Tao — first-hand experiences, dated prices and historical colour that no database captures. Summaries are ours; every card links out to the original. Photos remain © their authors and are shown with attribution."
+      />
 
-      <div className="mt-6 flex flex-wrap gap-1.5">
+      <div className="mt-8 flex flex-wrap gap-1.5">
         {GROUP_FILTERS.map((f) => (
           <button
             key={f.key}
@@ -70,10 +68,15 @@ export default function Community() {
         {filtered.map((r) => {
           const video = isVideoReport(r)
           return (
-            <Card key={r.url + r.title} className="flex flex-col border-stone-800 bg-stone-900/60">
+            <Card
+              key={r.url + r.title}
+              className="flex flex-col rounded-xl border-stone-800 bg-stone-900 transition hover:border-stone-700"
+            >
               <CardHeader>
                 <div className="flex items-start justify-between gap-3">
-                  <CardTitle className="text-lg leading-snug">{r.title}</CardTitle>
+                  <CardTitle className="font-display text-lg leading-snug tracking-tight">
+                    {r.title}
+                  </CardTitle>
                   <Badge
                     variant="outline"
                     className={`shrink-0 text-xs ${
@@ -95,7 +98,7 @@ export default function Community() {
                     {r.photos.map((file) => {
                       const p = photoByFile.get(file)
                       return (
-                        <figure key={file} className="overflow-hidden rounded-md border border-stone-800">
+                        <figure key={file} className="overflow-hidden rounded-lg border border-stone-800">
                           <img
                             src={imgSrc(file)}
                             alt={p?.caption ?? r.title}
@@ -136,6 +139,12 @@ export default function Community() {
           )
         })}
       </div>
+
+      {filtered.length === 0 && (
+        <EmptyState className="mt-8" title="No reports in this group yet">
+          Try another filter — or send us yours.
+        </EmptyState>
+      )}
 
       <p className="mt-8 text-sm text-stone-500">
         Climbed Koh Tao yourself? Share conditions with the{' '}

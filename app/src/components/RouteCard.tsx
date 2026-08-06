@@ -3,7 +3,7 @@ import { styleColor, type Style } from '@/data/climbing'
 import type { RouteRecord } from '@/data/routes'
 import { gradeSystemLabel, styleLabel, styleList } from '@/lib/photo'
 import RouteDetails, { hasRouteDetails } from '@/components/RouteDetails'
-import { Check, ChevronRight } from 'lucide-react'
+import { AlertTriangle, Check, ChevronRight } from 'lucide-react'
 
 // Mobile (<md) presentation of one route record — the wide route tables get a
 // stacked card instead of a cramped horizontally scrolling grid.
@@ -39,7 +39,7 @@ export default function RouteCard({
   )
 
   return (
-    <div className="rounded-lg border border-stone-800 bg-stone-900/60 p-3.5">
+    <div className="rounded-xl border border-stone-800 bg-stone-900 p-3.5">
       <div className="flex items-baseline justify-between gap-2">
         <div>
           {name}
@@ -50,13 +50,17 @@ export default function RouteCard({
           )}
         </div>
         <div className="shrink-0 whitespace-nowrap">
-          <span className="font-semibold text-teal-400">{r.grade}</span>{' '}
+          <span className="font-semibold tabular-nums text-teal-400">{r.grade}</span>{' '}
           <span className="rounded bg-stone-800 px-1 py-0.5 text-[10px] uppercase text-stone-400">
             {gradeSystemLabel[r.gradeSystem] ?? r.gradeSystem}
           </span>
         </div>
       </div>
-      {r.note && <p className="mt-1 text-xs text-amber-300/80">⚠ {r.note}</p>}
+      {r.note && (
+        <p className="mt-1 flex items-start gap-1 text-xs text-amber-300/80">
+          <AlertTriangle className="mt-0.5 h-3 w-3 shrink-0" /> {r.note}
+        </p>
+      )}
       <div className="mt-2 flex flex-wrap gap-1">
         {styleList(r.style).map((s) => (
           <span
@@ -90,7 +94,7 @@ export default function RouteCard({
         )}
       </div>
       {hasRouteDetails(r) && (
-        <details className="group mt-2 rounded-md border border-stone-800 bg-stone-950/60">
+        <details className="group mt-2 rounded-lg border border-stone-800 bg-stone-950/60">
           <summary className="flex min-h-10 cursor-pointer list-none items-center gap-2 px-3 text-xs font-medium text-stone-400 transition-colors hover:text-teal-300 [&::-webkit-details-marker]:hidden">
             <ChevronRight className="h-3.5 w-3.5 text-stone-500 transition-transform group-open:rotate-90" />
             Route details

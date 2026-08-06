@@ -1,8 +1,9 @@
 import { useState, useMemo } from 'react'
 import { Link } from 'react-router'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Input } from '@/components/ui/input'
+import SectionHeader from '@/components/SectionHeader'
+import EmptyState from '@/components/EmptyState'
 import { crags, styleColor, type Style } from '@/data/climbing'
 import { isNdLicense } from '@/data/photos'
 import { cragThumbnail, imgSrc } from '@/lib/photo'
@@ -40,15 +41,16 @@ export default function Crags() {
   )
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-10">
-      <h1 className="text-3xl font-bold">Crags</h1>
-      <p className="mt-2 text-stone-400">
-        {crags.length} documented areas — granite sport, trad and bouldering across the island.
-        Click a map marker to open a crag.
-      </p>
+    <div className="mx-auto max-w-6xl px-4 py-12 sm:py-16">
+      <SectionHeader
+        as="h1"
+        kicker="The island"
+        title="Crags"
+        lede={`${crags.length} documented areas — granite sport, trad and bouldering across the island. Click a map marker to open a crag.`}
+      />
 
       {/* Island map */}
-      <CragMap className="mt-6" />
+      <CragMap className="mt-8" />
 
       <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
         <div className="relative sm:w-72">
@@ -82,10 +84,10 @@ export default function Crags() {
           const thumb = cragThumbnail(c.name)
           const checked = isFactChecked(c.verified)
           return (
-            <Link key={c.slug} to={`/crags/${c.slug}`}>
-              <Card className="h-full overflow-hidden border-stone-800 bg-stone-900/60 transition-colors hover:border-teal-500/50">
+            <Link key={c.slug} to={`/crags/${c.slug}`} className="h-full">
+              <article className="flex h-full flex-col overflow-hidden rounded-xl border border-stone-800 bg-stone-900 transition duration-200 hover:-translate-y-0.5 hover:border-stone-700">
                 {thumb ? (
-                  <div className={`h-36 w-full ${isNdLicense(thumb) ? 'bg-stone-950' : ''}`}>
+                  <div className={`aspect-[4/3] w-full ${isNdLicense(thumb) ? 'bg-stone-950' : ''}`}>
                     <img
                       src={imgSrc(thumb.file)}
                       alt={thumb.caption}
@@ -94,22 +96,22 @@ export default function Crags() {
                     />
                   </div>
                 ) : (
-                  <div className="flex h-36 w-full items-center justify-center bg-gradient-to-br from-stone-900 via-stone-800 to-teal-950">
-                    <Mountain className="h-8 w-8 text-stone-600" />
+                  <div className="flex aspect-[4/3] w-full items-center justify-center bg-stone-950">
+                    <Mountain className="h-10 w-10 text-stone-700" />
                   </div>
                 )}
-                <CardHeader className="pb-2">
+                <div className="flex flex-1 flex-col p-5">
                   <div className="flex items-center justify-between gap-2">
-                    <CardTitle className="text-base">{c.name}</CardTitle>
-                    <span className="text-xs text-stone-500">{c.grades}</span>
+                    <h2 className="font-display text-base font-semibold tracking-tight">
+                      {c.name}
+                    </h2>
+                    <span className="text-xs tabular-nums text-stone-500">{c.grades}</span>
                   </div>
-                  <div className="flex items-center gap-1 text-xs text-stone-500">
+                  <div className="mt-1 flex items-center gap-1 text-xs text-stone-500">
                     <MapPin className="h-3 w-3" /> {c.area}
                   </div>
-                </CardHeader>
-                <CardContent>
-                  <p className="mb-3 line-clamp-3 text-sm text-stone-400">{c.summary}</p>
-                  <div className="flex flex-wrap items-center gap-1.5">
+                  <p className="mt-3 line-clamp-3 text-sm text-stone-400">{c.summary}</p>
+                  <div className="mt-4 flex flex-wrap items-center gap-1.5">
                     {c.styles.map((s) => (
                       <span
                         key={s}
@@ -122,7 +124,7 @@ export default function Crags() {
                       <Sun className="h-3 w-3" /> {c.sun}
                     </span>
                   </div>
-                  <div className="mt-3 flex items-center gap-2">
+                  <div className="mt-4 flex items-center gap-2 border-t border-stone-800/70 pt-3">
                     {c.highlight && (
                       <Badge variant="outline" className="border-stone-700 text-xs text-stone-400">
                         {c.highlight}
@@ -145,15 +147,18 @@ export default function Crags() {
                       )}
                     </span>
                   </div>
-                </CardContent>
-              </Card>
+                </div>
+              </article>
             </Link>
           )
         })}
       </div>
 
       {list.length === 0 && (
-        <p className="mt-10 text-center text-stone-500">No crags match your filters.</p>
+        <EmptyState className="mt-8" title="No crags match your filters">
+          Try a different style or clear the search — the island only has {crags.length} documented
+          areas.
+        </EmptyState>
       )}
     </div>
   )

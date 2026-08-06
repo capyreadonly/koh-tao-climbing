@@ -74,6 +74,47 @@
   }
 }
 
+/* --- Design-system polish (see .kimi-code/skills/design) --- */
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  /* Body/display faces come from tailwind fontFamily (Inter / Space Grotesk
+     with system fallbacks); preflight applies fontFamily.sans globally. */
+  ::selection {
+    background: rgb(45 212 191 / 0.25); /* teal-400 */
+    color: #f5f5f4; /* stone-100 */
+  }
+  /* Default focus ring for elements that don't manage their own — shadcn
+     components set outline-none + focus-visible:ring themselves. */
+  :focus-visible {
+    outline: 2px solid rgb(45 212 191 / 0.6);
+    outline-offset: 2px;
+  }
+}
+
+/* Subtle dark scrollbar (WebKit + Firefox). */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #44403c #0c0a09; /* stone-700 thumb on stone-950 track */
+}
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: #0c0a09; /* stone-950 */
+}
+::-webkit-scrollbar-thumb {
+  background: #44403c; /* stone-700 */
+  border-radius: 9999px;
+  border: 2px solid #0c0a09;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #57534e; /* stone-600 */
+}
+
 /* --- CragMap (Leaflet) dark-theme overrides --- */
 
 /* Subtle dark filter so the tiles sit comfortably on the dark page while

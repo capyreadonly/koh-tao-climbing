@@ -2,6 +2,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Badge } from '@/components/ui/badge'
+import SectionHeader from '@/components/SectionHeader'
 import {
   gettingThere,
   seasons,
@@ -23,6 +24,9 @@ import {
   ExternalLink,
 } from 'lucide-react'
 
+// Plain-table header cell: uppercase micro-label (per design skill).
+const thClass = 'px-4 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-stone-500'
+
 function BulletList({ items, tone = 'bg-teal-400' }: { items: string[]; tone?: string }) {
   return (
     <ul className="space-y-3">
@@ -38,13 +42,13 @@ function BulletList({ items, tone = 'bg-teal-400' }: { items: string[]; tone?: s
 
 export default function Plan() {
   return (
-    <div className="mx-auto max-w-6xl px-4 py-10">
-      <h1 className="text-3xl font-bold">Plan a trip</h1>
-      <p className="mt-2 max-w-2xl text-stone-400">
-        Hot and humid year-round (28–32 °C), granite that gets vicious in the sun, and a community
-        that asks you to check in before bolting. Here's the distilled playbook — source
-        contradictions kept visible, not smoothed over.
-      </p>
+    <div className="mx-auto max-w-6xl px-4 py-12 sm:py-16">
+      <SectionHeader
+        as="h1"
+        kicker="Plan a trip"
+        title="The distilled playbook"
+        lede="Hot and humid year-round (28–32 °C), granite that gets vicious in the sun, and a community that asks you to check in before bolting. Source contradictions kept visible, not smoothed over."
+      />
 
       <Tabs defaultValue="season" className="mt-8">
         <TabsList className="flex h-auto w-full flex-wrap justify-start gap-1 bg-stone-900 p-1">
@@ -70,14 +74,14 @@ export default function Plan() {
 
         {/* When to go */}
         <TabsContent value="season" className="mt-6 space-y-6">
-          <p className="max-w-3xl text-sm text-stone-400">{seasons.climate}</p>
-          <div className="overflow-x-auto rounded-lg border border-stone-800">
+          <p className="max-w-prose text-sm text-stone-400">{seasons.climate}</p>
+          <div className="overflow-x-auto rounded-xl border border-stone-800">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-stone-800 bg-stone-900/80 text-left text-stone-400">
-                  <th className="px-4 py-3 font-medium">Period</th>
-                  <th className="px-4 py-3 font-medium">Conditions</th>
-                  <th className="hidden px-4 py-3 font-medium md:table-cell">Notes</th>
+                <tr className="border-b border-stone-800 bg-stone-900/80">
+                  <th className={thClass}>Period</th>
+                  <th className={thClass}>Conditions</th>
+                  <th className={`hidden md:table-cell ${thClass}`}>Notes</th>
                 </tr>
               </thead>
               <tbody>
@@ -91,9 +95,9 @@ export default function Plan() {
               </tbody>
             </table>
           </div>
-          <Card className="border-stone-800 bg-stone-900/60">
+          <Card className="rounded-xl border-stone-800 bg-stone-900">
             <CardHeader>
-              <CardTitle>The daily rhythm (matters more than the month)</CardTitle>
+              <CardTitle className="font-display tracking-tight">The daily rhythm (matters more than the month)</CardTitle>
             </CardHeader>
             <CardContent>
               <BulletList items={seasons.dailyRhythm} />
@@ -108,24 +112,24 @@ export default function Plan() {
 
         {/* Getting there */}
         <TabsContent value="logistics" className="mt-6 space-y-6">
-          <Card className="border-stone-800 bg-stone-900/60">
+          <Card className="rounded-xl border-stone-800 bg-stone-900">
             <CardHeader>
-              <CardTitle>To the island</CardTitle>
+              <CardTitle className="font-display tracking-tight">To the island</CardTitle>
             </CardHeader>
             <CardContent>
               <BulletList items={gettingThere.toIsland} />
             </CardContent>
           </Card>
 
-          <div className="overflow-x-auto rounded-lg border border-stone-800">
+          <div className="overflow-x-auto rounded-xl border border-stone-800">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-stone-800 bg-stone-900/80 text-left text-stone-400">
-                  <th className="px-4 py-3 font-medium">Ferry route</th>
-                  <th className="hidden px-4 py-3 font-medium lg:table-cell">Operators</th>
-                  <th className="px-4 py-3 font-medium">Duration</th>
-                  <th className="hidden px-4 py-3 font-medium md:table-cell">Fare</th>
-                  <th className="hidden px-4 py-3 font-medium xl:table-cell">Notes</th>
+                <tr className="border-b border-stone-800 bg-stone-900/80">
+                  <th className={thClass}>Ferry route</th>
+                  <th className={`hidden lg:table-cell ${thClass}`}>Operators</th>
+                  <th className={thClass}>Duration</th>
+                  <th className={`hidden md:table-cell ${thClass}`}>Fare</th>
+                  <th className={`hidden xl:table-cell ${thClass}`}>Notes</th>
                 </tr>
               </thead>
               <tbody>
@@ -143,7 +147,7 @@ export default function Plan() {
           </div>
 
           {gettingThere.conflicts.map((c, i) => (
-            <Alert key={i} className="border-amber-500/30 bg-amber-500/10 text-amber-100">
+            <Alert key={i} className="rounded-xl border-amber-500/30 bg-amber-500/10 text-amber-100">
               <AlertTriangle className="h-4 w-4 text-amber-400" />
               <AlertTitle className="text-amber-300">Sources disagree</AlertTitle>
               <AlertDescription className="text-amber-100/80">{c}</AlertDescription>
@@ -151,17 +155,17 @@ export default function Plan() {
           ))}
 
           <div className="grid gap-6 lg:grid-cols-2">
-            <Card className="border-stone-800 bg-stone-900/60">
+            <Card className="rounded-xl border-stone-800 bg-stone-900">
               <CardHeader>
-                <CardTitle>On the island</CardTitle>
+                <CardTitle className="font-display tracking-tight">On the island</CardTitle>
               </CardHeader>
               <CardContent>
                 <BulletList items={gettingThere.onIsland} />
               </CardContent>
             </Card>
-            <Card className="border-stone-800 bg-stone-900/60">
+            <Card className="rounded-xl border-stone-800 bg-stone-900">
               <CardHeader>
-                <CardTitle>Bringing gear vs renting</CardTitle>
+                <CardTitle className="font-display tracking-tight">Bringing gear vs renting</CardTitle>
               </CardHeader>
               <CardContent>
                 <BulletList items={gettingThere.withGear} />
@@ -172,24 +176,24 @@ export default function Plan() {
 
         {/* Gear & safety */}
         <TabsContent value="gear" className="mt-6 space-y-6">
-          <Alert className="border-rose-500/30 bg-rose-500/10 text-rose-100">
+          <Alert className="rounded-xl border-rose-500/30 bg-rose-500/10 text-rose-100">
             <ShieldAlert className="h-4 w-4 text-rose-400" />
             <AlertTitle className="text-rose-300">Bolts &amp; the Thaitanium warning</AlertTitle>
             <AlertDescription className="text-rose-100/80">{gearAndSafety.bolts}</AlertDescription>
           </Alert>
 
           <div className="grid gap-6 lg:grid-cols-2">
-            <Card className="border-stone-800 bg-stone-900/60">
+            <Card className="rounded-xl border-stone-800 bg-stone-900">
               <CardHeader>
-                <CardTitle>The rock demands</CardTitle>
+                <CardTitle className="font-display tracking-tight">The rock demands</CardTitle>
               </CardHeader>
               <CardContent>
                 <BulletList items={gearAndSafety.rockDemands} />
               </CardContent>
             </Card>
-            <Card className="border-stone-800 bg-stone-900/60">
+            <Card className="rounded-xl border-stone-800 bg-stone-900">
               <CardHeader>
-                <CardTitle>Kit list</CardTitle>
+                <CardTitle className="font-display tracking-tight">Kit list</CardTitle>
               </CardHeader>
               <CardContent>
                 <BulletList items={gearAndSafety.kitList} />
@@ -197,9 +201,9 @@ export default function Plan() {
             </Card>
           </div>
 
-          <Card className="border-stone-800 bg-stone-900/60">
+          <Card className="rounded-xl border-stone-800 bg-stone-900">
             <CardHeader>
-              <CardTitle>Hazards</CardTitle>
+              <CardTitle className="font-display tracking-tight">Hazards</CardTitle>
             </CardHeader>
             <CardContent>
               <BulletList items={gearAndSafety.hazards} tone="bg-rose-400" />
@@ -207,12 +211,12 @@ export default function Plan() {
           </Card>
 
           <div>
-            <h3 className="mb-4 text-lg font-semibold">Gear, gyms &amp; rentals on the island</h3>
+            <h3 className="mb-4 font-display text-lg font-semibold tracking-tight">Gear, gyms &amp; rentals on the island</h3>
             <div className="grid gap-3 sm:grid-cols-2">
               {gearAndSafety.shops.map((s) => {
                 const unverified = s.verified?.toLowerCase().startsWith('unverified')
                 return (
-                  <div key={s.name} className="rounded-lg border border-stone-800 bg-stone-900/60 p-4">
+                  <div key={s.name} className="rounded-xl border border-stone-800 bg-stone-900 p-4">
                     <div className="flex items-center justify-between gap-2">
                       <span className="font-medium">{s.name}</span>
                       <Badge
@@ -244,11 +248,11 @@ export default function Plan() {
 
         {/* Ethics */}
         <TabsContent value="ethics" className="mt-6 space-y-6">
-          <Card className="border-teal-500/30 bg-teal-500/5">
+          <Card className="rounded-xl border-teal-500/30 bg-teal-500/5">
             <CardContent className="pt-6">
               <Quote className="mb-3 h-5 w-5 text-teal-400" />
               {ethics.officialLine.map((l, i) => (
-                <p key={i} className="text-lg font-medium text-teal-100">
+                <p key={i} className="font-display text-lg font-medium tracking-tight text-teal-100">
                   “{l}”
                 </p>
               ))}
@@ -256,9 +260,9 @@ export default function Plan() {
             </CardContent>
           </Card>
 
-          <Card className="border-stone-800 bg-stone-900/60">
+          <Card className="rounded-xl border-stone-800 bg-stone-900">
             <CardHeader>
-              <CardTitle>The island rules</CardTitle>
+              <CardTitle className="font-display tracking-tight">The island rules</CardTitle>
             </CardHeader>
             <CardContent>
               <ul className="space-y-3">
@@ -274,9 +278,9 @@ export default function Plan() {
             </CardContent>
           </Card>
 
-          <Card className="border-stone-800 bg-stone-900/60">
+          <Card className="rounded-xl border-stone-800 bg-stone-900">
             <CardHeader>
-              <CardTitle>The fuller picture — access &amp; the Koh Tao Climbing Club</CardTitle>
+              <CardTitle className="font-display tracking-tight">The fuller picture — access &amp; the Koh Tao Climbing Club</CardTitle>
             </CardHeader>
             <CardContent>
               <BulletList items={ethics.fullerPicture} />
@@ -288,9 +292,9 @@ export default function Plan() {
         <TabsContent value="itineraries" className="mt-6">
           <div className="grid gap-4 lg:grid-cols-2">
             {itineraries.map((it) => (
-              <Card key={it.slug} className="border-stone-800 bg-stone-900/60">
+              <Card key={it.slug} className="rounded-xl border-stone-800 bg-stone-900">
                 <CardHeader>
-                  <CardTitle className="text-lg">{it.name}</CardTitle>
+                  <CardTitle className="font-display text-lg tracking-tight">{it.name}</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   {it.days.map((d) => (
@@ -311,7 +315,7 @@ export default function Plan() {
         <TabsContent value="guidebooks" className="mt-6">
           <div className="grid gap-3 sm:grid-cols-2">
             {guidebooks.map((g) => (
-              <div key={g.title} className="rounded-lg border border-stone-800 bg-stone-900/60 p-4">
+              <div key={g.title} className="rounded-xl border border-stone-800 bg-stone-900 p-4">
                 <div className="flex items-start justify-between gap-2">
                   <span className="text-sm font-medium">{g.title}</span>
                   <Badge

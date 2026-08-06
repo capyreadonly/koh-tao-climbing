@@ -1,31 +1,35 @@
+import SectionHeader from '@/components/SectionHeader'
 import { sources } from '@/data/climbing'
 import { communityPhotos, isNdLicense } from '@/data/photos'
 import { GUIDE_PDF_URL } from '@/lib/photo'
-import { ExternalLink, Camera } from 'lucide-react'
+import { ExternalLink } from 'lucide-react'
+
+// Plain-table header cell: uppercase micro-label (per design skill).
+const thClass = 'px-4 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-stone-500'
 
 export default function Sources() {
   return (
-    <div className="mx-auto max-w-6xl px-4 py-10">
-      <h1 className="text-3xl font-bold">Sources</h1>
-      <p className="mt-2 max-w-2xl text-stone-400">
-        Everything in this database was compiled from the public references below (fact-checked
-        2026-08-02). Grades and access change — cross-check with the Rakkup guide, theCrag, or the
-        Koh Tao Climbing Club before acting on anything here.
-      </p>
+    <div className="mx-auto max-w-6xl px-4 py-12 sm:py-16">
+      <SectionHeader
+        as="h1"
+        kicker="Fact-check"
+        title="Sources"
+        lede="Everything in this database was compiled from the public references below (fact-checked 2026-08-02). Grades and access change — cross-check with the Rakkup guide, theCrag, or the Koh Tao Climbing Club before acting on anything here."
+      />
 
-      <div className="mt-8 overflow-x-auto rounded-lg border border-stone-800">
+      <div className="mt-8 overflow-x-auto rounded-xl border border-stone-800">
         <table className="w-full text-sm">
           <thead>
-            <tr className="border-b border-stone-800 bg-stone-900/80 text-left text-stone-400">
-              <th className="px-4 py-3 font-medium">#</th>
-              <th className="px-4 py-3 font-medium">Source</th>
-              <th className="hidden px-4 py-3 font-medium md:table-cell">Used for</th>
+            <tr className="border-b border-stone-800 bg-stone-900/80">
+              <th className={thClass}>#</th>
+              <th className={thClass}>Source</th>
+              <th className={`hidden md:table-cell ${thClass}`}>Used for</th>
             </tr>
           </thead>
           <tbody>
             {sources.map((s, i) => (
               <tr key={s.url} className="border-b border-stone-800/60 last:border-0 hover:bg-stone-900/50">
-                <td className="px-4 py-3 text-stone-500">{i + 1}</td>
+                <td className="px-4 py-3 tabular-nums text-stone-500">{i + 1}</td>
                 <td className="px-4 py-3">
                   <a
                     href={s.url}
@@ -44,10 +48,13 @@ export default function Sources() {
       </div>
 
       {/* Photo credits & licenses */}
-      <h2 className="mb-4 mt-12 flex items-center gap-2 text-2xl font-semibold">
-        <Camera className="h-5 w-5 text-teal-400" /> Photo credits &amp; licenses
-      </h2>
-      <p className="mb-6 max-w-3xl text-sm text-stone-400">
+      <SectionHeader
+        className="mt-12 sm:mt-16"
+        kicker="Attribution"
+        title="Photo credits & licenses"
+        lede="Every image on this site is a real photo, credited to its author — nothing generated, nothing stripped of its license."
+      />
+      <p className="mt-6 max-w-prose text-sm text-stone-400">
         Guide photos, topos and hand-drawn maps (paths <code className="text-teal-300">images/guide/*</code>)
         are extracted from the{' '}
         <a href={GUIDE_PDF_URL} target="_blank" rel="noreferrer" className="text-teal-400 hover:underline">
@@ -59,16 +66,16 @@ export default function Sources() {
         under the licenses listed below — CC-ND images are shown unmodified.
       </p>
 
-      <p className="mb-2 text-xs text-stone-500 md:hidden">Swipe sideways to see the full table →</p>
-      <div className="overflow-x-auto rounded-lg border border-stone-800">
+      <p className="mb-2 mt-6 text-xs text-stone-500 md:hidden">Swipe sideways to see the full table →</p>
+      <div className="overflow-x-auto rounded-xl border border-stone-800 md:mt-0">
         <table className="w-full min-w-[560px] text-sm">
           <thead>
-            <tr className="border-b border-stone-800 bg-stone-900/80 text-left text-stone-400">
-              <th className="px-4 py-3 font-medium">File</th>
-              <th className="hidden px-4 py-3 font-medium lg:table-cell">Caption</th>
-              <th className="px-4 py-3 font-medium">Author</th>
-              <th className="px-4 py-3 font-medium">License</th>
-              <th className="hidden px-4 py-3 font-medium md:table-cell">Source</th>
+            <tr className="border-b border-stone-800 bg-stone-900/80">
+              <th className={thClass}>File</th>
+              <th className={`hidden lg:table-cell ${thClass}`}>Caption</th>
+              <th className={thClass}>Author</th>
+              <th className={thClass}>License</th>
+              <th className={`hidden md:table-cell ${thClass}`}>Source</th>
             </tr>
           </thead>
           <tbody>
@@ -111,8 +118,8 @@ export default function Sources() {
         </table>
       </div>
 
-      <div className="mt-8 rounded-lg border border-stone-800 bg-stone-900/40 p-5 text-sm text-stone-400">
-        <h3 className="mb-1 font-semibold text-stone-200">Obsidian mirror</h3>
+      <div className="mt-8 rounded-xl border border-stone-800 bg-stone-900/40 p-5 text-sm text-stone-400">
+        <h3 className="mb-1 font-display font-semibold tracking-tight text-stone-200">Obsidian mirror</h3>
         This site is generated to mirror the Obsidian vault in <code className="text-teal-300">/vault</code> —
         24 interlinked notes (crags, routes, people &amp; orgs, planning, resources) with YAML
         frontmatter, wikilinks, Dataview queries and note templates. Open the folder in Obsidian to

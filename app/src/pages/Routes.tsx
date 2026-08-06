@@ -17,12 +17,22 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
+import SectionHeader from '@/components/SectionHeader'
+import EmptyState from '@/components/EmptyState'
 import { crags, styleColor, type Style } from '@/data/climbing'
 import { routes } from '@/data/routes'
 import { sourceLabel, gradeSystemLabel, styleLabel, styleList } from '@/lib/photo'
 import RouteCard from '@/components/RouteCard'
 import RouteDetails, { hasRouteDetails } from '@/components/RouteDetails'
-import { Search, Check, ChevronLeft, ChevronRight, ExternalLink, Info } from 'lucide-react'
+import {
+  Search,
+  Check,
+  ChevronLeft,
+  ChevronRight,
+  ExternalLink,
+  Info,
+  AlertTriangle,
+} from 'lucide-react'
 
 const STYLE_FILTERS = [
   { key: 'all', label: 'All styles' },
@@ -37,6 +47,9 @@ const STYLE_FILTERS = [
 const PAGE_SIZE = 50
 
 const cragSlugByName = new Map(crags.map((c) => [c.name, c.slug]))
+
+// One table-header treatment: uppercase micro-labels (per design skill).
+const headClass = 'text-[11px] font-semibold uppercase tracking-wider text-stone-500'
 
 export default function Routes() {
   const [q, setQ] = useState('')
@@ -80,16 +93,15 @@ export default function Routes() {
     })
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-10">
-      <h1 className="text-3xl font-bold">Route database</h1>
-      <p className="mt-2 max-w-3xl text-stone-400">
-        {routes.length} routes and boulder problems merged from Mountain Project, 27crags, the
-        Goodtime Adventures PDF and vault notes. Star scales differ per source — compare only
-        within the same source. Amber rows are unverified or carry a cross-source conflict. The ⓘ
-        button expands description and first-ascent beta where available.
-      </p>
+    <div className="mx-auto max-w-6xl px-4 py-12 sm:py-16">
+      <SectionHeader
+        as="h1"
+        kicker="The database"
+        title="Route database"
+        lede={`${routes.length} routes and boulder problems merged from Mountain Project, 27crags, the Goodtime Adventures PDF and vault notes. Star scales differ per source — compare only within the same source. Amber marks the unverified; the info button expands description and first-ascent beta where available.`}
+      />
 
-      <div className="mt-6 flex flex-col gap-3 lg:flex-row lg:items-center">
+      <div className="mt-8 flex flex-col gap-3 lg:flex-row lg:items-center">
         <div className="relative lg:w-72">
           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-stone-500" />
           <Input
@@ -160,17 +172,17 @@ export default function Routes() {
         {list.length} matching routes{list.length > PAGE_SIZE && ` — page ${pageSafe + 1} of ${pageCount}`}
       </p>
 
-      <div className="mt-3 hidden overflow-hidden rounded-lg border border-stone-800 md:block">
+      <div className="mt-3 hidden overflow-hidden rounded-xl border border-stone-800 md:block">
         <Table>
           <TableHeader>
             <TableRow className="border-stone-800 bg-stone-900/80 hover:bg-stone-900/80">
-              <TableHead className="text-stone-400">Route</TableHead>
-              <TableHead className="text-stone-400">Grade</TableHead>
-              <TableHead className="text-stone-400">Style</TableHead>
-              <TableHead className="text-stone-400">Crag</TableHead>
-              <TableHead className="text-stone-400">★</TableHead>
-              <TableHead className="text-stone-400">Status</TableHead>
-              <TableHead className="hidden text-stone-400 lg:table-cell">Source</TableHead>
+              <TableHead className={headClass}>Route</TableHead>
+              <TableHead className={headClass}>Grade</TableHead>
+              <TableHead className={headClass}>Style</TableHead>
+              <TableHead className={headClass}>Crag</TableHead>
+              <TableHead className={headClass}>★</TableHead>
+              <TableHead className={headClass}>Status</TableHead>
+              <TableHead className={`hidden lg:table-cell ${headClass}`}>Source</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -231,11 +243,13 @@ export default function Routes() {
                         </span>
                       )}
                       {r.note && (
-                        <p className="mt-1 text-xs font-normal text-amber-300/80">⚠ {r.note}</p>
+                        <p className="mt-1 flex items-start gap-1 text-xs font-normal text-amber-300/80">
+                          <AlertTriangle className="mt-0.5 h-3 w-3 shrink-0" /> {r.note}
+                        </p>
                       )}
                     </TableCell>
                     <TableCell className="whitespace-nowrap">
-                      <span className="font-semibold text-teal-400">{r.grade}</span>{' '}
+                      <span className="font-semibold tabular-nums text-teal-400">{r.grade}</span>{' '}
                       <span className="rounded bg-stone-800 px-1 py-0.5 text-[10px] uppercase text-stone-400">
                         {gradeSystemLabel[r.gradeSystem] ?? r.gradeSystem}
                       </span>
@@ -318,7 +332,9 @@ export default function Routes() {
       </div>
 
       {list.length === 0 && (
-        <p className="mt-10 text-center text-stone-500">No routes match your filters.</p>
+        <EmptyState className="mt-8" title="No routes match your filters">
+          Widen the grade range, clear the search, or drop the verified-only filter.
+        </EmptyState>
       )}
 
       {pageCount > 1 && (
@@ -331,7 +347,7 @@ export default function Routes() {
           >
             <ChevronLeft className="mr-1 h-4 w-4" /> Previous
           </Button>
-          <span className="text-sm text-stone-500">
+          <span className="text-sm tabular-nums text-stone-500">
             Page {pageSafe + 1} / {pageCount}
           </span>
           <Button
