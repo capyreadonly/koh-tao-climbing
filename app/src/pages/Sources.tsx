@@ -47,6 +47,31 @@ export default function Sources() {
         </table>
       </div>
 
+      {/* Archived documents */}
+      <div className="mt-8 rounded-xl border border-stone-800 bg-stone-900/40 p-5 text-sm text-stone-400">
+        <h3 className="mb-1 font-display font-semibold tracking-tight text-stone-200">Archived documents</h3>
+        <p className="max-w-prose">
+          Source documents are archived in the{' '}
+          <a
+            href="https://github.com/capyreadonly/koh-tao-climbing/tree/main/archive/pdfs"
+            target="_blank"
+            rel="noreferrer"
+            className="text-teal-400 hover:underline"
+          >
+            project repo
+          </a>{' '}
+          so this site keeps working if an original URL dies:{' '}
+          <a
+            href="https://github.com/capyreadonly/koh-tao-climbing/raw/main/archive/pdfs/KT-Climbing-guide-1.14.pdf"
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex items-center gap-1.5 text-teal-400 hover:underline"
+          >
+            Goodtime free guidebook PDF (v1.14, 3.9 MB) <ExternalLink className="h-3.5 w-3.5" />
+          </a>
+        </p>
+      </div>
+
       {/* Photo credits & licenses */}
       <SectionHeader
         className="mt-12 sm:mt-16"
