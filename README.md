@@ -28,19 +28,43 @@ npm run preview
 The production build outputs to `app/dist/` and works under any subpath
 (relative asset base + hash routing).
 
-## Convert to app later
+## Install as PWA
 
-The site is already an installable PWA — no wrapper needed today:
+The site is an installable PWA — open it in a mobile browser and use
+**Add to Home Screen** (Safari on iOS, Chrome menu on Android). The app
+shell, photos and map tiles are cached offline by the service worker;
+HashRouter makes routing fully server-independent.
 
-- **Install now:** open the site in a mobile browser and use
-  **Add to Home Screen** (Safari on iOS, Chrome menu on Android). The app
-  shell, photos and map tiles are cached offline by the service worker;
-  HashRouter makes routing fully server-independent.
-- **App-store path later:** the build is fully static with no backend, so it
-  can be wrapped as-is — run it through [PWABuilder](https://www.pwabuilder.com)
-  to generate store packages, or wrap `app/dist/` with
-  [Capacitor](https://capacitorjs.com) for a native shell. No code or backend
-  changes are required either way.
+## iOS app
+
+The site is wrapped as a native iOS app with [Capacitor](https://capacitorjs.com)
+(v8) in `app/ios/` — the web build is bundled into the app and served offline
+from a `capacitor://` origin (service-worker registration is skipped there;
+see `app/src/main.tsx`).
+
+Prerequisites: Xcode (with an iOS simulator runtime) and CocoaPods
+(`brew install cocoapods`).
+
+```sh
+cd app
+npm run build && npx cap sync ios   # rebuild the web bundle and copy it into ios/
+npx cap open ios                    # open the project in Xcode
+```
+
+From the command line, build and run in the simulator:
+
+```sh
+cd app/ios/App
+xcodebuild -project App.xcodeproj -scheme App -configuration Debug \
+  -destination 'platform=iOS Simulator,name=iPhone 17 Pro' build CODE_SIGNING_ALLOWED=NO
+xcrun simctl boot "iPhone 17 Pro"
+xcrun simctl install booted <path-to>/Debug-iphonesimulator/App.app
+xcrun simctl launch booted com.kohtaoclimbing.guide
+```
+
+App Store distribution additionally needs an Apple Developer account and
+signing configured in Xcode (Signing & Capabilities → your team), then a
+Release archive uploaded via Xcode's organizer.
 
 ## Deployment
 

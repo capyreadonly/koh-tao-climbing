@@ -39,3 +39,4 @@ The capyreadonly token lacks the `workflow` scope, so `.github/workflows/deploy.
 
 - vite `base: './'` + HashRouter are deliberate — do not "fix" them; they make the site work under the `/koh-tao-climbing/` subpath.
 - Image srcs must go through `imgSrc()` in `app/src/lib/photo.ts` (prefixes `import.meta.env.BASE_URL`).
+- The iOS app (Capacitor, `app/ios/`) bundles `dist/`, so after web builds also run `npx cap sync ios` in `app/` to refresh the native app's copy.
