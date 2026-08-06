@@ -3,7 +3,7 @@ import {
   Mountain,
   BookOpen,
   Github,
-  Home,
+  Map,
   Route as RouteIcon,
   Users,
   Compass,
@@ -20,10 +20,11 @@ const nav = [
   { to: '/sources', label: 'Sources' },
 ]
 
-// Mobile bottom tab bar (below md): the five day-to-day destinations.
-// Services & Sources stay reachable from the footer.
+// Mobile bottom tab bar (below md): the five day-to-day destinations. Home is
+// the island map now, so the first tab is "Map". Services & Sources stay
+// reachable from the footer.
 const tabs = [
-  { to: '/', label: 'Home', icon: Home },
+  { to: '/', label: 'Map', icon: Map },
   { to: '/crags', label: 'Crags', icon: Mountain },
   { to: '/routes', label: 'Routes', icon: RouteIcon },
   { to: '/community', label: 'Community', icon: Users },

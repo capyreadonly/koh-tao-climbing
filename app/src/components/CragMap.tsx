@@ -1,7 +1,7 @@
-import { useMemo } from 'react'
+import { useMemo, type ReactNode } from 'react'
 import { Link } from 'react-router'
 import L from 'leaflet'
-import { MapContainer, Marker, Popup, TileLayer } from 'react-leaflet'
+import { MapContainer, Marker, Popup, TileLayer, ZoomControl } from 'react-leaflet'
 import 'leaflet/dist/leaflet.css'
 import { crags } from '@/data/climbing'
 
@@ -49,22 +49,40 @@ const ICON_SELECTED = markerIcon(true)
 export default function CragMap({
   selectedSlug,
   className,
+  fullBleed = false,
+  children,
 }: {
   selectedSlug?: string
   className?: string
+  /** Landing-page use (Home): tall edge-to-edge map with square corners, zoom
+      control top-right (clear of the overlay chip) and no scroll-wheel zoom so
+      the page can scroll past. Card use (Crags) keeps the framed 350/500px box. */
+  fullBleed?: boolean
+  /** Overlay rendered above the tiles but below markers/popups (z-500) — e.g.
+      the Home headline chip. Wrapper is pointer-events-none; make the chip
+      itself pointer-events-auto. */
+  children?: ReactNode
 }) {
   const mapped = useMemo(() => crags.filter((c) => c.coords), [])
   const unmapped = useMemo(() => crags.filter((c) => !c.coords), [])
 
   return (
     <div className={className}>
-      <div className="crag-map relative z-0 h-[350px] w-full overflow-hidden rounded-xl border border-stone-200 sm:h-[500px]">
+      <div
+        className={
+          fullBleed
+            ? 'crag-map relative z-0 h-[72svh] w-full overflow-hidden sm:h-[80svh]'
+            : 'crag-map relative z-0 h-[350px] w-full overflow-hidden rounded-xl border border-stone-200 sm:h-[500px]'
+        }
+      >
         <MapContainer
           center={KOH_TAO}
           zoom={13}
           minZoom={OSM_SELFHOSTED.minZoom}
           maxZoom={OSM_SELFHOSTED.maxZoom}
           maxBounds={MAP_MAX_BOUNDS}
+          scrollWheelZoom={!fullBleed}
+          zoomControl={!fullBleed}
           className="h-full w-full"
           aria-label="Map of Koh Tao with climbing crag markers"
         >
@@ -74,6 +92,7 @@ export default function CragMap({
             minZoom={OSM_SELFHOSTED.minZoom}
             maxZoom={OSM_SELFHOSTED.maxZoom}
           />
+          {fullBleed && <ZoomControl position="topright" />}
           {mapped.map((c) => (
             <Marker
               key={c.slug}
@@ -97,8 +116,13 @@ export default function CragMap({
             </Marker>
           ))}
         </MapContainer>
+        {children && (
+          <div className="pointer-events-none absolute left-3 top-3 z-[500] max-w-[calc(100%-1.5rem)] sm:left-4 sm:top-4">
+            {children}
+          </div>
+        )}
       </div>
-      {unmapped.length > 0 && (
+      {!fullBleed && unmapped.length > 0 && (
         <p className="mt-2 text-xs text-stone-500">
           No verified coordinates yet: {unmapped.map((c) => c.name).join(' · ')}
         </p>
