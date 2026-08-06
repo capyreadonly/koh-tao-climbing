@@ -123,41 +123,30 @@
   border: none;
 }
 
-/* divIcon crag markers: teal dot with a pulsing ring, amber when selected. */
-.crag-marker-dot {
-  position: relative;
-  display: block;
-  width: 14px;
-  height: 14px;
-  margin: 3px;
+/* divIcon crag markers — thetopo.com pattern: a flat yellow (#f3dc10) disc with
+   a dark per-style glyph (inline SVG from CragMap). Theme-independent: the yellow
+   reads on both the plain light tiles and the dimmed dark tiles. Selected =
+   slight scale + dark ring. */
+.crag-style-marker {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
   border-radius: 9999px;
-  background: #0d9488; /* teal-600 */
-  border: 2px solid #ffffff;
-  box-shadow: 0 1px 3px rgb(0 0 0 / 0.35);
+  background: #f3dc10;
+  box-shadow: 0 1px 4px rgb(0 0 0 / 0.4);
+  transition: transform 0.15s ease;
 }
-.crag-marker-dot::after {
-  content: '';
-  position: absolute;
-  inset: -4px;
-  border-radius: 9999px;
-  border: 2px solid rgb(13 148 136 / 0.5);
-  animation: crag-marker-pulse 2.4s ease-out infinite;
+.crag-style-marker svg {
+  width: 17px;
+  height: 17px;
 }
-.crag-marker-dot-selected {
-  background: #d97706; /* amber-600 */
-}
-.crag-marker-dot-selected::after {
-  border-color: rgb(217 119 6 / 0.55);
-}
-@keyframes crag-marker-pulse {
-  0% {
-    transform: scale(0.6);
-    opacity: 1;
-  }
-  100% {
-    transform: scale(2.1);
-    opacity: 0;
-  }
+.crag-style-marker-selected {
+  transform: scale(1.15);
+  box-shadow:
+    0 0 0 2px #212121,
+    0 1px 4px rgb(0 0 0 / 0.4);
 }
 
 /* Leaflet chrome (zoom, layer toggle, attribution, popup) in light stone/teal. */

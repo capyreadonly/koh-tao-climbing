@@ -71,7 +71,7 @@ export default function Crags() {
         </div>
       </div>
 
-      <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {list.map((c) => (
           <CragCard key={c.slug} crag={c} />
         ))}

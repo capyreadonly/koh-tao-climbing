@@ -3,7 +3,7 @@ import {
   Mountain,
   BookOpen,
   Github,
-  Map,
+  Home,
   Route as RouteIcon,
   Users,
   Compass,
@@ -21,11 +21,10 @@ const nav = [
   { to: '/sources', label: 'Sources' },
 ]
 
-// Mobile bottom tab bar (below md): the five day-to-day destinations. Home is
-// the island map now, so the first tab is "Map". Services & Sources stay
-// reachable from the footer.
+// Mobile bottom tab bar (below md): the five day-to-day destinations. Services
+// & Sources stay reachable from the footer.
 const tabs = [
-  { to: '/', label: 'Map', icon: Map },
+  { to: '/', label: 'Home', icon: Home },
   { to: '/crags', label: 'Crags', icon: Mountain },
   { to: '/routes', label: 'Routes', icon: RouteIcon },
   { to: '/community', label: 'Community', icon: Users },
@@ -99,59 +98,61 @@ export default function Layout() {
         </div>
       </nav>
 
-      <footer className="border-t border-stone-200 dark:border-stone-800 bg-stone-50 dark:bg-stone-900">
+      {/* Dark charcoal footer in BOTH themes (thetopo.com pattern): muted
+          stone-400 text on stone-900, hover-white links. */}
+      <footer className="border-t border-stone-800 bg-stone-900">
         <div className="mx-auto max-w-6xl px-4 py-10">
           <div className="flex flex-col gap-8 sm:flex-row sm:items-start sm:justify-between">
             <div className="max-w-md">
               <Link
                 to="/"
-                className="flex items-center gap-2 font-display font-semibold tracking-tight text-stone-900 dark:text-stone-100"
+                className="flex items-center gap-2 font-display font-semibold tracking-tight text-stone-100"
               >
-                <Mountain className="h-5 w-5 text-teal-600 dark:text-teal-400" />
+                <Mountain className="h-5 w-5 text-teal-400" />
                 <span>
-                  Koh Tao <span className="text-teal-700 dark:text-teal-400">Climbing Guide</span>
+                  Koh Tao <span className="text-teal-400">Climbing Guide</span>
                 </span>
               </Link>
-              <p className="mt-3 text-sm text-stone-500 dark:text-stone-400">
+              <p className="mt-3 text-sm text-stone-400">
                 Community-contributed climbing database for Koh Tao, Thailand — compiled August
                 2026 from public sources. Routes, grades and access change:{' '}
-                <span className="text-stone-700 dark:text-stone-300">
+                <span className="text-stone-200">
                   verify locally with the Koh Tao Climbing Club before climbing.
                 </span>
               </p>
             </div>
             <nav className="flex flex-col gap-2.5 text-sm" aria-label="Site credits">
-              <span className="text-xs font-semibold uppercase tracking-[0.2em] text-stone-400 dark:text-stone-500">
+              <span className="text-xs font-semibold uppercase tracking-[0.2em] text-stone-500">
                 Credits
               </span>
               <a
                 href={GUIDE_PDF_URL}
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex items-center gap-2 text-stone-500 dark:text-stone-400 transition-colors hover:text-teal-700 dark:hover:text-teal-400"
+                className="inline-flex items-center gap-2 text-stone-400 transition-colors hover:text-white"
               >
-                <BookOpen className="h-4 w-4 text-stone-400 dark:text-stone-500" />
+                <BookOpen className="h-4 w-4 text-stone-500" />
                 Goodtime Adventures guidebook PDF
               </a>
               <a
                 href="https://github.com/capyreadonly/koh-tao-climbing"
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex items-center gap-2 text-stone-500 dark:text-stone-400 transition-colors hover:text-teal-700 dark:hover:text-teal-400"
+                className="inline-flex items-center gap-2 text-stone-400 transition-colors hover:text-white"
               >
-                <Github className="h-4 w-4 text-stone-400 dark:text-stone-500" />
+                <Github className="h-4 w-4 text-stone-500" />
                 Source on GitHub
               </a>
               <Link
                 to="/sources"
-                className="inline-flex items-center gap-2 text-stone-500 dark:text-stone-400 transition-colors hover:text-teal-700 dark:hover:text-teal-400"
+                className="inline-flex items-center gap-2 text-stone-400 transition-colors hover:text-white"
               >
-                <Mountain className="h-4 w-4 text-stone-400 dark:text-stone-500" />
+                <Mountain className="h-4 w-4 text-stone-500" />
                 Photo credits &amp; sources
               </Link>
             </nav>
           </div>
-          <p className="mt-8 border-t border-stone-200 dark:border-stone-800 pt-6 text-xs text-stone-400 dark:text-stone-500">
+          <p className="mt-8 border-t border-stone-800 pt-6 text-xs text-stone-500">
             Photos remain © their authors and are shown with attribution — full credits on the
             Sources page. Not affiliated with any operator; support the local guides who maintain
             the bolts.

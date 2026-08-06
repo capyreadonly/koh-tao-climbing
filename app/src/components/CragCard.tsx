@@ -1,37 +1,52 @@
 import { Link } from 'react-router'
 import type { Crag } from '@/data/climbing'
 import { isNdLicense } from '@/data/photos'
-import { cragFeaturePhoto, imgSrc } from '@/lib/photo'
-import { styleBadge } from '@/lib/badges'
-import { ArrowRight, MapPin, Mountain, ShieldAlert, ShieldCheck } from 'lucide-react'
+import { cragFeaturePhoto, imgSrc, styleLabel } from '@/lib/photo'
+import GradeChart from '@/components/GradeChart'
+import { Mountain, ShieldAlert, ShieldCheck } from 'lucide-react'
 
 // The `verified` note says what the 2026-08-02 fact-check confirmed; notes that open
 // with "Unverified" mean nothing could be corroborated.
 const isFactChecked = (verified?: string) =>
   verified != null && !verified.toLowerCase().startsWith('unverified')
 
-// The one big editorial crag card (Home featured grid + Crags page): a wide real
-// photograph, name + grade range, one-line summary, style chips, "Read more →".
+// Short fee tag for the photo corner (mirrors thetopo's yellow "Premium" tag):
+// "100 THB entry, paid at …" → "100 THB".
+const feeTag = (accessFee?: string) => accessFee?.match(/\d[\d,]*\s*THB/i)?.[0].toUpperCase()
+
+// The crag card (Home "topos" grid + Crags page), restyled 2026-08 to
+// thetopo.com's crag-card pattern: 10px radius, soft 18px shadow, hover scale,
+// 2:1 photo with a yellow corner tag, then a compact body row — name + meta +
+// per-style labels on the left, grade-distribution mini chart on the right.
 // CC-ND photos are shown unmodified (object-contain on a stone-50 matte).
 export default function CragCard({ crag: c }: { crag: Crag }) {
   const photo = cragFeaturePhoto(c.name)
   const checked = isFactChecked(c.verified)
+  const fee = feeTag(c.accessFee)
 
   return (
     <Link to={`/crags/${c.slug}`} className="group block h-full">
-      <article className="flex h-full flex-col overflow-hidden rounded-xl border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-950 shadow-sm transition duration-200 hover:-translate-y-0.5 hover:shadow-md">
-        <div className={`relative aspect-[16/10] w-full ${photo && isNdLicense(photo) ? 'bg-stone-50 dark:bg-stone-900' : ''}`}>
+      <article className="flex h-full flex-col overflow-hidden rounded-[10px] border border-stone-100 dark:border-stone-800 bg-white dark:bg-stone-950 shadow-card dark:shadow-card-dark transition duration-200 hover:scale-[1.02]">
+        <div className={`relative aspect-[2/1] w-full ${photo && isNdLicense(photo) ? 'bg-stone-50 dark:bg-stone-900' : ''}`}>
           {photo ? (
             <img
               src={imgSrc(photo.file)}
               alt={photo.caption}
               loading="lazy"
-              className={`h-full w-full ${isNdLicense(photo) ? 'object-contain' : 'object-cover'}`}
+              // absolute inset-0: an h-full img in normal flow can't resolve
+              // against the aspect-ratio box (cyclic sizing) and would render
+              // at its natural ratio, stretching the card.
+              className={`absolute inset-0 h-full w-full ${isNdLicense(photo) ? 'object-contain' : 'object-cover'}`}
             />
           ) : (
-            <div className="flex h-full w-full items-center justify-center bg-stone-100 dark:bg-stone-900/80">
+            <div className="absolute inset-0 flex items-center justify-center bg-stone-100 dark:bg-stone-900/80">
               <Mountain className="h-10 w-10 text-stone-300 dark:text-stone-600" />
             </div>
+          )}
+          {fee && (
+            <span className="absolute right-0 top-2.5 rounded-l-sm bg-topo px-1.5 py-0.5 text-[10px] font-medium text-stone-950">
+              {fee}
+            </span>
           )}
           {photo && (
             <span className="absolute bottom-2 right-2 rounded bg-white/85 dark:bg-stone-950/85 px-1.5 py-0.5 text-[10px] text-stone-600 dark:text-stone-300">
@@ -39,44 +54,26 @@ export default function CragCard({ crag: c }: { crag: Crag }) {
             </span>
           )}
         </div>
-        <div className="flex flex-1 flex-col p-5">
-          <div className="flex items-baseline justify-between gap-2">
-            <h3 className="font-display text-lg font-semibold tracking-tight text-stone-900 dark:text-stone-100">
-              {c.name}
-            </h3>
-            <span className="shrink-0 text-xs tabular-nums text-stone-500 dark:text-stone-400">{c.grades}</span>
-          </div>
-          <div className="mt-1 flex items-center gap-1 text-xs text-stone-500 dark:text-stone-400">
-            <MapPin className="h-3 w-3" /> {c.area}
-            {c.highlight && <span className="ml-1 text-emerald-700 dark:text-emerald-400">· {c.highlight}</span>}
-          </div>
-          <p className="mt-3 line-clamp-2 text-sm text-stone-600 dark:text-stone-300">{c.summary}</p>
-          <div className="mt-4 flex flex-wrap gap-1.5">
-            {c.styles.map((s) => (
-              <span key={s} className={`rounded-full border px-2 py-0.5 text-xs ${styleBadge[s]}`}>
-                {s}
+        <div className="flex flex-1 items-center gap-3 p-4">
+          <div className="min-w-0 flex-1">
+            <h3 className="flex items-center gap-1.5 text-base font-semibold text-stone-900 dark:text-stone-100">
+              <span className="truncate">{c.name}</span>
+              <span title={c.verified} className="shrink-0">
+                {checked ? (
+                  <ShieldCheck className="h-3.5 w-3.5 text-teal-700 dark:text-teal-400" />
+                ) : (
+                  <ShieldAlert className="h-3.5 w-3.5 text-amber-600 dark:text-amber-400" />
+                )}
               </span>
-            ))}
+            </h3>
+            <p className="mt-0.5 truncate text-sm text-stone-500 dark:text-stone-400">
+              {c.area} · {c.grades}
+            </p>
+            <p className="mt-1.5 text-[10px] font-medium uppercase tracking-wider text-stone-400 dark:text-stone-500">
+              {c.styles.map((s) => styleLabel[s] ?? s).join(' · ')}
+            </p>
           </div>
-          <div className="mt-4 flex items-center gap-2 border-t border-stone-100 dark:border-stone-800 pt-3 text-xs">
-            <span
-              title={c.verified}
-              className={`inline-flex items-center gap-1 ${checked ? 'text-teal-700 dark:text-teal-400' : 'text-amber-700 dark:text-amber-400'}`}
-            >
-              {checked ? (
-                <>
-                  <ShieldCheck className="h-3.5 w-3.5" /> Fact-checked
-                </>
-              ) : (
-                <>
-                  <ShieldAlert className="h-3.5 w-3.5" /> Unverified
-                </>
-              )}
-            </span>
-            <span className="ml-auto inline-flex items-center gap-1 font-medium text-teal-700 dark:text-teal-400 transition-colors group-hover:text-teal-600 dark:group-hover:text-teal-300">
-              Read more <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
-            </span>
-          </div>
+          <GradeChart cragName={c.name} />
         </div>
       </article>
     </Link>

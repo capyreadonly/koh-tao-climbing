@@ -26,6 +26,12 @@ module.exports = {
         ],
       },
       colors: {
+        // thetopo.com destination-pattern accent (see work/thetopo-tokens.md):
+        // their signature #f3dc10 yellow — h2 bars, CTAs, map markers, card tags.
+        topo: {
+          DEFAULT: '#f3dc10',
+          hover: '#e0cb0c',
+        },
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
@@ -79,6 +85,9 @@ module.exports = {
       },
       boxShadow: {
         xs: "0 1px 2px 0 rgb(0 0 0 / 0.05)",
+        // thetopo crag-card shadow (0 2px 18px rgba(0,0,0,.1)).
+        card: "0 2px 18px 0 rgb(0 0 0 / 0.10)",
+        "card-dark": "0 2px 18px 0 rgb(0 0 0 / 0.45)",
       },
       keyframes: {
         "accordion-down": {

@@ -179,7 +179,9 @@ export default function CragDetail() {
 
   return (
     <div>
-      {/* Hero photo band (topo-first fallback when no real photo exists) */}
+      {/* Hero photo band — same cover pattern as the Home destination hero:
+          dark scrim (both themes), white name + on-photo chips, credit
+          bottom-left (thetopo .photo__credit style). */}
       {hero && (
         <section className="relative flex min-h-[46svh] items-end overflow-hidden border-b border-stone-200 dark:border-stone-800 sm:min-h-[58svh]">
           <img
@@ -187,48 +189,55 @@ export default function CragDetail() {
             alt={hero.caption}
             className={`absolute inset-0 h-full w-full ${isNdLicense(hero) ? 'bg-stone-50 dark:bg-stone-900 object-contain' : 'object-cover'}`}
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-white dark:from-stone-950 via-white/45 dark:via-stone-950/45 to-white/5 dark:to-stone-950/5" />
-          <div className="relative mx-auto w-full max-w-6xl px-4 pb-8 pt-28 sm:pb-10 sm:pt-36">
+          <div className="absolute inset-0 bg-black/20" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/25 to-black/5" />
+          <div className="relative mx-auto w-full max-w-6xl px-4 pb-12 pt-28 sm:pb-14 sm:pt-36">
             <Link
               to="/crags"
-              className="mb-4 inline-flex items-center gap-1 text-sm text-stone-600 dark:text-stone-300 transition-colors hover:text-teal-700 dark:hover:text-teal-400"
+              className="mb-4 inline-flex items-center gap-1 text-sm text-white/80 transition-colors hover:text-white"
             >
               <ArrowLeft className="h-4 w-4" /> All crags
             </Link>
-            <h1 className="font-display text-3xl font-semibold tracking-tight text-stone-900 dark:text-stone-100 sm:text-5xl">
+            <h1 className="font-sans text-3xl font-bold tracking-tight text-white drop-shadow-md sm:text-5xl">
               {crag.name}
             </h1>
             <div className="mt-3 flex flex-wrap items-center gap-2">
               {crag.styles.map((s) => (
-                <span key={s} className={`rounded-full border px-2.5 py-0.5 text-xs ${styleBadgeFor(s)}`}>
+                <span
+                  key={s}
+                  className="rounded-full border border-white/40 bg-black/35 px-2.5 py-0.5 text-xs text-white backdrop-blur-sm"
+                >
                   {styleLabel[s] ?? s}
                 </span>
               ))}
               {crag.highlight && (
-                <span className="rounded-full border border-stone-300 dark:border-stone-700 bg-white/80 dark:bg-stone-950/80 px-2.5 py-0.5 text-xs text-stone-600 dark:text-stone-300">
+                <span className="rounded-full border border-white/25 bg-black/25 px-2.5 py-0.5 text-xs text-white/85 backdrop-blur-sm">
                   {crag.highlight}
                 </span>
               )}
             </div>
-            <p className="mt-6 inline-block rounded bg-white/75 dark:bg-stone-950/75 px-2 py-1 text-[11px] text-stone-500 dark:text-stone-400 backdrop-blur-sm">
-              {hero.caption}
-              {hero.credit ? (
-                <>
-                  {' '}© {hero.credit} · {hero.license}
-                  {hero.sourceUrl && (
-                    <>
-                      {' · '}
-                      <a href={hero.sourceUrl} target="_blank" rel="noreferrer" className="text-teal-700 dark:text-teal-400 hover:underline">
-                        source
-                      </a>
-                    </>
-                  )}
-                </>
-              ) : (
-                <> · image {GUIDE_PHOTO_CREDIT}</>
-              )}
-            </p>
           </div>
+          <p
+            className="absolute bottom-2 left-3 max-w-[calc(100%-1.5rem)] text-[11px] text-white/85 drop-shadow line-clamp-2"
+            title={hero.caption}
+          >
+            {hero.caption}
+            {hero.credit ? (
+              <>
+                {' '}© {hero.credit} · {hero.license}
+                {hero.sourceUrl && (
+                  <>
+                    {' · '}
+                    <a href={hero.sourceUrl} target="_blank" rel="noreferrer" className="underline hover:text-white">
+                      source
+                    </a>
+                  </>
+                )}
+              </>
+            ) : (
+              <> · image {GUIDE_PHOTO_CREDIT}</>
+            )}
+          </p>
         </section>
       )}
 
