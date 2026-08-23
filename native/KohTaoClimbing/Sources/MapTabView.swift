@@ -70,9 +70,34 @@ final class CragAnnotation: NSObject, MKAnnotation {
 /// crag markers tinted by climbing style. Marker callouts carry an info button that
 /// pushes the crag detail; camera moves stream back so the tab can persist them.
 struct OfflineMapView: UIViewRepresentable {
-    /// Island center; tiles cover lat 10.03–10.16, lng 99.79–99.90.
-    static let islandCenter = CLLocationCoordinate2D(latitude: 10.095, longitude: 99.840)
-    static let defaultDistance: CLLocationDistance = 17_000
+    /// Center of the tile coverage bbox (lat 10.03–10.16, lng 99.79–99.90).
+    static let islandCenter = CLLocationCoordinate2D(latitude: 10.095, longitude: 99.845)
+    /// Camera distance that fits the whole tile strip on screen (island + small margin).
+    static let fitDistance: CLLocationDistance = 14_500
+    /// Zoom clamp. Max distance keeps max-zoom-out inside the bundled tiles;
+    /// min distance stays shallow enough for z15 tiles (upscaled beyond that).
+    static let minDistance: CLLocationDistance = 1_000
+    static let maxDistance: CLLocationDistance = 15_000
+
+    /// Hard camera clamp: the tile bbox plus 100 m. The bundled z15 tiles actually
+    /// extend ~130 m–1 km past the declared bbox on every side, so even with the
+    /// camera pushed against the clamp the screen is still inside real tiles.
+    static let clampRect: MKMapRect = {
+        let pad = 100 / MKMetersPerMapPointAtLatitude(islandCenter.latitude)
+        return OfflineTileOverlay.coverageRect.insetBy(dx: -pad, dy: -pad)
+    }()
+
+    /// A persisted camera is only restored when it sits inside the clamp rect at a
+    /// sane distance — anything else (e.g. a street-level view saved by an older
+    /// build) falls back to the whole-island fit.
+    static func isRestorable(_ camera: CameraState) -> Bool {
+        guard CLLocationCoordinate2DIsValid(camera.center),
+              camera.distance >= minDistance, camera.distance <= maxDistance else { return false }
+        return clampRect.contains(MKMapPoint(camera.center))
+    }
+
+    /// Testing hook: `-debugPrintVisible` logs camera distance vs visible size.
+    static let debugPrintVisible = ProcessInfo.processInfo.arguments.contains("-debugPrintVisible")
 
     struct CameraState: Equatable {
         var center: CLLocationCoordinate2D
@@ -90,6 +115,8 @@ struct OfflineMapView: UIViewRepresentable {
     /// Testing hook: force this camera on creation (also exercises persistence
     /// write-back, since region-change callbacks persist whatever is applied).
     var debugCameraOverride: CameraState?
+    /// Bump to re-fit the whole island (handled in updateUIView).
+    var recenterToken: Int = 0
     var onSelectCrag: (Crag) -> Void
     var onCameraChange: (CameraState) -> Void
     /// True while the visible area reaches beyond the bundled tiles.
@@ -111,16 +138,22 @@ struct OfflineMapView: UIViewRepresentable {
 
         mapView.addOverlay(OfflineTileOverlay(), level: .aboveLabels)
 
-        let camera = debugCameraOverride ?? initialCamera ?? CameraState(center: Self.islandCenter, distance: Self.defaultDistance)
+        // Hard clamp first so the initial camera below is already constrained:
+        // the camera can never leave the tile coverage, so Apple's base map can
+        // never show (the overlay replaces map content inside its bounding rect).
+        mapView.cameraBoundary = MKMapView.CameraBoundary(mapRect: Self.clampRect)
+        mapView.cameraZoomRange = MKMapView.CameraZoomRange(
+            minCenterCoordinateDistance: Self.minDistance,
+            maxCenterCoordinateDistance: Self.maxDistance
+        )
+
+        // First launch (or a stale out-of-coverage restore) shows the whole island.
+        let restored = initialCamera.flatMap { Self.isRestorable($0) ? $0 : nil }
+        let camera = debugCameraOverride ?? restored ?? CameraState(center: Self.islandCenter, distance: Self.fitDistance)
         mapView.setCamera(
             MKMapCamera(lookingAtCenter: camera.center, fromDistance: camera.distance, pitch: 0, heading: 0),
             animated: false
         )
-        // Keep the camera on the island — tiles don't exist beyond it.
-        mapView.cameraBoundary = MKMapView.CameraBoundary(
-            coordinateRegion: MKCoordinateRegion(center: Self.islandCenter, latitudinalMeters: 20_000, longitudinalMeters: 20_000)
-        )
-        mapView.cameraZoomRange = MKMapView.CameraZoomRange(minCenterCoordinateDistance: 1_500, maxCenterCoordinateDistance: 25_000)
 
         mapView.addAnnotations(crags.compactMap { crag in
             guard let coords = crag.coords else { return nil }
@@ -140,6 +173,13 @@ struct OfflineMapView: UIViewRepresentable {
         context.coordinator.onSelectCrag = onSelectCrag
         context.coordinator.onCameraChange = onCameraChange
         context.coordinator.onCoverageChange = onCoverageChange
+        if context.coordinator.lastRecenterToken != recenterToken {
+            context.coordinator.lastRecenterToken = recenterToken
+            mapView.setCamera(
+                MKMapCamera(lookingAtCenter: Self.islandCenter, fromDistance: Self.fitDistance, pitch: 0, heading: 0),
+                animated: true
+            )
+        }
     }
 
     @MainActor
@@ -147,6 +187,7 @@ struct OfflineMapView: UIViewRepresentable {
         var onSelectCrag: (Crag) -> Void
         var onCameraChange: (CameraState) -> Void
         var onCoverageChange: (Bool) -> Void
+        var lastRecenterToken = 0
         private var lastOutside = false
 
         init(onSelectCrag: @escaping (Crag) -> Void,
@@ -184,6 +225,15 @@ struct OfflineMapView: UIViewRepresentable {
         func mapViewDidChangeVisibleRegion(_ mapView: MKMapView) {
             let camera = mapView.camera
             onCameraChange(CameraState(center: camera.centerCoordinate, distance: camera.centerCoordinateDistance))
+            if OfflineMapView.debugPrintVisible {
+                let rect = mapView.visibleMapRect
+                let mpp = MKMetersPerMapPointAtLatitude(camera.centerCoordinate.latitude)
+                print(String(
+                    format: "MAPDBG center=%.5f,%.5f dist=%.0f visibleH=%.0f visibleW=%.0f",
+                    camera.centerCoordinate.latitude, camera.centerCoordinate.longitude,
+                    camera.centerCoordinateDistance, rect.size.height * mpp, rect.size.width * mpp
+                ))
+            }
             // Edge state: part of the screen shows beyond the bundled tiles.
             let padded = OfflineTileOverlay.coverageRect.insetBy(dx: -800, dy: -800)
             let outside = !padded.contains(mapView.visibleMapRect)
@@ -202,6 +252,7 @@ struct MapTabView: View {
     @State private var path = NavigationPath()
     @State private var showingUnmappedCrags = MapTabView.debugShowUnmapped
     @State private var outsideCoverage = false
+    @State private var recenterToken = 0
     // Camera persistence: 0/0/0 means "never moved — use the default view".
     @AppStorage("mapCameraLatitude") private var savedLatitude = 0.0
     @AppStorage("mapCameraLongitude") private var savedLongitude = 0.0
@@ -229,9 +280,13 @@ struct MapTabView: View {
     }
 
     private var restoredCamera: OfflineMapView.CameraState? {
-        let center = CLLocationCoordinate2D(latitude: savedLatitude, longitude: savedLongitude)
-        guard savedDistance > 0, CLLocationCoordinate2DIsValid(center) else { return nil }
-        return OfflineMapView.CameraState(center: center, distance: savedDistance)
+        let camera = OfflineMapView.CameraState(
+            center: CLLocationCoordinate2D(latitude: savedLatitude, longitude: savedLongitude),
+            distance: savedDistance
+        )
+        // Discard anything saved outside the tile coverage (e.g. by an older build
+        // without the clamp) — those restores produced a street-level patchwork view.
+        return OfflineMapView.isRestorable(camera) ? camera : nil
     }
 
     var body: some View {
@@ -241,6 +296,7 @@ struct MapTabView: View {
                 initialCamera: restoredCamera,
                 selectSlug: Self.debugSelectSlug,
                 debugCameraOverride: Self.debugCamera,
+                recenterToken: recenterToken,
                 onSelectCrag: { crag in path.append(crag) },
                 onCameraChange: { camera in
                     savedLatitude = camera.center.latitude
@@ -266,16 +322,26 @@ struct MapTabView: View {
                 }
             }
             .overlay(alignment: .topTrailing) {
-                Button {
-                    showingUnmappedCrags = true
-                } label: {
-                    Image(systemName: "list.bullet")
-                        .font(.body.weight(.semibold))
-                        .padding(10)
+                VStack(spacing: 10) {
+                    Button {
+                        showingUnmappedCrags = true
+                    } label: {
+                        Image(systemName: "list.bullet")
+                            .font(.body.weight(.semibold))
+                            .padding(10)
+                    }
+                    .accessibilityLabel("Crags without a map marker")
+                    Button {
+                        recenterToken += 1
+                    } label: {
+                        Image(systemName: "map.fill")
+                            .font(.body.weight(.semibold))
+                            .padding(10)
+                    }
+                    .accessibilityLabel("Show the whole island")
                 }
                 .buttonStyle(.glass)
                 .padding([.top, .trailing], 10)
-                .accessibilityLabel("Crags without a map marker")
             }
             .animation(.easeInOut(duration: 0.2), value: outsideCoverage)
             .sheet(isPresented: $showingUnmappedCrags) {

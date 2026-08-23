@@ -42,6 +42,9 @@ targets:
         TARGETED_DEVICE_FAMILY: "1,2"
         MARKETING_VERSION: "0.1"
         CURRENT_PROJECT_VERSION: "1"
+        # Xcode Cloud manages signing with the team selected in the flow UI.
+        CODE_SIGN_STYLE: Automatic
+        DEVELOPMENT_TEAM: JAT5L64V29
 
   # Hosted unit tests — they run inside the app process, so Bundle.main in the
   # tests sees the real AppResources the app ships.
