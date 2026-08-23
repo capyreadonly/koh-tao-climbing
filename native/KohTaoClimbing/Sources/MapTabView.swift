@@ -332,13 +332,19 @@ struct MapTabView: View {
             }
             .overlay(alignment: .top) {
                 if outsideCoverage {
-                    Label("Offline tiles cover Koh Tao only", systemImage: "map")
-                        .font(.caption.weight(.medium))
-                        .padding(.horizontal, 12)
-                        .padding(.vertical, 7)
-                        .background(.regularMaterial, in: Capsule())
-                        .padding(.top, 4)
-                        .transition(.move(edge: .top).combined(with: .opacity))
+                    Button {
+                        recenterToken += 1
+                    } label: {
+                        Label("Offline tiles cover Koh Tao only — tap to fit", systemImage: "map")
+                            .font(.caption.weight(.medium))
+                            .padding(.horizontal, 12)
+                            .padding(.vertical, 7)
+                            .background(.regularMaterial, in: Capsule())
+                    }
+                    .buttonStyle(.plain)
+                    .accessibilityLabel("Fit the map to Koh Tao")
+                    .padding(.top, 4)
+                    .transition(.move(edge: .top).combined(with: .opacity))
                 }
             }
             .overlay(alignment: .topTrailing) {
@@ -354,8 +360,23 @@ struct MapTabView: View {
                         }
                         .padding(.horizontal, 10)
                         .padding(.vertical, 8)
+                        .overlay(alignment: .topTrailing) {
+                            if !unmappedCrags.isEmpty {
+                                Text("\(unmappedCrags.count)")
+                                    .font(.caption2.weight(.bold))
+                                    .foregroundStyle(.white)
+                                    .padding(.horizontal, 5)
+                                    .padding(.vertical, 2)
+                                    .background(Color.orange, in: Capsule())
+                                    .offset(x: 6, y: -6)
+                            }
+                        }
                     }
-                    .accessibilityLabel("Areas without a map pin")
+                    .accessibilityLabel(
+                        unmappedCrags.isEmpty
+                            ? "Areas without a map pin"
+                            : "Areas without a map pin, \(unmappedCrags.count)"
+                    )
                     Button {
                         recenterToken += 1
                     } label: {
@@ -414,11 +435,21 @@ private struct UnmappedCragsSheet: View {
 
     var body: some View {
         NavigationStack {
-            List {
-                Section("\(crags.count) areas") {
-                    ForEach(crags) { crag in
-                        NavigationLink(value: crag) {
-                            CragRow(crag: crag, store: store)
+            Group {
+                if crags.isEmpty {
+                    ContentUnavailableView(
+                        "All areas have a map pin",
+                        systemImage: "mappin.and.ellipse",
+                        description: Text("Nothing left to list here.")
+                    )
+                } else {
+                    List {
+                        Section("\(crags.count) areas") {
+                            ForEach(crags) { crag in
+                                NavigationLink(value: crag) {
+                                    CragRow(crag: crag, store: store)
+                                }
+                            }
                         }
                     }
                 }
