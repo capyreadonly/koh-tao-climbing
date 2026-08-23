@@ -53,11 +53,23 @@ final class OfflineTileOverlay: MKTileOverlay {
     }
 }
 
+/// Human callout line: styles + grade range, stripping source jargon in parentheses.
+fileprivate func calloutSubtitle(for crag: Crag) -> String {
+    let styles = crag.styles.prefix(2).map { $0.capitalized }.joined(separator: ", ")
+    var grades = crag.grades
+    if let idx = grades.firstIndex(of: "(") {
+        grades = String(grades[..<idx]).trimmingCharacters(in: .whitespaces)
+    }
+    if styles.isEmpty { return grades }
+    if grades.isEmpty { return styles }
+    return "\(styles) · \(grades)"
+}
+
 final class CragAnnotation: NSObject, MKAnnotation {
     let crag: Crag
     dynamic var coordinate: CLLocationCoordinate2D
     var title: String? { crag.name }
-    var subtitle: String? { crag.grades }
+    var subtitle: String? { calloutSubtitle(for: crag) }
 
     init(crag: Crag, coordinate: CLLocationCoordinate2D) {
         self.crag = crag
@@ -211,6 +223,14 @@ struct OfflineMapView: UIViewRepresentable {
             view.markerTintColor = UIColor(CragStyle.color(for: cragAnnotation.crag))
             view.glyphImage = UIImage(systemName: "figure.climbing")
             view.canShowCallout = true
+            view.displayPriority = .defaultHigh
+            if #available(iOS 16.0, *) {
+                view.titleVisibility = .adaptive
+                view.subtitleVisibility = .adaptive
+            }
+            let open = UIButton(type: .system)
+            open.setTitle("Open", for: .normal)
+            view.leftCalloutAccessoryView = open
             view.rightCalloutAccessoryView = UIButton(type: .detailDisclosure)
             return view
         }
@@ -326,28 +346,63 @@ struct MapTabView: View {
                     Button {
                         showingUnmappedCrags = true
                     } label: {
-                        Image(systemName: "list.bullet")
-                            .font(.body.weight(.semibold))
-                            .padding(10)
+                        VStack(spacing: 2) {
+                            Image(systemName: "list.bullet")
+                                .font(.body.weight(.semibold))
+                            Text("Unmapped")
+                                .font(.caption2.weight(.semibold))
+                        }
+                        .padding(.horizontal, 10)
+                        .padding(.vertical, 8)
                     }
-                    .accessibilityLabel("Crags without a map marker")
+                    .accessibilityLabel("Areas without a map pin")
                     Button {
                         recenterToken += 1
                     } label: {
-                        Image(systemName: "map.fill")
-                            .font(.body.weight(.semibold))
-                            .padding(10)
+                        VStack(spacing: 2) {
+                            Image(systemName: "map.fill")
+                                .font(.body.weight(.semibold))
+                            Text("Fit island")
+                                .font(.caption2.weight(.semibold))
+                        }
+                        .padding(.horizontal, 10)
+                        .padding(.vertical, 8)
                     }
                     .accessibilityLabel("Show the whole island")
                 }
                 .buttonStyle(.glass)
                 .padding([.top, .trailing], 10)
             }
+            .overlay(alignment: .bottomLeading) {
+                HStack(spacing: 10) {
+                    legendDot("Sport", color: CragStyle.color("sport"))
+                    legendDot("Boulder", color: CragStyle.color("boulder"))
+                    legendDot("Trad", color: CragStyle.color("trad"))
+                }
+                .padding(.horizontal, 12)
+                .padding(.vertical, 8)
+                .background(.regularMaterial, in: Capsule())
+                .padding(.leading, 10)
+                .padding(.bottom, 10)
+                .allowsHitTesting(false)
+            }
             .animation(.easeInOut(duration: 0.2), value: outsideCoverage)
             .sheet(isPresented: $showingUnmappedCrags) {
                 UnmappedCragsSheet(crags: unmappedCrags, store: store)
             }
         }
+    }
+}
+
+
+private func legendDot(_ label: String, color: Color) -> some View {
+    HStack(spacing: 4) {
+        Circle()
+            .fill(color)
+            .frame(width: 8, height: 8)
+        Text(label)
+            .font(.caption2.weight(.medium))
+            .foregroundStyle(.primary)
     }
 }
 
@@ -359,12 +414,16 @@ private struct UnmappedCragsSheet: View {
 
     var body: some View {
         NavigationStack {
-            List(crags) { crag in
-                NavigationLink(value: crag) {
-                    CragRow(crag: crag, store: store)
+            List {
+                Section("\(crags.count) areas") {
+                    ForEach(crags) { crag in
+                        NavigationLink(value: crag) {
+                            CragRow(crag: crag, store: store)
+                        }
+                    }
                 }
             }
-            .navigationTitle("No map marker (\(crags.count))")
+            .navigationTitle("Areas without a map pin")
             .navigationBarTitleDisplayMode(.inline)
             .navigationDestination(for: Crag.self) { crag in
                 CragDetailView(crag: crag, store: store)
