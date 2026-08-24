@@ -215,6 +215,18 @@ struct OfflineMapView: UIViewRepresentable {
         }
 
         func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+            if let clusterAnnotation = annotation as? MKClusterAnnotation {
+                let identifier = "crag-cluster"
+                let view = mapView.dequeueReusableAnnotationView(withIdentifier: identifier) as? MKMarkerAnnotationView
+                    ?? MKMarkerAnnotationView(annotation: clusterAnnotation, reuseIdentifier: identifier)
+                view.annotation = clusterAnnotation
+                view.markerTintColor = .systemGray
+                view.glyphText = "\(clusterAnnotation.memberAnnotations.count)"
+                view.canShowCallout = false
+                view.displayPriority = .required
+                view.clusteringIdentifier = "crag"
+                return view
+            }
             guard let cragAnnotation = annotation as? CragAnnotation else { return nil }
             let identifier = "crag"
             let view = mapView.dequeueReusableAnnotationView(withIdentifier: identifier) as? MKMarkerAnnotationView
@@ -224,6 +236,7 @@ struct OfflineMapView: UIViewRepresentable {
             view.glyphImage = UIImage(systemName: "figure.climbing")
             view.canShowCallout = true
             view.displayPriority = .defaultHigh
+            view.clusteringIdentifier = "crag"
             if #available(iOS 16.0, *) {
                 view.titleVisibility = .adaptive
                 view.subtitleVisibility = .adaptive
