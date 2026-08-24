@@ -406,6 +406,8 @@ struct MapTabView: View {
                 .background(.regularMaterial, in: Capsule())
                 .padding(.leading, 10)
                 .padding(.bottom, 10)
+                // Map ignoresSafeArea (full-bleed under tab bar); lift legend above it.
+                .safeAreaPadding(.bottom)
                 .allowsHitTesting(false)
             }
             .animation(.easeInOut(duration: 0.2), value: outsideCoverage)
