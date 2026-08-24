@@ -222,6 +222,8 @@ struct OfflineMapView: UIViewRepresentable {
                 view.annotation = clusterAnnotation
                 view.markerTintColor = .systemGray
                 view.glyphText = "\(clusterAnnotation.memberAnnotations.count)"
+                view.accessibilityLabel = "\(clusterAnnotation.memberAnnotations.count) clustered areas"
+                view.accessibilityHint = "Double-tap to expand"
                 view.canShowCallout = false
                 view.displayPriority = .required
                 view.clusteringIdentifier = "crag"
