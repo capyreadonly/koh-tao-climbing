@@ -256,6 +256,12 @@ struct OfflineMapView: UIViewRepresentable {
             onSelectCrag(cragAnnotation.crag)
         }
 
+        func mapView(_ mapView: MKMapView, didSelect annotation: MKAnnotation) {
+            guard let cluster = annotation as? MKClusterAnnotation else { return }
+            mapView.deselectAnnotation(cluster, animated: false)
+            mapView.showAnnotations(cluster.memberAnnotations, animated: true)
+        }
+
         func mapViewDidChangeVisibleRegion(_ mapView: MKMapView) {
             let camera = mapView.camera
             onCameraChange(CameraState(center: camera.centerCoordinate, distance: camera.centerCoordinateDistance))
