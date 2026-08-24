@@ -228,10 +228,11 @@ struct OfflineMapView: UIViewRepresentable {
                 view.titleVisibility = .adaptive
                 view.subtitleVisibility = .adaptive
             }
+            // Single labeled accessory — avoid Open + detailDisclosure doing the same push.
             let open = UIButton(type: .system)
             open.setTitle("Open", for: .normal)
-            view.leftCalloutAccessoryView = open
-            view.rightCalloutAccessoryView = UIButton(type: .detailDisclosure)
+            open.accessibilityLabel = "Open crag"
+            view.rightCalloutAccessoryView = open
             return view
         }
 
