@@ -345,6 +345,7 @@ struct MapTabView: View {
                     .buttonStyle(.plain)
                     .accessibilityLabel("Fit the map to Koh Tao")
                     .padding(.top, 4)
+                    .safeAreaPadding(.top)
                     .transition(.move(edge: .top).combined(with: .opacity))
                 }
             }
@@ -394,6 +395,8 @@ struct MapTabView: View {
                 }
                 .buttonStyle(.glass)
                 .padding([.top, .trailing], 10)
+                // Map ignoresSafeArea (full-bleed); lift chrome below status bar / Dynamic Island.
+                .safeAreaPadding(.top)
             }
             .overlay(alignment: .bottomLeading) {
                 HStack(spacing: 10) {
