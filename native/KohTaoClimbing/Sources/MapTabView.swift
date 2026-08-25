@@ -366,6 +366,7 @@ struct MapTabView: View {
                     .buttonStyle(.plain)
                     .accessibilityLabel("Fit the map to Koh Tao")
                     .padding(.top, 4)
+                    .padding(.trailing, 72)
                     .safeAreaPadding(.top)
                     .transition(.move(edge: .top).combined(with: .opacity))
                 }
