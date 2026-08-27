@@ -17,6 +17,8 @@ enum AppTab: String {
 struct RootTabView: View {
     let store: DataStore
     @State private var selection: AppTab
+    @AppStorage("didShowAboutGuide") private var didShowAboutGuide = false
+    @State private var showAboutGuide = false
     private let initialCragSlug: String?
 
     init(store: DataStore) {
@@ -33,6 +35,8 @@ struct RootTabView: View {
         }
         initialCragSlug = slug
         _selection = State(initialValue: tab)
+        _showAboutGuide = State(initialValue: false)
+        _didShowAboutGuide = AppStorage(wrappedValue: false, "didShowAboutGuide")
     }
 
     var body: some View {
@@ -62,6 +66,24 @@ struct RootTabView: View {
                     .padding(8)
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .background(.red.opacity(0.9))
+            }
+        }
+        .sheet(isPresented: $showAboutGuide, onDismiss: {
+            didShowAboutGuide = true
+        }) {
+            AboutGuideSheet(store: store)
+        }
+        .onAppear {
+            // Screenshot/debug launch args skip the first-run sheet so existing hooks still land.
+            let args = ProcessInfo.processInfo.arguments
+            let skip = args.contains("-skipAbout")
+                || args.contains("-initialTab")
+                || args.contains("-initialCrag")
+                || args.contains("-planSection")
+                || args.contains("-initialRoute")
+                || args.contains("-initialReport")
+            if !didShowAboutGuide && !skip {
+                showAboutGuide = true
             }
         }
     }
