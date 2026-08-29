@@ -259,9 +259,26 @@ struct RouteRow: View {
 struct RouteDetailView: View {
     let route: RouteRecord
     let store: DataStore
+    @Environment(MapFocus.self) private var mapFocus
+
+    private var mappedCrag: Crag? {
+        guard let crag = store.crag(named: route.crag), crag.coords != nil else { return nil }
+        return crag
+    }
 
     var body: some View {
         List {
+            if let crag = mappedCrag {
+                Section {
+                    Button {
+                        mapFocus.show(cragSlug: crag.slug)
+                    } label: {
+                        Label("Show \(crag.name) on map", systemImage: "map")
+                    }
+                    .accessibilityHint("Switches to the Map tab and focuses this route’s area")
+                }
+            }
+
             Section {
                 HStack {
                     Label(route.verified ? "Verified" : "Unverified — sources conflict or unconfirmed",
@@ -333,5 +350,15 @@ struct RouteDetailView: View {
         }
         .navigationTitle(route.name)
         .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            if let crag = mappedCrag {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button("Show on map", systemImage: "map") {
+                        mapFocus.show(cragSlug: crag.slug)
+                    }
+                    .accessibilityHint("Switches to the Map tab and focuses this route’s area")
+                }
+            }
+        }
     }
 }

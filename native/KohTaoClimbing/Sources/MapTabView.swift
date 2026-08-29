@@ -90,6 +90,8 @@ struct OfflineMapView: UIViewRepresentable {
     /// min distance stays shallow enough for z15 tiles (upscaled beyond that).
     static let minDistance: CLLocationDistance = 1_000
     static let maxDistance: CLLocationDistance = 15_000
+    /// Camera distance when focusing a single crag from detail (“Show on map”).
+    static let focusDistance: CLLocationDistance = 2_400
 
     /// Hard camera clamp: the tile bbox plus 100 m. The bundled z15 tiles actually
     /// extend ~130 m–1 km past the declared bbox on every side, so even with the
@@ -129,6 +131,9 @@ struct OfflineMapView: UIViewRepresentable {
     var debugCameraOverride: CameraState?
     /// Bump to re-fit the whole island (handled in updateUIView).
     var recenterToken: Int = 0
+    /// Slug + token from MapFocus — camera + selected pin for “Show on map”.
+    var focusSlug: String? = nil
+    var focusToken: Int = 0
     var onSelectCrag: (Crag) -> Void
     var onCameraChange: (CameraState) -> Void
     /// True while the visible area reaches beyond the bundled tiles.
@@ -192,6 +197,10 @@ struct OfflineMapView: UIViewRepresentable {
                 animated: true
             )
         }
+        if focusToken > 0, context.coordinator.lastFocusToken != focusToken, let slug = focusSlug {
+            context.coordinator.lastFocusToken = focusToken
+            context.coordinator.focus(mapView, slug: slug)
+        }
     }
 
     @MainActor
@@ -200,6 +209,7 @@ struct OfflineMapView: UIViewRepresentable {
         var onCameraChange: (CameraState) -> Void
         var onCoverageChange: (Bool) -> Void
         var lastRecenterToken = 0
+        var lastFocusToken = 0
         private var lastOutside = false
 
         init(onSelectCrag: @escaping (Crag) -> Void,
@@ -208,6 +218,21 @@ struct OfflineMapView: UIViewRepresentable {
             self.onSelectCrag = onSelectCrag
             self.onCameraChange = onCameraChange
             self.onCoverageChange = onCoverageChange
+        }
+
+        func focus(_ mapView: MKMapView, slug: String) {
+            let pins = mapView.annotations.compactMap { $0 as? CragAnnotation }
+            guard let match = pins.first(where: { $0.crag.slug == slug }) else { return }
+            mapView.setCamera(
+                MKMapCamera(lookingAtCenter: match.coordinate, fromDistance: OfflineMapView.focusDistance, pitch: 0, heading: 0),
+                animated: true
+            )
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.45) { [weak mapView] in
+                guard let mapView else { return }
+                if let current = mapView.annotations.compactMap({ $0 as? CragAnnotation }).first(where: { $0.crag.slug == slug }) {
+                    mapView.selectAnnotation(current, animated: true)
+                }
+            }
         }
 
         func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
@@ -291,6 +316,7 @@ struct OfflineMapView: UIViewRepresentable {
 /// button lists the crags that have no coordinates (and thus no map marker).
 struct MapTabView: View {
     let store: DataStore
+    let mapFocus: MapFocus
     @State private var path = NavigationPath()
     @State private var showingUnmappedCrags = MapTabView.debugShowUnmapped
     @State private var outsideCoverage = false
@@ -339,6 +365,8 @@ struct MapTabView: View {
                 selectSlug: Self.debugSelectSlug,
                 debugCameraOverride: Self.debugCamera,
                 recenterToken: recenterToken,
+                focusSlug: mapFocus.slug,
+                focusToken: mapFocus.token,
                 onSelectCrag: { crag in path.append(crag) },
                 onCameraChange: { camera in
                     savedLatitude = camera.center.latitude
@@ -438,6 +466,11 @@ struct MapTabView: View {
             .animation(.easeInOut(duration: 0.2), value: outsideCoverage)
             .sheet(isPresented: $showingUnmappedCrags) {
                 UnmappedCragsSheet(crags: unmappedCrags, store: store)
+            }
+            .onChange(of: mapFocus.token) { _, token in
+                if token > 0 {
+                    path = NavigationPath()
+                }
             }
         }
     }

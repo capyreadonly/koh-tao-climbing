@@ -25,6 +25,9 @@ targets:
       # iOS 26 Liquid Glass icon (Icon Composer document) — compiled by the build
       # system; ASSETCATALOG_COMPILER_APPICON_NAME points at its basename.
       - path: KohTaoClimbing/AppIcon.icon
+      # Privacy manifest: tracking false, no collected data types (Data Not Collected).
+      - path: KohTaoClimbing/PrivacyInfo.xcprivacy
+        buildPhase: resources
       # Whole folder copied into the bundle as a folder reference (blue folder),
       # preserving Data/, Images/{guide,community}/ and Tiles/{z}/{x}/{y}.png structure.
       # NOTE: must NOT be named "Resources" — a top-level Resources/ folder in an iOS
@@ -41,7 +44,7 @@ targets:
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         TARGETED_DEVICE_FAMILY: "1,2"
         MARKETING_VERSION: "0.1"
-        CURRENT_PROJECT_VERSION: "2"
+        CURRENT_PROJECT_VERSION: "3"
         # Xcode Cloud manages signing with the team selected in the flow UI.
         CODE_SIGN_STYLE: Automatic
         DEVELOPMENT_TEAM: JAT5L64V29

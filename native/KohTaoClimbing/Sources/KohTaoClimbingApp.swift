@@ -17,6 +17,7 @@ enum AppTab: String {
 struct RootTabView: View {
     let store: DataStore
     @State private var selection: AppTab
+    @State private var mapFocus = MapFocus()
     @AppStorage("didShowAboutGuide") private var didShowAboutGuide = false
     @State private var showAboutGuide = false
     private let initialCragSlug: String?
@@ -42,7 +43,7 @@ struct RootTabView: View {
     var body: some View {
         TabView(selection: $selection) {
             Tab("Map", systemImage: "map", value: .map) {
-                MapTabView(store: store)
+                MapTabView(store: store, mapFocus: mapFocus)
             }
             Tab("Crags", systemImage: "mountain.2", value: .crags) {
                 CragsTabView(store: store, initialCragSlug: initialCragSlug)
@@ -55,6 +56,12 @@ struct RootTabView: View {
             }
             Tab("Plan", systemImage: "ferry", value: .plan) {
                 PlanTabView(store: store)
+            }
+        }
+        .environment(mapFocus)
+        .onChange(of: mapFocus.token) { _, token in
+            if token > 0, mapFocus.slug != nil {
+                selection = .map
             }
         }
         .overlay(alignment: .top) {
