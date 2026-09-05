@@ -1,12 +1,12 @@
 # Koh Tao Climbing — improvements
 
-Updated 4 Sep 2026 (Asia/Bangkok). Living backlog for the native iOS app. Highest first.
+Updated 5 Sep 2026 (Asia/Bangkok). Living backlog for the native iOS app. Highest first.
 
 Skip anything already in the 0.1 (3) review binary: About + first-run, privacy/support pages, map QA (callouts, legend, FABs, unmapped badge, clustering, VoiceOver, coverage banner), show-on-map, launch screen, PrivacyInfo. TestFlight 0.1 (2) is superseded. App Store watch is a separate routine — do not archive or upload from this list.
 
 ## Next
 
-1. **Merge [PR #3](https://github.com/capyreadonly/koh-tao-climbing/pull/3)** so `main` matches the review binary (`fix/asc-4-3-unique` is 18 commits ahead of `main`, mergeable/CLEAN). Close superseded [#1](https://github.com/capyreadonly/koh-tao-climbing/pull/1) and [#2](https://github.com/capyreadonly/koh-tao-climbing/pull/2) after. PR title still says “build 2”; HEAD is build 3 (`CURRENT_PROJECT_VERSION` 3). `main` is still at Aug 23 TF 0.1 (1).
+1. **Merge [PR #3](https://github.com/capyreadonly/koh-tao-climbing/pull/3)** so `main` matches the review binary (`fix/asc-4-3-unique` is 19 commits ahead of `main`, mergeable/CLEAN). Close superseded [#1](https://github.com/capyreadonly/koh-tao-climbing/pull/1) and [#2](https://github.com/capyreadonly/koh-tao-climbing/pull/2) after. PR title still says “build 2”; HEAD is build 3 (`CURRENT_PROJECT_VERSION` 3). `main` is still at Aug 23 TF 0.1 (1).
 2. **Offline favorites / personal ticks.** Search exists on Crags/Routes/Community; `@AppStorage` is only map camera + first-run About. Climbers still cannot mark what they did or starred. This is the next product ship after `main` is current.
 3. **Align `MARKETING_VERSION`** in `native/project.yml` (still `0.1`) with the App Store listing (`1.0`). Do not bump `CURRENT_PROJECT_VERSION` and do not archive/upload.
 4. **Park or split the dirty web tree** at `koh tao climbing` (WIP deletions, untracked images/vault, `.bak` files; still on `improve/native-map-qa`). Keep native work on this unique worktree only.
