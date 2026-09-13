@@ -8,7 +8,7 @@ struct PlanTabView: View {
     @State private var path = NavigationPath()
 
     enum PlanSection: String, Hashable, CaseIterable {
-        case gettingThere, seasons, gear, ethics, itineraries, guidebooks, services, sources
+        case about, gettingThere, seasons, gear, ethics, itineraries, guidebooks, services, sources
     }
 
     // Testing/screenshot hook: `-planSection gettingThere` pushes that sub-screen.
@@ -21,6 +21,11 @@ struct PlanTabView: View {
     var body: some View {
         NavigationStack(path: $path) {
             List {
+                Section("This guide") {
+                    NavigationLink(value: PlanSection.about) {
+                        Label("About this guide", systemImage: "info.circle")
+                    }
+                }
                 if store.info != nil {
                     Section("Trip planning") {
                         NavigationLink(value: PlanSection.gettingThere) {
@@ -66,6 +71,8 @@ struct PlanTabView: View {
     @ViewBuilder
     private func destination(for section: PlanSection) -> some View {
         switch section {
+        case .about:
+            AboutGuideView(store: store)
         case .gettingThere:
             if let info = store.info { GettingThereScreen(gettingThere: info.gettingThere) }
         case .seasons:
@@ -348,6 +355,10 @@ private struct SourcesScreen: View {
 
     var body: some View {
         List {
+            Section {
+                Text("This guide is an original compilation for Koh Tao — not a white-label template. Every entry below was used while fact-checking the on-device database.")
+                    .font(.callout)
+            }
             Section("Sources") {
                 ForEach(sources) { source in
                     VStack(alignment: .leading, spacing: 2) {

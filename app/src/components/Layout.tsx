@@ -5,7 +5,7 @@ import {
   Github,
   Home,
   Route as RouteIcon,
-  Users,
+  Map as MapIcon,
   Compass,
 } from 'lucide-react'
 import { GUIDE_PDF_URL } from '@/lib/photo'
@@ -15,7 +15,7 @@ const nav = [
   { to: '/', label: 'Overview' },
   { to: '/crags', label: 'Crags' },
   { to: '/routes', label: 'Routes' },
-  { to: '/community', label: 'Community' },
+  { to: '/map', label: 'Map' },
   { to: '/plan', label: 'Plan a Trip' },
   { to: '/services', label: 'Services' },
   { to: '/sources', label: 'Sources' },
@@ -27,7 +27,7 @@ const tabs = [
   { to: '/', label: 'Home', icon: Home },
   { to: '/crags', label: 'Crags', icon: Mountain },
   { to: '/routes', label: 'Routes', icon: RouteIcon },
-  { to: '/community', label: 'Community', icon: Users },
+  { to: '/map', label: 'Map', icon: MapIcon },
   { to: '/plan', label: 'Plan', icon: Compass },
 ]
 

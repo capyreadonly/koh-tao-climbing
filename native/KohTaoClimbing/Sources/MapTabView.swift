@@ -53,11 +53,23 @@ final class OfflineTileOverlay: MKTileOverlay {
     }
 }
 
+/// Human callout line: styles + grade range, stripping source jargon in parentheses.
+fileprivate func calloutSubtitle(for crag: Crag) -> String {
+    let styles = crag.styles.prefix(2).map { $0.capitalized }.joined(separator: ", ")
+    var grades = crag.grades
+    if let idx = grades.firstIndex(of: "(") {
+        grades = String(grades[..<idx]).trimmingCharacters(in: .whitespaces)
+    }
+    if styles.isEmpty { return grades }
+    if grades.isEmpty { return styles }
+    return "\(styles) · \(grades)"
+}
+
 final class CragAnnotation: NSObject, MKAnnotation {
     let crag: Crag
     dynamic var coordinate: CLLocationCoordinate2D
     var title: String? { crag.name }
-    var subtitle: String? { crag.grades }
+    var subtitle: String? { calloutSubtitle(for: crag) }
 
     init(crag: Crag, coordinate: CLLocationCoordinate2D) {
         self.crag = crag
@@ -78,6 +90,8 @@ struct OfflineMapView: UIViewRepresentable {
     /// min distance stays shallow enough for z15 tiles (upscaled beyond that).
     static let minDistance: CLLocationDistance = 1_000
     static let maxDistance: CLLocationDistance = 15_000
+    /// Camera distance when focusing a single crag from detail (“Show on map”).
+    static let focusDistance: CLLocationDistance = 2_400
 
     /// Hard camera clamp: the tile bbox plus 100 m. The bundled z15 tiles actually
     /// extend ~130 m–1 km past the declared bbox on every side, so even with the
@@ -117,6 +131,9 @@ struct OfflineMapView: UIViewRepresentable {
     var debugCameraOverride: CameraState?
     /// Bump to re-fit the whole island (handled in updateUIView).
     var recenterToken: Int = 0
+    /// Slug + token from MapFocus — camera + selected pin for “Show on map”.
+    var focusSlug: String? = nil
+    var focusToken: Int = 0
     var onSelectCrag: (Crag) -> Void
     var onCameraChange: (CameraState) -> Void
     /// True while the visible area reaches beyond the bundled tiles.
@@ -180,6 +197,10 @@ struct OfflineMapView: UIViewRepresentable {
                 animated: true
             )
         }
+        if focusToken > 0, context.coordinator.lastFocusToken != focusToken, let slug = focusSlug {
+            context.coordinator.lastFocusToken = focusToken
+            context.coordinator.focus(mapView, slug: slug)
+        }
     }
 
     @MainActor
@@ -188,6 +209,7 @@ struct OfflineMapView: UIViewRepresentable {
         var onCameraChange: (CameraState) -> Void
         var onCoverageChange: (Bool) -> Void
         var lastRecenterToken = 0
+        var lastFocusToken = 0
         private var lastOutside = false
 
         init(onSelectCrag: @escaping (Crag) -> Void,
@@ -198,11 +220,40 @@ struct OfflineMapView: UIViewRepresentable {
             self.onCoverageChange = onCoverageChange
         }
 
+        func focus(_ mapView: MKMapView, slug: String) {
+            let pins = mapView.annotations.compactMap { $0 as? CragAnnotation }
+            guard let match = pins.first(where: { $0.crag.slug == slug }) else { return }
+            mapView.setCamera(
+                MKMapCamera(lookingAtCenter: match.coordinate, fromDistance: OfflineMapView.focusDistance, pitch: 0, heading: 0),
+                animated: true
+            )
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.45) { [weak mapView] in
+                guard let mapView else { return }
+                if let current = mapView.annotations.compactMap({ $0 as? CragAnnotation }).first(where: { $0.crag.slug == slug }) {
+                    mapView.selectAnnotation(current, animated: true)
+                }
+            }
+        }
+
         func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
             MKTileOverlayRenderer(overlay: overlay)
         }
 
         func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+            if let clusterAnnotation = annotation as? MKClusterAnnotation {
+                let identifier = "crag-cluster"
+                let view = mapView.dequeueReusableAnnotationView(withIdentifier: identifier) as? MKMarkerAnnotationView
+                    ?? MKMarkerAnnotationView(annotation: clusterAnnotation, reuseIdentifier: identifier)
+                view.annotation = clusterAnnotation
+                view.markerTintColor = .systemGray
+                view.glyphText = "\(clusterAnnotation.memberAnnotations.count)"
+                view.accessibilityLabel = "\(clusterAnnotation.memberAnnotations.count) clustered areas"
+                view.accessibilityHint = "Double-tap to expand"
+                view.canShowCallout = false
+                view.displayPriority = .required
+                view.clusteringIdentifier = "crag"
+                return view
+            }
             guard let cragAnnotation = annotation as? CragAnnotation else { return nil }
             let identifier = "crag"
             let view = mapView.dequeueReusableAnnotationView(withIdentifier: identifier) as? MKMarkerAnnotationView
@@ -211,7 +262,17 @@ struct OfflineMapView: UIViewRepresentable {
             view.markerTintColor = UIColor(CragStyle.color(for: cragAnnotation.crag))
             view.glyphImage = UIImage(systemName: "figure.climbing")
             view.canShowCallout = true
-            view.rightCalloutAccessoryView = UIButton(type: .detailDisclosure)
+            view.displayPriority = .defaultHigh
+            view.clusteringIdentifier = "crag"
+            if #available(iOS 16.0, *) {
+                view.titleVisibility = .adaptive
+                view.subtitleVisibility = .adaptive
+            }
+            // Single labeled accessory — avoid Open + detailDisclosure doing the same push.
+            let open = UIButton(type: .system)
+            open.setTitle("Open", for: .normal)
+            open.accessibilityLabel = "Open crag"
+            view.rightCalloutAccessoryView = open
             return view
         }
 
@@ -220,6 +281,12 @@ struct OfflineMapView: UIViewRepresentable {
             guard let cragAnnotation = view.annotation as? CragAnnotation else { return }
             mapView.deselectAnnotation(view.annotation, animated: true)
             onSelectCrag(cragAnnotation.crag)
+        }
+
+        func mapView(_ mapView: MKMapView, didSelect annotation: MKAnnotation) {
+            guard let cluster = annotation as? MKClusterAnnotation else { return }
+            mapView.deselectAnnotation(cluster, animated: false)
+            mapView.showAnnotations(cluster.memberAnnotations, animated: true)
         }
 
         func mapViewDidChangeVisibleRegion(_ mapView: MKMapView) {
@@ -249,6 +316,7 @@ struct OfflineMapView: UIViewRepresentable {
 /// button lists the crags that have no coordinates (and thus no map marker).
 struct MapTabView: View {
     let store: DataStore
+    let mapFocus: MapFocus
     @State private var path = NavigationPath()
     @State private var showingUnmappedCrags = MapTabView.debugShowUnmapped
     @State private var outsideCoverage = false
@@ -297,6 +365,8 @@ struct MapTabView: View {
                 selectSlug: Self.debugSelectSlug,
                 debugCameraOverride: Self.debugCamera,
                 recenterToken: recenterToken,
+                focusSlug: mapFocus.slug,
+                focusToken: mapFocus.token,
                 onSelectCrag: { crag in path.append(crag) },
                 onCameraChange: { camera in
                     savedLatitude = camera.center.latitude
@@ -312,13 +382,21 @@ struct MapTabView: View {
             }
             .overlay(alignment: .top) {
                 if outsideCoverage {
-                    Label("Offline tiles cover Koh Tao only", systemImage: "map")
-                        .font(.caption.weight(.medium))
-                        .padding(.horizontal, 12)
-                        .padding(.vertical, 7)
-                        .background(.regularMaterial, in: Capsule())
-                        .padding(.top, 4)
-                        .transition(.move(edge: .top).combined(with: .opacity))
+                    Button {
+                        recenterToken += 1
+                    } label: {
+                        Label("Offline tiles cover Koh Tao only — tap to fit", systemImage: "map")
+                            .font(.caption.weight(.medium))
+                            .padding(.horizontal, 12)
+                            .padding(.vertical, 7)
+                            .background(.regularMaterial, in: Capsule())
+                    }
+                    .buttonStyle(.plain)
+                    .accessibilityLabel("Fit the map to Koh Tao")
+                    .padding(.top, 4)
+                    .padding(.trailing, 72)
+                    .safeAreaPadding(.top)
+                    .transition(.move(edge: .top).combined(with: .opacity))
                 }
             }
             .overlay(alignment: .topTrailing) {
@@ -326,28 +404,87 @@ struct MapTabView: View {
                     Button {
                         showingUnmappedCrags = true
                     } label: {
-                        Image(systemName: "list.bullet")
-                            .font(.body.weight(.semibold))
-                            .padding(10)
+                        VStack(spacing: 2) {
+                            Image(systemName: "list.bullet")
+                                .font(.body.weight(.semibold))
+                            Text("Unmapped")
+                                .font(.caption2.weight(.semibold))
+                        }
+                        .padding(.horizontal, 10)
+                        .padding(.vertical, 8)
+                        .overlay(alignment: .topTrailing) {
+                            if !unmappedCrags.isEmpty {
+                                Text("\(unmappedCrags.count)")
+                                    .font(.caption2.weight(.bold))
+                                    .foregroundStyle(.white)
+                                    .padding(.horizontal, 5)
+                                    .padding(.vertical, 2)
+                                    .background(Color.orange, in: Capsule())
+                                    .offset(x: 6, y: -6)
+                            }
+                        }
                     }
-                    .accessibilityLabel("Crags without a map marker")
+                    .accessibilityLabel(
+                        unmappedCrags.isEmpty
+                            ? "Areas without a map pin"
+                            : "Areas without a map pin, \(unmappedCrags.count)"
+                    )
                     Button {
                         recenterToken += 1
                     } label: {
-                        Image(systemName: "map.fill")
-                            .font(.body.weight(.semibold))
-                            .padding(10)
+                        VStack(spacing: 2) {
+                            Image(systemName: "map.fill")
+                                .font(.body.weight(.semibold))
+                            Text("Fit island")
+                                .font(.caption2.weight(.semibold))
+                        }
+                        .padding(.horizontal, 10)
+                        .padding(.vertical, 8)
                     }
                     .accessibilityLabel("Show the whole island")
                 }
                 .buttonStyle(.glass)
                 .padding([.top, .trailing], 10)
+                // Map ignoresSafeArea (full-bleed); lift chrome below status bar / Dynamic Island.
+                .safeAreaPadding(.top)
+            }
+            .overlay(alignment: .bottomLeading) {
+                HStack(spacing: 10) {
+                    legendDot("Sport", color: CragStyle.color("sport"))
+                    legendDot("Boulder", color: CragStyle.color("boulder"))
+                    legendDot("Trad", color: CragStyle.color("trad"))
+                }
+                .padding(.horizontal, 12)
+                .padding(.vertical, 8)
+                .background(.regularMaterial, in: Capsule())
+                .padding(.leading, 10)
+                .padding(.bottom, 10)
+                // Map ignoresSafeArea (full-bleed under tab bar); lift legend above it.
+                .safeAreaPadding(.bottom)
+                .allowsHitTesting(false)
             }
             .animation(.easeInOut(duration: 0.2), value: outsideCoverage)
             .sheet(isPresented: $showingUnmappedCrags) {
                 UnmappedCragsSheet(crags: unmappedCrags, store: store)
             }
+            .onChange(of: mapFocus.token) { _, token in
+                if token > 0 {
+                    path = NavigationPath()
+                }
+            }
         }
+    }
+}
+
+
+private func legendDot(_ label: String, color: Color) -> some View {
+    HStack(spacing: 4) {
+        Circle()
+            .fill(color)
+            .frame(width: 8, height: 8)
+        Text(label)
+            .font(.caption2.weight(.medium))
+            .foregroundStyle(.primary)
     }
 }
 
@@ -359,12 +496,26 @@ private struct UnmappedCragsSheet: View {
 
     var body: some View {
         NavigationStack {
-            List(crags) { crag in
-                NavigationLink(value: crag) {
-                    CragRow(crag: crag, store: store)
+            Group {
+                if crags.isEmpty {
+                    ContentUnavailableView(
+                        "All areas have a map pin",
+                        systemImage: "mappin.and.ellipse",
+                        description: Text("Nothing left to list here.")
+                    )
+                } else {
+                    List {
+                        Section("\(crags.count) areas") {
+                            ForEach(crags) { crag in
+                                NavigationLink(value: crag) {
+                                    CragRow(crag: crag, store: store)
+                                }
+                            }
+                        }
+                    }
                 }
             }
-            .navigationTitle("No map marker (\(crags.count))")
+            .navigationTitle("Areas without a map pin")
             .navigationBarTitleDisplayMode(.inline)
             .navigationDestination(for: Crag.self) { crag in
                 CragDetailView(crag: crag, store: store)
