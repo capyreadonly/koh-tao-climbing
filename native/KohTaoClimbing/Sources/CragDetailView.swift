@@ -4,6 +4,7 @@ import SwiftUI
 struct CragDetailView: View {
     let crag: Crag
     let store: DataStore
+    @Environment(MapFocus.self) private var mapFocus
 
     // Testing/screenshot hook: `-showViewer [index]` pre-opens the full-screen
     // photo viewer, optionally at a page index.
@@ -19,6 +20,17 @@ struct CragDetailView: View {
 
     var body: some View {
         List {
+            if crag.coords != nil {
+                Section {
+                    Button {
+                        mapFocus.show(cragSlug: crag.slug)
+                    } label: {
+                        Label("Show on map", systemImage: "map")
+                    }
+                    .accessibilityHint("Switches to the Map tab and focuses this area")
+                }
+            }
+
             if let warning = crag.accessWarning {
                 Section {
                     Label(warning, systemImage: "exclamationmark.triangle.fill")
@@ -107,6 +119,16 @@ struct CragDetailView: View {
             }
         }
         .navigationTitle(crag.name)
+        .toolbar {
+            if crag.coords != nil {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button("Show on map", systemImage: "map") {
+                        mapFocus.show(cragSlug: crag.slug)
+                    }
+                    .accessibilityHint("Switches to the Map tab and focuses this area")
+                }
+            }
+        }
         .navigationDestination(for: RouteRecord.self) { route in
             RouteDetailView(route: route, store: store)
         }
