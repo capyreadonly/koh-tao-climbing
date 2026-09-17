@@ -61,3 +61,25 @@ Monday **09:00 Asia/Bangkok** — growth scorecard routine. Say plainly when ASC
 ## Listing note
 
 Prefer friendlier title **Koh Tao Climbing**; keep subtitle `Offline Koh Tao crag topos`.
+
+## User watch (all storefronts)
+
+Watch App Store **users across every territory** with installs — not US-only (priority: TH, US, then any other with ratings).
+
+| Signal | Cadence | Owner | Measure |
+|--------|---------|-------|---------|
+| New reviews (all locales) | Weekdays 10:00 Asia/Bangkok | user-watch routine → app manager | Locale, ★, quote, theme |
+| Rating count / avg | Weekly Mon scorecard | app manager ASC + public pages | Delta vs Day-0 |
+| Complaint / praise themes | Weekly | OpenAI gpt-6-astra synthesis (not Grok loops) | Top 3 themes |
+| Crashes / UX bugs from reviews | On new review | ping koh tao climbing app | Product fix queue |
+
+## Credit rules
+
+Conserve **Grok Bot** credits. Offload heavy work:
+
+- **Cursor** cloud agents — repo docs / PRs (e.g. this file)
+- **OpenAI / Codex (gpt-6-astra)** — research briefs, review synthesis, ASO drafts
+- **Claude Code** — UX / native code polish when product asks
+- **Kimi / Deepseek swarm** (Mini / gpu) — bulk analysis when available
+
+Do not run multi-module marketing-agi campaigns on Grok. Launch Desk drafts lightly; publishes only with Nic’s yes.
