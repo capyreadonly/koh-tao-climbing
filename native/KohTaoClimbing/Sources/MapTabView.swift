@@ -385,7 +385,7 @@ struct MapTabView: View {
                     Button {
                         recenterToken += 1
                     } label: {
-                        Label("Offline tiles cover Koh Tao only — tap to fit", systemImage: "map")
+                        Label("The offline map ends here — tap to return to the island", systemImage: "arrow.uturn.backward")
                             .font(.caption.weight(.medium))
                             .padding(.horizontal, 12)
                             .padding(.vertical, 7)

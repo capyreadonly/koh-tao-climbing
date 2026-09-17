@@ -11,37 +11,57 @@ struct AboutGuideView: View {
     var body: some View {
         List {
             Section {
-                VStack(alignment: .leading, spacing: 6) {
+                VStack(alignment: .leading, spacing: 10) {
+                    Image(systemName: "mountain.2.fill")
+                        .font(.title)
+                        .foregroundStyle(.teal)
+                        .accessibilityHidden(true)
                     Text("Koh Tao Climbing")
-                        .font(.title2.weight(.semibold))
+                        .font(.largeTitle.weight(.bold))
                     Text("An original community guide for one island in the Gulf of Thailand.")
+                        .font(.title3)
+                        .foregroundStyle(.secondary)
+                    Text("Crags, routes, topos and trip notes — all on your phone, no signal needed.")
                         .font(.subheadline)
                         .foregroundStyle(.secondary)
                 }
-                .padding(.vertical, 4)
+                .padding(.vertical, 10)
                 .accessibilityElement(children: .combine)
+                .listRowBackground(Color.clear)
+                .listRowInsets(EdgeInsets(top: 8, leading: 4, bottom: 8, trailing: 16))
             }
 
-            Section("What this is") {
+            Section {
                 Text("This iOS app is an original community-built climbing guide for Koh Tao, Thailand. It is not a white-label guidebook template and it is not a reskin of another destination.")
+                    .font(.body)
                 Text("It covers this island only: \(store.crags.count) documented crags, \(store.routes.count) routes and problems, \(store.reports.count) community trip reports, and a bundled offline map of Koh Tao and Nang Yuan.")
+                    .font(.body)
+            } header: {
+                GuideHeader(title: "What this is")
             }
 
-            Section("How it works") {
+            Section {
                 LabeledContent("Data", value: "On this device only")
                 LabeledContent("Accounts", value: "None")
                 LabeledContent("Ads & analytics", value: "None")
                 LabeledContent("Network", value: "Not required to browse the guide")
                 Text("The compiled database, photos and OpenStreetMap tiles ship inside the app bundle. The store never contacts a server. Tapping a source or operator link is the only reason Safari opens.")
                     .font(.callout)
+                    .foregroundStyle(.secondary)
+            } header: {
+                GuideHeader(title: "How it works")
             }
 
-            Section("Sources & photos") {
+            Section {
                 Text("The database was compiled from public references — Mountain Project, 27crags, theCrag, the Goodtime Adventures guidebook, and the other entries on the Sources screen — and fact-checked. Grades and access change; cross-check before you climb.")
+                    .font(.body)
                 Text("Photos are contributed by members of the Koh Tao climbing community. Credits and licenses live on the Sources screen.")
+                    .font(.body)
+            } header: {
+                GuideHeader(title: "Sources & photos")
             }
 
-            Section("Help") {
+            Section {
                 if let url = URL(string: "https://capyreadonly.github.io/koh-tao-climbing/support.html") {
                     Link(destination: url) {
                         Label("Support page", systemImage: "questionmark.circle")
@@ -62,6 +82,8 @@ struct AboutGuideView: View {
                         Label("Web guide (same database)", systemImage: "safari")
                     }
                 }
+            } header: {
+                GuideHeader(title: "Help")
             }
         }
         .navigationTitle("About this guide")
@@ -71,6 +93,24 @@ struct AboutGuideView: View {
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Continue") { dismiss() }
                 }
+            }
+        }
+        .safeAreaInset(edge: .bottom) {
+            if showsContinue {
+                Button {
+                    dismiss()
+                } label: {
+                    Text("Start exploring")
+                        .font(.headline)
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 6)
+                }
+                .buttonStyle(.borderedProminent)
+                .tint(.teal)
+                .padding(.horizontal, 20)
+                .padding(.vertical, 12)
+                .background(.bar)
+                .accessibilityHint("Closes this introduction and opens the map")
             }
         }
     }

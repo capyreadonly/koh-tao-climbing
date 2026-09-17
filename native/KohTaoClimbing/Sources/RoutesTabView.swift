@@ -45,8 +45,16 @@ struct RoutesTabView: View {
         return ordered + set.sorted()
     }
 
+    private var trimmedQuery: String {
+        searchText.trimmingCharacters(in: .whitespaces)
+    }
+
+    private var hasActiveFilters: Bool {
+        selectedStyle != nil || verifiedOnly
+    }
+
     private var filtered: [RouteRecord] {
-        let query = searchText.trimmingCharacters(in: .whitespaces).lowercased()
+        let query = trimmedQuery.lowercased()
         return store.routes.filter { route in
             if verifiedOnly && !route.verified { return false }
             if let selectedStyle, CragStyle.primaryStyle(route.style) != selectedStyle { return false }
@@ -100,7 +108,7 @@ struct RoutesTabView: View {
             .searchable(text: $searchText, prompt: "Route, crag, sector or grade")
             .overlay {
                 if filtered.isEmpty {
-                    ContentUnavailableView.search(text: searchText)
+                    emptyState
                 }
             }
             .onAppear {
@@ -109,6 +117,38 @@ struct RoutesTabView: View {
                 else { return }
                 path.append(match)
             }
+        }
+    }
+
+    // MARK: - Empty state
+
+    @ViewBuilder
+    private var emptyState: some View {
+        if !trimmedQuery.isEmpty {
+            GuideEmptyState(
+                title: "No routes match",
+                message: hasActiveFilters
+                    ? "Nothing called “\(trimmedQuery)” with these filters. Try another spelling, or clear the filters to search every route."
+                    : "Nothing called “\(trimmedQuery)” yet. Try a crag, sector or grade instead.",
+                systemImage: "figure.climbing",
+                actionTitle: hasActiveFilters ? "Clear filters" : nil,
+                action: hasActiveFilters ? { clearFilters() } : nil
+            )
+        } else {
+            GuideEmptyState(
+                title: "No routes match",
+                message: "Try another style, or clear the filters to browse every route on the island.",
+                systemImage: "line.3.horizontal.decrease.circle",
+                actionTitle: "Clear filters",
+                action: clearFilters
+            )
+        }
+    }
+
+    private func clearFilters() {
+        withAnimation(.snappy) {
+            selectedStyle = nil
+            verifiedOnly = false
         }
     }
 
@@ -123,7 +163,9 @@ struct RoutesTabView: View {
                         color: CragStyle.color(style),
                         isSelected: selectedStyle == style
                     ) {
-                        selectedStyle = selectedStyle == style ? nil : style
+                        withAnimation(.snappy) {
+                            selectedStyle = selectedStyle == style ? nil : style
+                        }
                     }
                 }
                 FilterChip(
@@ -132,7 +174,7 @@ struct RoutesTabView: View {
                     systemImage: "checkmark.seal.fill",
                     isSelected: verifiedOnly
                 ) {
-                    verifiedOnly.toggle()
+                    withAnimation(.snappy) { verifiedOnly.toggle() }
                 }
                 Menu {
                     Picker("Sort", selection: $gradeSort) {
@@ -148,10 +190,23 @@ struct RoutesTabView: View {
                         isSelected: gradeSort != .off
                     )
                 }
+                .accessibilityLabel("Sort routes, \(gradeSort.rawValue)")
+                if hasActiveFilters {
+                    FilterChip(
+                        text: "clear",
+                        color: .secondary,
+                        systemImage: "xmark",
+                        isSelected: false,
+                        action: clearFilters
+                    )
+                    .accessibilityLabel("Clear filters")
+                    .transition(.opacity.combined(with: .scale(scale: 0.9)))
+                }
             }
             .padding(.horizontal, 16)
-            .padding(.vertical, 8)
+            .padding(.vertical, 10)
         }
+        .animation(.snappy, value: hasActiveFilters)
     }
 
     // MARK: - Route list
@@ -161,26 +216,55 @@ struct RoutesTabView: View {
         if gradeSort == .off {
             List {
                 ForEach(groups, id: \.crag) { group in
-                    Section(group.crag) {
+                    Section {
                         ForEach(group.routes) { route in
                             NavigationLink(value: route) {
                                 RouteRow(route: route)
                             }
                         }
+                    } header: {
+                        RouteGroupHeader(title: group.crag, count: group.routes.count)
                     }
                 }
             }
         } else {
             List {
-                Section("\(filtered.count) routes") {
+                Section {
                     ForEach(gradeSorted) { route in
                         NavigationLink(value: route) {
                             RouteRow(route: route)
                         }
                     }
+                } header: {
+                    RouteGroupHeader(
+                        title: gradeSort == .ascending ? "Easiest first" : "Hardest first",
+                        count: filtered.count
+                    )
                 }
             }
         }
+    }
+}
+
+/// Editorial crag-group header for the route list: sentence-case title with a quiet count.
+private struct RouteGroupHeader: View {
+    let title: String
+    let count: Int
+
+    var body: some View {
+        HStack(alignment: .firstTextBaseline) {
+            Text(title)
+                .font(.headline)
+                .foregroundStyle(.primary)
+            Spacer()
+            Text(count == 1 ? "1 route" : "\(count) routes")
+                .font(.caption)
+                .foregroundStyle(.secondary)
+                .monospacedDigit()
+        }
+        .textCase(nil)
+        .padding(.top, 2)
+        .accessibilityElement(children: .combine)
     }
 }
 
@@ -197,9 +281,11 @@ struct FilterChip: View {
             FilterChipLabel(text: text, color: color, systemImage: systemImage, isSelected: isSelected)
         }
         .buttonStyle(.plain)
+        .accessibilityAddTraits(isSelected ? .isSelected : [])
     }
 }
 
+/// Filter chip appearance: soft neutral capsule at rest, tinted fill + heavier text when selected.
 struct FilterChipLabel: View {
     let text: String
     var color: Color = .secondary
@@ -207,54 +293,68 @@ struct FilterChipLabel: View {
     let isSelected: Bool
 
     var body: some View {
-        HStack(spacing: 4) {
+        HStack(spacing: 5) {
             if let systemImage {
                 Image(systemName: systemImage)
+                    .font(.caption.weight(.semibold))
             }
             Text(text)
         }
-        .font(.caption.weight(.medium))
-        .padding(.horizontal, 10)
-        .padding(.vertical, 6)
-        .background(isSelected ? color.opacity(0.25) : color.opacity(0.1), in: Capsule())
+        .font(.subheadline.weight(isSelected ? .semibold : .medium))
+        .lineLimit(1)
+        .padding(.horizontal, 13)
+        .padding(.vertical, 7)
+        .frame(minHeight: 34)
+        .background(isSelected ? color.opacity(0.18) : Color.secondary.opacity(0.10), in: Capsule())
         .foregroundStyle(isSelected ? color : .secondary)
-        .overlay {
-            Capsule().strokeBorder(isSelected ? color : .clear, lineWidth: 1)
-        }
+        .contentShape(Capsule())
     }
 }
 
+/// Route row: grade leads (climbers scan grades first), then name and quiet meta.
 struct RouteRow: View {
     let route: RouteRecord
 
     var body: some View {
-        HStack(spacing: 8) {
+        HStack(alignment: .center, spacing: 12) {
+            Text(route.grade)
+                .font(.title3.weight(.bold))
+                .monospacedDigit()
+                .lineLimit(1)
+                .minimumScaleFactor(0.7)
+                .frame(minWidth: 52, alignment: .leading)
+                .foregroundStyle(.primary)
+
             VStack(alignment: .leading, spacing: 3) {
                 Text(route.name)
-                    .font(.subheadline.weight(.medium))
-                HStack(spacing: 4) {
-                    StyleBadge(text: route.grade, color: .primary)
+                    .font(.body)
+                    .lineLimit(2)
+                HStack(spacing: 6) {
                     StyleBadge(text: route.style, color: CragStyle.color(forStyleString: route.style))
                     if let sector = route.sector {
                         Text(sector)
-                            .font(.caption2)
+                            .font(.caption)
                             .foregroundStyle(.secondary)
                             .lineLimit(1)
                     }
                 }
             }
+
             Spacer(minLength: 4)
-            if let stars = route.stars, stars > 0 {
-                StarsView(stars: stars)
+
+            VStack(alignment: .trailing, spacing: 4) {
+                if let stars = route.stars, stars > 0 {
+                    StarsView(stars: stars)
+                }
+                VerifiedMark(verified: route.verified)
+                    .font(.caption2)
             }
-            VerifiedMark(verified: route.verified)
-                .font(.caption)
         }
-        .padding(.vertical, 1)
+        .padding(.vertical, 3)
     }
 }
 
-/// Route detail: grade/style facts, protection and description, source link.
+/// Route detail: grade/style/stars hero, facts, protection and description, source link.
 /// The crag name links across to that crag's detail screen.
 struct RouteDetailView: View {
     let route: RouteRecord
@@ -268,33 +368,57 @@ struct RouteDetailView: View {
 
     var body: some View {
         List {
+            Section {
+                VStack(alignment: .leading, spacing: 12) {
+                    HStack(alignment: .firstTextBaseline, spacing: 14) {
+                        Text(route.grade)
+                            .font(.system(.largeTitle, design: .rounded, weight: .bold))
+                            .monospacedDigit()
+                            .lineLimit(1)
+                            .minimumScaleFactor(0.6)
+                        Text(route.gradeSystem)
+                            .font(.subheadline)
+                            .foregroundStyle(.secondary)
+                        Spacer()
+                        if let stars = route.stars, stars > 0 {
+                            StarsView(stars: stars)
+                        }
+                    }
+                    HStack(spacing: 8) {
+                        StyleBadge(text: route.style, color: CragStyle.color(forStyleString: route.style))
+                        if let length = route.lengthM {
+                            Text(String(format: "%.0f m", length))
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                        }
+                        if let bolts = route.bolts {
+                            Text(bolts == 1 ? "1 bolt" : "\(bolts) bolts")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                        }
+                    }
+                    Label(route.verified ? "Verified against the sources" : "Unverified — sources conflict or unconfirmed",
+                          systemImage: route.verified ? "checkmark.seal.fill" : "exclamationmark.circle")
+                        .font(.footnote)
+                        .foregroundStyle(route.verified ? Color.green : GuideTheme.warning)
+                }
+                .padding(.vertical, 6)
+                .accessibilityElement(children: .combine)
+            }
+
             if let crag = mappedCrag {
                 Section {
                     Button {
                         mapFocus.show(cragSlug: crag.slug)
                     } label: {
                         Label("Show \(crag.name) on map", systemImage: "map")
+                            .font(.body.weight(.medium))
                     }
                     .accessibilityHint("Switches to the Map tab and focuses this route’s area")
                 }
             }
 
             Section {
-                HStack {
-                    Label(route.verified ? "Verified" : "Unverified — sources conflict or unconfirmed",
-                          systemImage: route.verified ? "checkmark.seal.fill" : "exclamationmark.circle")
-                        .foregroundStyle(route.verified ? Color.green : Color.orange)
-                        .font(.callout)
-                    Spacer()
-                    if let stars = route.stars, stars > 0 {
-                        StarsView(stars: stars)
-                    }
-                }
-            }
-
-            Section("Facts") {
-                LabeledContent("Grade", value: "\(route.grade) (\(route.gradeSystem))")
-                LabeledContent("Style", value: route.style)
                 if let crag = store.crag(named: route.crag) {
                     NavigationLink(value: crag) {
                         LabeledContent("Crag", value: route.crag)
@@ -305,47 +429,51 @@ struct RouteDetailView: View {
                 if let sector = route.sector {
                     LabeledContent("Sector", value: sector)
                 }
-                if let length = route.lengthM {
-                    LabeledContent("Length", value: String(format: "%.0f m", length))
-                }
-                if let bolts = route.bolts {
-                    LabeledContent("Bolts", value: "\(bolts)")
-                }
                 if let fa = route.fa {
                     LabeledContent("First ascent", value: fa)
                 }
                 if let ticks = route.ticks {
                     LabeledContent("27crags ticks", value: "\(ticks)")
                 }
-            }
-
-            if let protection = route.protection {
-                Section("Protection") {
-                    Text(protection).font(.callout)
-                }
+            } header: {
+                GuideHeader(title: "Where")
             }
 
             if let description = route.description {
-                Section("Description") {
-                    Text(description).font(.callout)
+                Section {
+                    Text(description)
+                        .font(.body)
+                } header: {
+                    GuideHeader(title: "The climb")
+                }
+            }
+
+            if let protection = route.protection {
+                Section {
+                    Text(protection)
+                        .font(.body)
+                } header: {
+                    GuideHeader(title: "Protection")
                 }
             }
 
             if let note = route.note {
                 Section {
-                    Label(note, systemImage: "info.circle")
-                        .font(.callout)
-                        .foregroundStyle(.blue)
+                    GuideCallout(text: note, systemImage: "info.circle.fill", tint: GuideTheme.note)
+                        .listRowInsets(EdgeInsets())
+                        .listRowBackground(Color.clear)
                 }
             }
 
-            Section("Source") {
+            Section {
                 LabeledContent("Database", value: route.source)
                 if let sourceUrl = route.sourceUrl, let url = URL(string: sourceUrl) {
                     Link(destination: url) {
                         Label("Open original page", systemImage: "safari")
                     }
                 }
+            } header: {
+                Text("Source")
             }
         }
         .navigationTitle(route.name)
