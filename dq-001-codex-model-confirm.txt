@@ -1,0 +1,15 @@
+OpenAI Codex v0.153.2
+--------
+workdir: /workspace/koh-tao-briefs
+model: gpt-6-astra
+provider: openai
+approval: never
+sandbox: read-only
+reasoning effort: none
+reasoning summaries: none
+session id: 01a0bd7b-87ab-7231-be23-33618a3da79e
+--------
+user
+--- resume ---
+2026-09-20T06:25:30.730202Z ERROR codex_api::endpoint::responses_websocket: failed to connect to websocket: IO error: tls handshake eof, url: wss://chatgpt.com/backend-api/codex/responses
+2026-09-20T06:25:33.092966Z ERROR codex_models_manager::manager: failed to refresh available models: timeout waiting for child process to exit

@@ -1,0 +1,21 @@
+You are running a FIRST-PASS photo↔route DQ judgment for Koh Tao Climbing.
+Model must behave as analysis-only. Never invent routes, grades, coords, or URLs.
+
+Read the JSON package that follows in the <stdin> block (also mirrored at /workspace/koh-tao-briefs/dq-001-codex-slim.json if readable).
+
+Produce a single JSON object matching the required schema:
+- model_confirm: state you are gpt-6-astra
+- top10: exactly 10 worst photo↔route problems ranked
+- schema_suggestion: brief suggestion for routeAnnotations / multi-route linking (no invented routes)
+- pr_batches: 3–6 small proposed fix batches for Claude/Mini (JSON patches as lists only; do not edit files)
+- notes: any blockers / thin evidence
+
+Prioritize:
+1) dual-crag photo.crag labels that DataStore.photoBelongs cannot resolve to both crags
+2) multi-route topo captions with no routeId (schema gap)
+3) confirmed spelling drift between caption and routes.json (Mosquit/Btich etc.) — only if present in provided data
+4) grade mismatches caption vs DB
+5) caption route names not in DB (do NOT invent new routes; propose caption fix or mark unverified)
+6) community crag aliases (Backyard/Frontyard) and scenic_non_crag
+
+Evidence must cite provided captions, scan flags, or sources.json URLs already present.
