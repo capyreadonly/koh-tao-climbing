@@ -6,7 +6,7 @@ final class MapTapRoutesUITests: XCTestCase {
         continueAfterFailure = false
     }
 
-    /// `-selectCrag` drives the same navigation as a pin tap (path push + didSelect).
+    /// `-selectCrag` drives the same sheet as a pin tap (TF 1.0.2 NavigationPath push was insufficient).
     @MainActor
     func testMapCragSelectionOpensCragRoutesDetail() throws {
         let app = XCUIApplication()
@@ -21,14 +21,21 @@ final class MapTapRoutesUITests: XCTestCase {
             mapTab.tap()
         }
 
+        // Sheet presentation (not nav push) — look for detail chrome + Done.
         let nav = app.navigationBars["Mek's Mountain"]
         let detail = app.otherElements["cragDetail"]
-        let opened = nav.waitForExistence(timeout: 20) || detail.waitForExistence(timeout: 5)
-        XCTAssertTrue(opened, "Selecting a map crag must open crag/routes detail")
+        let done = app.buttons["cragDetailDone"]
+        let sheet = app.otherElements["cragDetailSheet"]
+        let opened = nav.waitForExistence(timeout: 20)
+            || detail.waitForExistence(timeout: 5)
+            || done.waitForExistence(timeout: 5)
+            || sheet.waitForExistence(timeout: 5)
+        XCTAssertTrue(opened, "Selecting a map crag must open crag/routes detail sheet")
 
         XCTAssertTrue(
-            app.staticTexts["Routes"].waitForExistence(timeout: 8),
-            "Crag detail should show the Routes section"
+            app.staticTexts["Routes"].waitForExistence(timeout: 8)
+                || app.buttons["openInRoutesProminent"].waitForExistence(timeout: 3),
+            "Crag detail should show the Routes section or Open-in-Routes CTA"
         )
     }
 
@@ -54,6 +61,29 @@ final class MapTapRoutesUITests: XCTestCase {
         XCTAssertTrue(
             clear.waitForExistence(timeout: 8) || clearChip.waitForExistence(timeout: 2),
             "Active grade+style filters should offer a clear control"
+        )
+    }
+
+    /// Photo presence filter chip + Has photo / No photo row labels.
+    @MainActor
+    func testRoutesPhotoFilterExists() throws {
+        let app = XCUIApplication()
+        app.launchArguments += [
+            "-skipAbout",
+            "-initialTab", "routes",
+            "-routesPhotoFilter", "has-photo",
+        ]
+        app.launch()
+
+        let photoFilter = app.descendants(matching: .any)["routesPhotoFilter"]
+        XCTAssertTrue(
+            photoFilter.waitForExistence(timeout: 12),
+            "Photo filter control should be in the Routes filter bar"
+        )
+        let hasPhoto = app.staticTexts["Has photo"]
+        XCTAssertTrue(
+            hasPhoto.waitForExistence(timeout: 10),
+            "Filtered routes should show Has photo labels"
         )
     }
 }

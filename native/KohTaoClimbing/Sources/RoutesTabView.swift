@@ -1,6 +1,6 @@
 import SwiftUI
 
-/// Routes tab: all 624 routes with search, style + grade filters, a verified-only
+/// Routes tab: all 624 routes with search, style + grade + photo filters, a verified-only
 /// toggle and optional grade sorting. Grouped by crag in the default order.
 struct RoutesTabView: View {
     let store: DataStore
@@ -34,9 +34,17 @@ struct RoutesTabView: View {
 
     @State private var path = NavigationPath()
 
+    /// Testing hook: `-routesPhotoFilter has-photo|no-photo` pre-selects photo filter.
+    private static let debugPhotoFilter: PhotoPresenceFilter? = {
+        let args = ProcessInfo.processInfo.arguments
+        guard let i = args.firstIndex(of: "-routesPhotoFilter"), i + 1 < args.count else { return nil }
+        return PhotoPresenceFilter.fromLaunchArg(args[i + 1])
+    }()
+
     private func applyDebugHooks() {
         if let s = Self.debugStyle { filter.selectedStyle = s }
         if let b = Self.debugGradeBand { filter.gradeBand = b }
+        if let p = Self.debugPhotoFilter { filter.photoFilter = p }
         if let i = ProcessInfo.processInfo.arguments.firstIndex(of: "-routesCrag"),
            i + 1 < ProcessInfo.processInfo.arguments.count {
             filter.selectedCragName = ProcessInfo.processInfo.arguments[i + 1]
@@ -78,6 +86,13 @@ struct RoutesTabView: View {
             if let style = filter.selectedStyle, CragStyle.primaryStyle(route.style) != style { return false }
             if let band = filter.gradeBand, !band.matches(route) { return false }
             if let cragName = filter.selectedCragName, route.crag != cragName { return false }
+            switch filter.photoFilter {
+            case .all: break
+            case .hasPhoto:
+                if !store.hasPhotos(forRoute: route) { return false }
+            case .noPhoto:
+                if store.hasPhotos(forRoute: route) { return false }
+            }
             guard !query.isEmpty else { return true }
             return route.name.lowercased().contains(query)
                 || route.crag.lowercased().contains(query)
@@ -221,6 +236,35 @@ struct RoutesTabView: View {
                 }
                 .accessibilityLabel(filter.gradeBand.map { "Grade filter, \($0.rawValue)" } ?? "Grade filter")
                 .accessibilityIdentifier("routesGradeFilter")
+                Menu {
+                    Button("Any photo") {
+                        withAnimation(.snappy) { filter.photoFilter = .all }
+                    }
+                    Divider()
+                    Button("Has photo") {
+                        withAnimation(.snappy) {
+                            filter.photoFilter = filter.photoFilter == .hasPhoto ? .all : .hasPhoto
+                        }
+                    }
+                    Button("No photo") {
+                        withAnimation(.snappy) {
+                            filter.photoFilter = filter.photoFilter == .noPhoto ? .all : .noPhoto
+                        }
+                    }
+                } label: {
+                    FilterChipLabel(
+                        text: filter.photoFilter == .all ? "photo" : filter.photoFilter.chipLabel,
+                        color: .pink,
+                        systemImage: "photo",
+                        isSelected: filter.photoFilter != .all
+                    )
+                }
+                .accessibilityLabel(
+                    filter.photoFilter == .all
+                        ? "Photo filter"
+                        : "Photo filter, \(filter.photoFilter.chipLabel)"
+                )
+                .accessibilityIdentifier("routesPhotoFilter")
                 FilterChip(
                     text: "verified",
                     color: .green,
@@ -272,7 +316,7 @@ struct RoutesTabView: View {
                     Section {
                         ForEach(group.routes) { route in
                             NavigationLink(value: route) {
-                                RouteRow(route: route)
+                                RouteRow(route: route, hasPhoto: store.hasPhotos(forRoute: route))
                             }
                         }
                     } header: {
@@ -285,7 +329,7 @@ struct RoutesTabView: View {
                 Section {
                     ForEach(gradeSorted) { route in
                         NavigationLink(value: route) {
-                            RouteRow(route: route)
+                            RouteRow(route: route, hasPhoto: store.hasPhotos(forRoute: route))
                         }
                     }
                 } header: {
@@ -367,6 +411,8 @@ struct FilterChipLabel: View {
 /// Route row: grade leads (climbers scan grades first), then name and quiet meta.
 struct RouteRow: View {
     let route: RouteRecord
+    /// Crag-linked bundled photo presence (PhotoEntry.crag) — not a per-route image field.
+    var hasPhoto: Bool = false
 
     var body: some View {
         HStack(alignment: .center, spacing: 12) {
@@ -384,6 +430,10 @@ struct RouteRow: View {
                     .lineLimit(2)
                 HStack(spacing: 6) {
                     StyleBadge(text: route.style, color: CragStyle.color(forStyleString: route.style))
+                    Text(hasPhoto ? "Has photo" : "No photo")
+                        .font(.caption2.weight(.medium))
+                        .foregroundStyle(hasPhoto ? Color.pink : .secondary)
+                        .accessibilityLabel(hasPhoto ? "Has photo" : "No photo")
                     if let sector = route.sector {
                         Text(sector)
                             .font(.caption)

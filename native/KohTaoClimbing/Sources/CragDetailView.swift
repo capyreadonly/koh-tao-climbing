@@ -189,6 +189,7 @@ struct CragDetailView: View {
             }
         }
         .navigationTitle(crag.name)
+        .toolbarVisibility(.visible, for: .navigationBar)
         .accessibilityIdentifier("cragDetail")
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {

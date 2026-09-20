@@ -261,18 +261,18 @@ struct OfflineMapView: UIViewRepresentable {
             view.annotation = annotation
             view.markerTintColor = UIColor(CragStyle.color(for: cragAnnotation.crag))
             view.glyphImage = UIImage(systemName: "figure.climbing")
-            view.canShowCallout = true
-            view.displayPriority = .defaultHigh
-            view.clusteringIdentifier = "crag"
+            // Callout disabled: pin tap opens crag UI directly (TF 1.0.2 callout-only felt dead).
+            view.canShowCallout = false
+            view.displayPriority = .required
+            // No clustering — at island fit every pin stays independently tappable.
+            view.clusteringIdentifier = nil
             if #available(iOS 16.0, *) {
                 view.titleVisibility = .adaptive
                 view.subtitleVisibility = .adaptive
             }
-            // Single labeled accessory — avoid Open + detailDisclosure doing the same push.
-            let open = UIButton(type: .system)
-            open.setTitle("Open", for: .normal)
-            open.accessibilityLabel = "Open crag"
-            view.rightCalloutAccessoryView = open
+            view.rightCalloutAccessoryView = nil
+            view.accessibilityLabel = cragAnnotation.crag.name
+            view.accessibilityHint = "Opens climbs and routes for this area"
             return view
         }
 
@@ -289,10 +289,14 @@ struct OfflineMapView: UIViewRepresentable {
                 mapView.showAnnotations(cluster.memberAnnotations, animated: true)
                 return
             }
-            // Pin tap must open crag/routes detail — callout-only was a dead end.
+            // Pin tap must open climb/routes UI. NavigationPath over MKMapView failed in TF 1.0.2;
+            // coordinator calls into SwiftUI which presents a sheet (see MapTabView.selectedCrag).
             guard let cragAnnotation = annotation as? CragAnnotation else { return }
-            mapView.deselectAnnotation(annotation, animated: true)
-            onSelectCrag(cragAnnotation.crag)
+            let crag = cragAnnotation.crag
+            onSelectCrag(crag)
+            DispatchQueue.main.async {
+                mapView.deselectAnnotation(annotation, animated: false)
+            }
         }
 
         func mapViewDidChangeVisibleRegion(_ mapView: MKMapView) {
@@ -318,12 +322,14 @@ struct OfflineMapView: UIViewRepresentable {
     }
 }
 
-/// Map tab: full-bleed offline map. Marker callouts push the crag detail; a glass
+/// Map tab: full-bleed offline map. Pin tap presents crag/routes in a sheet; a glass
 /// button lists the crags that have no coordinates (and thus no map marker).
 struct MapTabView: View {
     let store: DataStore
     let mapFocus: MapFocus
-    @State private var path = NavigationPath()
+    /// Presented as a sheet — NavigationPath push over full-bleed MKMapView did not reliably
+    /// show CragDetail in TestFlight 1.0.2 (build 5). Sheet survives tab switches too.
+    @State private var selectedCrag: Crag?
     @State private var showingUnmappedCrags = MapTabView.debugShowUnmapped
     @State private var outsideCoverage = false
     @State private var recenterToken = 0
@@ -364,7 +370,7 @@ struct MapTabView: View {
     }
 
     var body: some View {
-        NavigationStack(path: $path) {
+        NavigationStack {
             OfflineMapView(
                 crags: store.crags,
                 initialCamera: restoredCamera,
@@ -373,7 +379,10 @@ struct MapTabView: View {
                 recenterToken: recenterToken,
                 focusSlug: mapFocus.slug,
                 focusToken: mapFocus.token,
-                onSelectCrag: { crag in path.append(crag) },
+                onSelectCrag: { crag in
+                    // Always assign on main; sheet(item:) is the reliable map→climb path.
+                    selectedCrag = crag
+                },
                 onCameraChange: { camera in
                     savedLatitude = camera.center.latitude
                     savedLongitude = camera.center.longitude
@@ -384,16 +393,11 @@ struct MapTabView: View {
             .ignoresSafeArea()
             .accessibilityIdentifier("mapTab")
             .toolbarVisibility(.hidden, for: .navigationBar)
-            .navigationDestination(for: Crag.self) { crag in
-                CragDetailView(crag: crag, store: store)
-            }
-            // Testing hook: `-selectCrag` also pushes detail (same outcome as pin tap).
-            // Pin selection alone can race UITest launch; path push is deterministic.
+            // Testing hook: `-selectCrag` opens the same sheet as a pin tap.
             .onAppear {
-                // debugSelectSlug push
-                guard path.isEmpty, let slug = Self.debugSelectSlug,
+                guard selectedCrag == nil, let slug = Self.debugSelectSlug,
                       let crag = store.crags.first(where: { $0.slug == slug }) else { return }
-                path.append(crag)
+                selectedCrag = crag
             }
             .overlay(alignment: .top) {
                 if outsideCoverage {
@@ -482,9 +486,25 @@ struct MapTabView: View {
             .sheet(isPresented: $showingUnmappedCrags) {
                 UnmappedCragsSheet(crags: unmappedCrags, store: store)
             }
+            .sheet(item: $selectedCrag) { crag in
+                NavigationStack {
+                    CragDetailView(crag: crag, store: store)
+                        .toolbarVisibility(.visible, for: .navigationBar)
+                        .toolbar {
+                            ToolbarItem(placement: .cancellationAction) {
+                                Button("Done") { selectedCrag = nil }
+                                    .accessibilityIdentifier("cragDetailDone")
+                            }
+                        }
+                }
+                .presentationDetents([.large])
+                .presentationDragIndicator(.visible)
+                .accessibilityIdentifier("cragDetailSheet")
+            }
             .onChange(of: mapFocus.token) { _, token in
+                // Show on map from another tab: dismiss climb sheet so the pin is visible.
                 if token > 0 {
-                    path = NavigationPath()
+                    selectedCrag = nil
                 }
             }
         }
