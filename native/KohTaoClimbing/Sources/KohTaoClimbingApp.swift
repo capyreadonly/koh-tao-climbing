@@ -18,6 +18,7 @@ struct RootTabView: View {
     let store: DataStore
     @State private var selection: AppTab
     @State private var mapFocus = MapFocus()
+    @State private var routesFilter = RoutesFilterModel()
     @AppStorage("didShowAboutGuide") private var didShowAboutGuide = false
     @State private var showAboutGuide = false
     private let initialCragSlug: String?
@@ -49,7 +50,7 @@ struct RootTabView: View {
                 CragsTabView(store: store, initialCragSlug: initialCragSlug)
             }
             Tab("Routes", systemImage: "figure.climbing", value: .routes) {
-                RoutesTabView(store: store)
+                RoutesTabView(store: store, filter: routesFilter)
             }
             Tab("Community", systemImage: "person.3", value: .community) {
                 CommunityTabView(store: store)
@@ -59,9 +60,15 @@ struct RootTabView: View {
             }
         }
         .environment(mapFocus)
+        .environment(routesFilter)
         .onChange(of: mapFocus.token) { _, token in
             if token > 0, mapFocus.slug != nil {
                 selection = .map
+            }
+        }
+        .onChange(of: routesFilter.tabJumpToken) { _, token in
+            if token > 0 {
+                selection = .routes
             }
         }
         .overlay(alignment: .top) {

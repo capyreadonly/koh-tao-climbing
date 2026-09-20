@@ -64,15 +64,30 @@ targets:
         SWIFT_VERSION: "6.0"
         GENERATE_INFOPLIST_FILE: YES
 
+  KohTaoClimbingUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    deploymentTarget: "26.0"
+    sources:
+      - path: KohTaoClimbing/UITests
+    dependencies:
+      - target: KohTaoClimbing
+    settings:
+      base:
+        SWIFT_VERSION: "6.0"
+        GENERATE_INFOPLIST_FILE: YES
+
 schemes:
   KohTaoClimbing:
     build:
       targets:
         KohTaoClimbing: all
         KohTaoClimbingTests: [test]
+        KohTaoClimbingUITests: [test]
     run:
       config: Debug
     test:
       config: Debug
       targets:
         - KohTaoClimbingTests
+        - KohTaoClimbingUITests

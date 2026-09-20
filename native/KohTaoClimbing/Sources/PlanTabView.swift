@@ -85,7 +85,7 @@ struct PlanTabView: View {
         case .services:
             ServicesScreen(services: store.services)
         case .sources:
-            SourcesScreen(sources: store.sources)
+            SourcesScreen(sources: store.sources, guidebooks: store.info?.guidebooks ?? [])
         }
     }
 }
@@ -514,6 +514,7 @@ private struct ServicesScreen: View {
 
 private struct SourcesScreen: View {
     let sources: [SourceLink]
+    var guidebooks: [Guidebook] = []
 
     var body: some View {
         List {
@@ -522,6 +523,34 @@ private struct SourcesScreen: View {
                     .font(.body)
                     .padding(.vertical, 2)
             }
+            Section {
+                let downloads = guidebooks.filter { $0.url != nil }
+                if downloads.isEmpty {
+                    Text("No downloadable paper guides listed.")
+                        .font(.callout)
+                        .foregroundStyle(.secondary)
+                } else {
+                    ForEach(downloads, id: \.self) { book in
+                        if let urlString = book.url, let url = URL(string: urlString) {
+                            Link(destination: url) {
+                                Label(
+                                    urlString.lowercased().hasSuffix(".pdf")
+                                        ? "Download \(book.title)"
+                                        : book.title,
+                                    systemImage: urlString.lowercased().hasSuffix(".pdf")
+                                        ? "arrow.down.doc" : "safari"
+                                )
+                            }
+                            Text("\(book.author) · \(book.year)")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                        }
+                    }
+                }
+            } header: {
+                GuideHeader(title: "Paper guide downloads")
+            }
+
             Section {
                 ForEach(sources) { source in
                     VStack(alignment: .leading, spacing: 3) {

@@ -6,6 +6,7 @@ struct CragDetailView: View {
     let crag: Crag
     let store: DataStore
     @Environment(MapFocus.self) private var mapFocus
+    @Environment(RoutesFilterModel.self) private var routesFilter
 
     // Full-screen photo viewer selection. Testing/screenshot hook: `-showViewer [index]`
     // pre-opens the viewer, optionally at a page index. The hero photo opens page 0.
@@ -55,6 +56,22 @@ struct CragDetailView: View {
                     GuideCallout(text: warning, title: "Access")
                         .listRowInsets(EdgeInsets())
                         .listRowBackground(Color.clear)
+                }
+            }
+
+            if !routes.isEmpty {
+                Section {
+                    Button {
+                        routesFilter.openCrag(crag.name)
+                    } label: {
+                        Label("Open \(routes.count) routes", systemImage: "figure.climbing")
+                            .font(.body.weight(.semibold))
+                            .frame(maxWidth: .infinity)
+                    }
+                    .buttonStyle(.borderedProminent)
+                    .tint(.teal)
+                    .listRowInsets(EdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 16))
+                    .accessibilityIdentifier("openInRoutesProminent")
                 }
             }
 
@@ -172,7 +189,15 @@ struct CragDetailView: View {
             }
         }
         .navigationTitle(crag.name)
+        .accessibilityIdentifier("cragDetail")
         .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                Button("Open in Routes", systemImage: "figure.climbing") {
+                    routesFilter.openCrag(crag.name)
+                }
+                .accessibilityHint("Switches to the Routes tab filtered to this crag")
+                .accessibilityIdentifier("openInRoutes")
+            }
             if crag.coords != nil {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button("Show on map", systemImage: "map") {

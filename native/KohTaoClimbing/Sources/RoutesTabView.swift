@@ -1,12 +1,10 @@
 import SwiftUI
 
-/// Routes tab: all 624 routes with search, style chips, a verified-only toggle
-/// and optional grade sorting. Grouped by crag in the default order.
+/// Routes tab: all 624 routes with search, style + grade filters, a verified-only
+/// toggle and optional grade sorting. Grouped by crag in the default order.
 struct RoutesTabView: View {
     let store: DataStore
-    @State private var searchText = ""
-    @State private var selectedStyle: String? = RoutesTabView.debugStyle
-    @State private var verifiedOnly = false
+    @Bindable var filter: RoutesFilterModel
     @State private var gradeSort: GradeSortOrder = RoutesTabView.debugSort
 
     // Testing/screenshot hooks: `-routesStyle boulder -routesSort asc|desc`.
@@ -14,6 +12,12 @@ struct RoutesTabView: View {
         let args = ProcessInfo.processInfo.arguments
         guard let i = args.firstIndex(of: "-routesStyle"), i + 1 < args.count else { return nil }
         return args[i + 1]
+    }()
+    /// Testing hook: `-routesGradeBand easy|mid|hard|project` pre-selects that band.
+    private static let debugGradeBand: GradeBand? = {
+        let args = ProcessInfo.processInfo.arguments
+        guard let i = args.firstIndex(of: "-routesGradeBand"), i + 1 < args.count else { return nil }
+        return GradeBand.fromLaunchArg(args[i + 1])
     }()
     private static let debugSort: GradeSortOrder = {
         let args = ProcessInfo.processInfo.arguments
@@ -30,6 +34,15 @@ struct RoutesTabView: View {
 
     @State private var path = NavigationPath()
 
+    private func applyDebugHooks() {
+        if let s = Self.debugStyle { filter.selectedStyle = s }
+        if let b = Self.debugGradeBand { filter.gradeBand = b }
+        if let i = ProcessInfo.processInfo.arguments.firstIndex(of: "-routesCrag"),
+           i + 1 < ProcessInfo.processInfo.arguments.count {
+            filter.selectedCragName = ProcessInfo.processInfo.arguments[i + 1]
+        }
+    }
+
     // Testing/screenshot hook: `-initialRoute <name substring>` pushes that route.
     private static let debugRoute: String? = {
         let args = ProcessInfo.processInfo.arguments
@@ -37,27 +50,34 @@ struct RoutesTabView: View {
         return args[i + 1].lowercased()
     }()
 
-    /// Style categories present in the data, well-known ones first.
+
+    private var trimmedQuery: String {
+        filter.searchText.trimmingCharacters(in: .whitespaces)
+    }
+
+    private var hasActiveFilters: Bool { filter.hasActiveFilters }
+
+    /// Style chips rebuild from the active crag's routes when a crag chip is set.
     private var stylesPresent: [String] {
-        var set = Set(store.routes.map { CragStyle.primaryStyle($0.style) })
+        let pool: [RouteRecord]
+        if let name = filter.selectedCragName {
+            pool = store.routes.filter { $0.crag == name }
+        } else {
+            pool = store.routes
+        }
+        var set = Set(pool.map { CragStyle.primaryStyle($0.style) })
         let known = ["boulder", "sport", "toprope", "trad", "multipitch", "dws"]
         let ordered = known.filter { set.remove($0) != nil }
         return ordered + set.sorted()
     }
 
-    private var trimmedQuery: String {
-        searchText.trimmingCharacters(in: .whitespaces)
-    }
-
-    private var hasActiveFilters: Bool {
-        selectedStyle != nil || verifiedOnly
-    }
-
     private var filtered: [RouteRecord] {
         let query = trimmedQuery.lowercased()
         return store.routes.filter { route in
-            if verifiedOnly && !route.verified { return false }
-            if let selectedStyle, CragStyle.primaryStyle(route.style) != selectedStyle { return false }
+            if filter.verifiedOnly && !route.verified { return false }
+            if let style = filter.selectedStyle, CragStyle.primaryStyle(route.style) != style { return false }
+            if let band = filter.gradeBand, !band.matches(route) { return false }
+            if let cragName = filter.selectedCragName, route.crag != cragName { return false }
             guard !query.isEmpty else { return true }
             return route.name.lowercased().contains(query)
                 || route.crag.lowercased().contains(query)
@@ -105,13 +125,14 @@ struct RoutesTabView: View {
             .navigationDestination(for: Crag.self) { crag in
                 CragDetailView(crag: crag, store: store)
             }
-            .searchable(text: $searchText, prompt: "Route, crag, sector or grade")
+            .searchable(text: $filter.searchText, prompt: "Route, crag, sector or grade")
             .overlay {
                 if filtered.isEmpty {
                     emptyState
                 }
             }
             .onAppear {
+                applyDebugHooks()
                 guard path.isEmpty, let keyword = Self.debugRoute,
                       let match = store.routes.first(where: { $0.name.lowercased().contains(keyword) })
                 else { return }
@@ -137,7 +158,7 @@ struct RoutesTabView: View {
         } else {
             GuideEmptyState(
                 title: "No routes match",
-                message: "Try another style, or clear the filters to browse every route on the island.",
+                message: "Try another grade or style, or clear the filters to browse every route on the island.",
                 systemImage: "line.3.horizontal.decrease.circle",
                 actionTitle: "Clear filters",
                 action: clearFilters
@@ -147,8 +168,7 @@ struct RoutesTabView: View {
 
     private func clearFilters() {
         withAnimation(.snappy) {
-            selectedStyle = nil
-            verifiedOnly = false
+            filter.clearFilters()
         }
     }
 
@@ -157,24 +177,57 @@ struct RoutesTabView: View {
     private var filterBar: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 8) {
+                if let cragName = filter.selectedCragName {
+                    FilterChip(
+                        text: "Crag: \(cragName)",
+                        color: .teal,
+                        systemImage: "xmark",
+                        isSelected: true
+                    ) {
+                        withAnimation(.snappy) { filter.selectedCragName = nil }
+                    }
+                    .accessibilityLabel("Crag filter, \(cragName), tap to clear")
+                }
                 ForEach(stylesPresent, id: \.self) { style in
                     FilterChip(
                         text: style,
                         color: CragStyle.color(style),
-                        isSelected: selectedStyle == style
+                        isSelected: filter.selectedStyle == style
                     ) {
                         withAnimation(.snappy) {
-                            selectedStyle = selectedStyle == style ? nil : style
+                            filter.selectedStyle = filter.selectedStyle == style ? nil : style
                         }
                     }
                 }
+                Menu {
+                    Button("Any grade") {
+                        withAnimation(.snappy) { filter.gradeBand = nil }
+                    }
+                    Divider()
+                    ForEach(GradeBand.allCases) { band in
+                        Button(band.rawValue) {
+                            withAnimation(.snappy) {
+                                filter.gradeBand = filter.gradeBand == band ? nil : band
+                            }
+                        }
+                    }
+                } label: {
+                    FilterChipLabel(
+                        text: filter.gradeBand?.rawValue ?? "grade",
+                        color: .indigo,
+                        systemImage: "number",
+                        isSelected: filter.gradeBand != nil
+                    )
+                }
+                .accessibilityLabel(filter.gradeBand.map { "Grade filter, \($0.rawValue)" } ?? "Grade filter")
+                .accessibilityIdentifier("routesGradeFilter")
                 FilterChip(
                     text: "verified",
                     color: .green,
                     systemImage: "checkmark.seal.fill",
-                    isSelected: verifiedOnly
+                    isSelected: filter.verifiedOnly
                 ) {
-                    withAnimation(.snappy) { verifiedOnly.toggle() }
+                    withAnimation(.snappy) { filter.verifiedOnly.toggle() }
                 }
                 Menu {
                     Picker("Sort", selection: $gradeSort) {

@@ -61,6 +61,39 @@ struct AboutGuideView: View {
                 GuideHeader(title: "Sources & photos")
             }
 
+
+            Section {
+                let books = (store.info?.guidebooks ?? []).filter { $0.url != nil }
+                if books.isEmpty {
+                    Text("No downloadable paper guides are listed yet.")
+                        .font(.callout)
+                        .foregroundStyle(.secondary)
+                } else {
+                    ForEach(books, id: \.self) { book in
+                        if let urlString = book.url, let url = URL(string: urlString) {
+                            Link(destination: url) {
+                                VStack(alignment: .leading, spacing: 2) {
+                                    Label(
+                                        urlString.lowercased().contains(".pdf") ? "Download \(book.title)" : book.title,
+                                        systemImage: urlString.lowercased().contains(".pdf") ? "arrow.down.doc" : "safari"
+                                    )
+                                    .font(.subheadline.weight(.medium))
+                                    Text("\(book.author) · \(book.year)")
+                                        .font(.caption)
+                                        .foregroundStyle(.secondary)
+                                }
+                            }
+                            .accessibilityHint(urlString.lowercased().contains(".pdf") ? "Downloads the PDF guidebook" : "Opens the guidebook page")
+                        }
+                    }
+                }
+            } header: {
+                GuideHeader(title: "Paper guides")
+            } footer: {
+                Text("Historic and current paper/digital guides used while compiling this database. Prefer the current edition on the rock.")
+                    .font(.caption)
+            }
+
             Section {
                 if let url = URL(string: "https://capyreadonly.github.io/koh-tao-climbing/support.html") {
                     Link(destination: url) {

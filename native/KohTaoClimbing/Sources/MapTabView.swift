@@ -284,9 +284,15 @@ struct OfflineMapView: UIViewRepresentable {
         }
 
         func mapView(_ mapView: MKMapView, didSelect annotation: MKAnnotation) {
-            guard let cluster = annotation as? MKClusterAnnotation else { return }
-            mapView.deselectAnnotation(cluster, animated: false)
-            mapView.showAnnotations(cluster.memberAnnotations, animated: true)
+            if let cluster = annotation as? MKClusterAnnotation {
+                mapView.deselectAnnotation(cluster, animated: false)
+                mapView.showAnnotations(cluster.memberAnnotations, animated: true)
+                return
+            }
+            // Pin tap must open crag/routes detail — callout-only was a dead end.
+            guard let cragAnnotation = annotation as? CragAnnotation else { return }
+            mapView.deselectAnnotation(annotation, animated: true)
+            onSelectCrag(cragAnnotation.crag)
         }
 
         func mapViewDidChangeVisibleRegion(_ mapView: MKMapView) {
@@ -376,9 +382,18 @@ struct MapTabView: View {
                 onCoverageChange: { outside in outsideCoverage = outside }
             )
             .ignoresSafeArea()
+            .accessibilityIdentifier("mapTab")
             .toolbarVisibility(.hidden, for: .navigationBar)
             .navigationDestination(for: Crag.self) { crag in
                 CragDetailView(crag: crag, store: store)
+            }
+            // Testing hook: `-selectCrag` also pushes detail (same outcome as pin tap).
+            // Pin selection alone can race UITest launch; path push is deterministic.
+            .onAppear {
+                // debugSelectSlug push
+                guard path.isEmpty, let slug = Self.debugSelectSlug,
+                      let crag = store.crags.first(where: { $0.slug == slug }) else { return }
+                path.append(crag)
             }
             .overlay(alignment: .top) {
                 if outsideCoverage {
