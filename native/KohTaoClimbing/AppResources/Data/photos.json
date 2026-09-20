@@ -865,14 +865,14 @@
       "file": "Images/guide/p37-0-X123.jpg",
       "kind": "topo-diagram",
       "caption": "Topo diagram titled 'The Peak Boulders' at June Jua Beach (area not among the 9 known crags - crag unverified). Boulder layout with letter/grade labels: MH - Pete's arete, Pro, M, M, Pro, MH - Nak Lung Noi, M - Kanom Wan, H - Crimpology, E - Baseball mantle, MH - Long live the Buddha, *M, MH - Slinky, MH, E, E, *E Sit. Landmarks: Viewpoint of Chalok Baan Kao, The Castle, steep sandy/rocky road. Compass rose.",
-      "crag": "The Peak Boulders / Sai Tong",
+      "crag": "The Peak Boulders",
       "page": 37
     },
     {
       "file": "Images/guide/p37-1-X124.jpg",
       "kind": "topo-diagram",
       "caption": "Topo diagram titled 'Sai Tong area' (near Jansom Bay per map labels). Boulder layout near Small Coral Beach, Sai Tong beach, Jansom Bay; features a 'Cave'. Labels: H - Return of the Jeddi, M/MH/H/E difficulty markers, M - Hels's arete (partially legible). Compass rose. Area attribution per the PDF page text: the page covers both The Peak Boulders and the Sai Tong area; the exact placement of this topo is inferred, unverified.",
-      "crag": "The Peak Boulders / Sai Tong",
+      "crag": "Sai Tong",
       "page": 37
     },
     {
@@ -1067,8 +1067,8 @@
     {
       "file": "Images/guide/p42-0-X152.jpg",
       "kind": "topo-diagram",
-      "caption": "Full guidebook page \"Aow Luek\": intro text (beach, snorkelling, warning about grumpy local) plus hand-drawn boulder topo with numbered problems and route list: 1. **Wonderlust V0 (great slab), 2. **V0 (traverse right from #1), 3. ***The Naturalist V4, 4. ***Naturalist Extension V4, 5. *Boop Boop Chomp V2, 6. **Rhythm Splitter V4 (crack and face), 7. **Clam Sandwich V1, 8. *V0, 9. *Caluga V0, 10. *V4 (sit start on low flake), 11. **Fish Supper V2. Credit: \"Maps and problems by Matt Pierson, July 2010\". Aow Luek is a beach adjacent to Lang Khai Bay but is not one of the 9 main crags, so crag is null.",
-      "crag": "Aow Luek / Lang Khai",
+      "caption": "Full guidebook page \"Aow Luek\": intro text (beach, snorkelling, warning about grumpy local) plus hand-drawn boulder topo with numbered problems and route list: 1. **Wonderlust V0 (great slab), 2. **V0 (traverse right from #1), 3. ***The Naturalist V4, 4. ***Naturalist Extension V4, 5. *Boop Boop Chomp V2, 6. **Rhythm Splitter V4 (crack and face), 7. **Clam Sandwich V1, 8. *V0, 9. *Caluga V0, 10. *V4 (sit start on low flake), 11. **Fish Supper V2. Credit: \"Maps and problems by Matt Pierson, July 2010\".",
+      "crag": "Aow Luek",
       "page": 42
     },
     {
@@ -1082,7 +1082,7 @@
       "file": "Images/guide/p42-2-X154.jpg",
       "kind": "topo-diagram",
       "caption": "Full guidebook page \"Lang Khaai Bay\": intro text (secluded seaside granite, Tantalis roof, Yang's Bungalows, potential DWS/cliff-jumping spot toward Tanote bay), compass rose and hand-drawn topo with 12 numbered problems: 1. ***Planet Paradise V4, 2. ***Tantalis V6 (traverse right along break, crank through jugs), 3. ***Pinatubo V4, 4. *Hairy Classic Right V2 (splitter crack), 5. *Hairy Classic Left V3 (vertical break), 6. ***Zenalithic V2, 7. **Difensless V3 (arete), 8. *V1, 9. *V1, 10. *Seafluzy V4, 11. ***Infra-bubba V2, 12. *V0. Credit: \"Maps and problems by Matt Pierson, July 2010\".",
-      "crag": "Aow Luek / Lang Khai",
+      "crag": "Lang Khai",
       "page": 42
     },
     {
