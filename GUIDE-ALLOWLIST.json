@@ -1,0 +1,91 @@
+{
+  "rule": "Only URLs from sources.json; do not invent",
+  "local_pdf_mirror": "archive/pdfs/KT-Climbing-guide-1.14.pdf",
+  "remote_pdf": "http://www.railay.com/railay/climbing/KT-Climbing-guide-1.14-sm.compressed.pdf",
+  "items": [
+    {
+      "tier": "A",
+      "title": "Goodtime Adventures \u2014 free PDF guide v1/14",
+      "url": "http://www.railay.com/railay/climbing/KT-Climbing-guide-1.14-sm.compressed.pdf",
+      "attribution": "Hosted on railay.com; Goodtime / Zen Gecko lineage. Authoritative print-era source (~325 route entries).",
+      "provenance": "sources.json"
+    },
+    {
+      "tier": "A",
+      "title": "Goodtime Adventures \u2014 Climbing guidebook page",
+      "url": "https://goodtimethailand.com/climbing-guidebook/",
+      "attribution": "Operator page; points to current resources (notes rakkup as most up to date, page updated 2026-07-30 per sources).",
+      "provenance": "sources.json"
+    },
+    {
+      "tier": "A",
+      "title": "rakkup \u2014 Thailand: Koh Tao Rock Climbing",
+      "url": "https://rakkup.com/guidebooks/thailand-koh-tao-rock-climbing/",
+      "attribution": "Commercial digital guidebook page (~180 routes per sources).",
+      "provenance": "sources.json"
+    },
+    {
+      "tier": "A",
+      "title": "Rakkup \u2014 Koh Tao guide by Kelsey Gray",
+      "url": "https://rakkup.com/koh-tao-thailand-rock-climbing-by-kelsey-gray/",
+      "attribution": "Release / author article; also used as photo `sourceUrl` (\u00d74).",
+      "provenance": "sources.json"
+    },
+    {
+      "tier": "B",
+      "title": "theCrag \u2014 Koh Tao",
+      "url": "https://www.thecrag.com/en/climbing/thailand/koh-tao",
+      "attribution": "Community wiki; access/ethics, gear rental notes.",
+      "provenance": "sources.json"
+    },
+    {
+      "tier": "B",
+      "title": "theCrag \u2014 The Elephant",
+      "url": "https://www.thecrag.com/en/climbing/thailand/koh-tao/area/9797417472",
+      "attribution": "Sairee Beach boulder detail.",
+      "provenance": "sources.json"
+    },
+    {
+      "tier": "B",
+      "title": "Mountain Project \u2014 Koh Tao",
+      "url": "https://www.mountainproject.com/area/108569570/koh-tao",
+      "attribution": "Area tree; ~96 routes scraped into DB (`source=mountainproject`).",
+      "provenance": "sources.json"
+    },
+    {
+      "tier": "B",
+      "title": "Mountain Project \u2014 Tanote Bay",
+      "url": "https://www.mountainproject.com/area/123981447/tanote-bay",
+      "attribution": "Sub-area.",
+      "provenance": "sources.json"
+    },
+    {
+      "tier": "B",
+      "title": "27crags \u2014 Koh Tao",
+      "url": "https://27crags.com/crags/koh-tao",
+      "attribution": "Boulder/DWS-heavy; ~247 routes with `source=27crags`.",
+      "provenance": "sources.json"
+    },
+    {
+      "tier": "C",
+      "title": "Mapo Tapo \u2014 Koh Tao rock climbing guide",
+      "url": "https://www.mapotapo.com/blog/koh-tao",
+      "attribution": "Circuit, itineraries, Goodtime/Zen Gecko history.",
+      "provenance": "sources.json"
+    },
+    {
+      "tier": "C",
+      "title": "Imperial College \u2014 2017 SE Asia expedition",
+      "url": "https://www.imperial.ac.uk/be-inspired/exploration-board/previous-expeditions/2010s/2017-south-east-asia-climbing/",
+      "attribution": "Mek\u2019s Mountain grades context.",
+      "provenance": "sources.json"
+    },
+    {
+      "tier": "C",
+      "title": "UKC Logbook \u2014 Frontyard and Backyard",
+      "url": "https://www.ukclimbing.com/logbook/crags/frontyard_and_backyard-19525/",
+      "attribution": "Partially-verified access note in sources.",
+      "provenance": "sources.json"
+    }
+  ]
+}

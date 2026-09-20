@@ -22,6 +22,8 @@ final class DataStore {
     private var cragsBySlug: [String: Crag] = [:]
     private var cragsByName: [String: Crag] = [:]
     private var routesByCragName: [String: [RouteRecord]] = [:]
+    /// Crag names that appear on at least one usable guide/community photo.
+    private var cragNamesWithPhotos: Set<String> = []
 
     private init() {
         if let v: [Crag] = load("crags") { crags = v }
@@ -38,6 +40,18 @@ final class DataStore {
         cragsBySlug = Dictionary(crags.map { ($0.slug, $0) }, uniquingKeysWith: { first, _ in first })
         cragsByName = Dictionary(crags.map { ($0.name, $0) }, uniquingKeysWith: { first, _ in first })
         routesByCragName = Dictionary(grouping: routes, by: \.crag)
+        rebuildPhotoCragIndex()
+    }
+
+    private func rebuildPhotoCragIndex() {
+        var names = Set<String>()
+        for photo in guidePhotos where photo.isUsable {
+            if let c = photo.crag { names.insert(c) }
+        }
+        for photo in communityPhotos {
+            if let c = photo.crag { names.insert(c) }
+        }
+        cragNamesWithPhotos = names
     }
 
     private func load<T: Decodable>(_ file: String) -> T? {
@@ -81,6 +95,17 @@ final class DataStore {
 
     func photos(forCrag crag: Crag) -> [PhotoEntry] {
         guidePhotos(forCrag: crag) + communityPhotos(forCrag: crag)
+    }
+
+
+    /// Whether any usable bundled photo is linked to this crag name (exact or "Name (qualifier)").
+    func hasPhotos(forCragName name: String) -> Bool {
+        if cragNamesWithPhotos.contains(name) { return true }
+        return cragNamesWithPhotos.contains { $0.hasPrefix(name + " (") }
+    }
+
+    func hasPhotos(forRoute route: RouteRecord) -> Bool {
+        hasPhotos(forCragName: route.crag)
     }
 
     /// Best list-row thumbnail for a crag: real photos before drawn topos before maps.

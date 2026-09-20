@@ -8,7 +8,7 @@ struct PlanTabView: View {
     @State private var path = NavigationPath()
 
     enum PlanSection: String, Hashable, CaseIterable {
-        case gettingThere, seasons, gear, ethics, itineraries, guidebooks, services, sources
+        case about, gettingThere, seasons, gear, ethics, itineraries, guidebooks, services, sources
     }
 
     // Testing/screenshot hook: `-planSection gettingThere` pushes that sub-screen.
@@ -22,34 +22,36 @@ struct PlanTabView: View {
         NavigationStack(path: $path) {
             List {
                 if store.info != nil {
-                    Section("Trip planning") {
-                        NavigationLink(value: PlanSection.gettingThere) {
-                            Label("Getting There", systemImage: "ferry")
-                        }
-                        NavigationLink(value: PlanSection.seasons) {
-                            Label("Seasons", systemImage: "sun.max")
-                        }
-                        NavigationLink(value: PlanSection.gear) {
-                            Label("Gear & Safety", systemImage: "backpack")
-                        }
-                        NavigationLink(value: PlanSection.ethics) {
-                            Label("Ethics & Access", systemImage: "leaf")
-                        }
-                        NavigationLink(value: PlanSection.itineraries) {
-                            Label("Itineraries", systemImage: "map")
-                        }
-                        NavigationLink(value: PlanSection.guidebooks) {
-                            Label("Guidebooks", systemImage: "book")
-                        }
+                    Section {
+                        PlanRow(section: .gettingThere, title: "Getting There",
+                                subtitle: "Ferries, transfers and moving around", systemImage: "ferry", tint: .blue)
+                        PlanRow(section: .seasons, title: "Seasons",
+                                subtitle: "When to go and the daily rhythm", systemImage: "sun.max", tint: .orange)
+                        PlanRow(section: .gear, title: "Gear & Safety",
+                                subtitle: "Kit list, bolts and hazards", systemImage: "backpack", tint: .green)
+                        PlanRow(section: .ethics, title: "Ethics & Access",
+                                subtitle: "The official line and the rules", systemImage: "leaf", tint: .teal)
+                        PlanRow(section: .itineraries, title: "Itineraries",
+                                subtitle: "Suggested days on the rock", systemImage: "map", tint: .purple)
+                        PlanRow(section: .guidebooks, title: "Guidebooks",
+                                subtitle: "Print and online guides", systemImage: "book", tint: .brown)
+                    } header: {
+                        GuideHeader(title: "Plan your trip", subtitle: "Everything you need before the ferry.")
                     }
                 }
-                Section("Directory") {
-                    NavigationLink(value: PlanSection.services) {
-                        Label("Services & Operators", systemImage: "person.2")
-                    }
-                    NavigationLink(value: PlanSection.sources) {
-                        Label("Sources", systemImage: "link")
-                    }
+                Section {
+                    PlanRow(section: .services, title: "Services & Operators",
+                            subtitle: "Operators listed in this guide", systemImage: "person.2", tint: .indigo)
+                    PlanRow(section: .sources, title: "Sources",
+                            subtitle: "Where this guide's facts come from", systemImage: "link", tint: .secondary)
+                } header: {
+                    GuideHeader(title: "Directory")
+                }
+                Section {
+                    PlanRow(section: .about, title: "About this guide",
+                            subtitle: "An original community guide, offline", systemImage: "info.circle", tint: .secondary)
+                } header: {
+                    GuideHeader(title: "This guide")
                 }
             }
             .navigationTitle("Plan")
@@ -66,6 +68,8 @@ struct PlanTabView: View {
     @ViewBuilder
     private func destination(for section: PlanSection) -> some View {
         switch section {
+        case .about:
+            AboutGuideView(store: store)
         case .gettingThere:
             if let info = store.info { GettingThereScreen(gettingThere: info.gettingThere) }
         case .seasons:
@@ -81,8 +85,69 @@ struct PlanTabView: View {
         case .services:
             ServicesScreen(services: store.services)
         case .sources:
-            SourcesScreen(sources: store.sources)
+            SourcesScreen(sources: store.sources, guidebooks: store.info?.guidebooks ?? [])
         }
+    }
+}
+
+/// Plan hub row: tinted symbol, title and a one-line teaser of what the screen holds.
+private struct PlanRow: View {
+    let section: PlanTabView.PlanSection
+    let title: String
+    let subtitle: String
+    let systemImage: String
+    var tint: Color = .accentColor
+
+    var body: some View {
+        NavigationLink(value: section) {
+            HStack(spacing: 14) {
+                Image(systemName: systemImage)
+                    .font(.body.weight(.medium))
+                    .foregroundStyle(tint)
+                    .frame(width: 34, height: 34)
+                    .background(tint.opacity(0.12), in: RoundedRectangle(cornerRadius: 9, style: .continuous))
+                    .accessibilityHidden(true)
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(title)
+                        .font(.body.weight(.medium))
+                    Text(subtitle)
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                        .lineLimit(1)
+                }
+            }
+            .padding(.vertical, 3)
+        }
+    }
+}
+
+/// Plain prose paragraphs inside a section — the body of most Plan screens.
+private struct ProseRows: View {
+    let paragraphs: [String]
+
+    var body: some View {
+        ForEach(paragraphs, id: \.self) { paragraph in
+            Text(paragraph)
+                .font(.body)
+                .padding(.vertical, 2)
+        }
+    }
+}
+
+/// Stack of tinted callouts (hazards, conflicting sources) in one clear-backed row.
+private struct CalloutRows: View {
+    let items: [String]
+    var systemImage: String = "exclamationmark.triangle.fill"
+    var tint: Color = GuideTheme.warning
+
+    var body: some View {
+        VStack(spacing: 8) {
+            ForEach(items, id: \.self) { item in
+                GuideCallout(text: item, systemImage: systemImage, tint: tint)
+            }
+        }
+        .listRowInsets(EdgeInsets())
+        .listRowBackground(Color.clear)
     }
 }
 
@@ -93,42 +158,55 @@ private struct GettingThereScreen: View {
 
     var body: some View {
         List {
-            Section("Getting to the island") {
-                ForEach(gettingThere.toIsland, id: \.self) { Text($0).font(.callout) }
+            Section {
+                ProseRows(paragraphs: gettingThere.toIsland)
+            } header: {
+                GuideHeader(title: "Getting to the island")
             }
-            Section("Ferries") {
+            Section {
                 ForEach(gettingThere.ferries, id: \.self) { ferry in
-                    VStack(alignment: .leading, spacing: 3) {
-                        Text(ferry.route).font(.subheadline.weight(.medium))
-                        Text(ferry.operators).font(.caption).foregroundStyle(.secondary)
-                        HStack(spacing: 8) {
-                            Text(ferry.duration)
-                            if let fare = ferry.fare { Text(fare) }
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text(ferry.route)
+                            .font(.headline)
+                        Text(ferry.operators)
+                            .font(.subheadline)
+                            .foregroundStyle(.secondary)
+                        HStack(spacing: 10) {
+                            Label(ferry.duration, systemImage: "clock")
+                            if let fare = ferry.fare {
+                                Label(fare, systemImage: "banknote")
+                            }
                         }
                         .font(.caption)
+                        .foregroundStyle(.secondary)
+                        .padding(.top, 1)
                         if let notes = ferry.notes {
-                            Text(notes).font(.caption).foregroundStyle(.secondary)
+                            Text(notes)
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
                         }
                     }
-                    .padding(.vertical, 1)
+                    .padding(.vertical, 3)
                 }
+            } header: {
+                GuideHeader(title: "Ferries")
             }
             if !gettingThere.conflicts.isEmpty {
                 Section {
-                    ForEach(gettingThere.conflicts, id: \.self) { conflict in
-                        Label(conflict, systemImage: "exclamationmark.triangle.fill")
-                            .font(.callout)
-                            .foregroundStyle(.yellow)
-                    }
+                    CalloutRows(items: gettingThere.conflicts, systemImage: "arrow.triangle.branch")
                 } header: {
-                    Text("Conflicting sources")
+                    GuideHeader(title: "Conflicting sources", subtitle: "References disagree here. Check before you travel.")
                 }
             }
-            Section("On the island") {
-                ForEach(gettingThere.onIsland, id: \.self) { Text($0).font(.callout) }
+            Section {
+                ProseRows(paragraphs: gettingThere.onIsland)
+            } header: {
+                GuideHeader(title: "On the island")
             }
-            Section("Travelling with gear") {
-                ForEach(gettingThere.withGear, id: \.self) { Text($0).font(.callout) }
+            Section {
+                ProseRows(paragraphs: gettingThere.withGear)
+            } header: {
+                GuideHeader(title: "Travelling with gear")
             }
         }
         .navigationTitle("Getting There")
@@ -143,26 +221,39 @@ private struct SeasonsScreen: View {
 
     var body: some View {
         List {
-            Section("When to go") {
-                Text(seasons.climate).font(.callout)
-                ForEach(seasons.table, id: \.self) { season in
-                    VStack(alignment: .leading, spacing: 2) {
-                        HStack {
-                            Text(season.period).font(.subheadline.weight(.medium))
-                            Spacer()
-                            Text(season.conditions).font(.caption).foregroundStyle(.secondary)
-                        }
-                        Text(season.note).font(.caption).foregroundStyle(.secondary)
-                    }
-                    .padding(.vertical, 1)
-                }
+            Section {
+                Text(seasons.climate)
+                    .font(.body)
+                    .padding(.vertical, 2)
+            } header: {
+                GuideHeader(title: "When to go")
             }
-            Section("Daily rhythm") {
-                ForEach(seasons.dailyRhythm, id: \.self) { Text($0).font(.callout) }
+            Section {
+                ForEach(seasons.table, id: \.self) { season in
+                    VStack(alignment: .leading, spacing: 3) {
+                        Text(season.period)
+                            .font(.headline)
+                        Text(season.conditions)
+                            .font(.subheadline)
+                        Text(season.note)
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
+                    .padding(.vertical, 3)
+                }
+            } header: {
+                GuideHeader(title: "Through the year")
+            }
+            Section {
+                ProseRows(paragraphs: seasons.dailyRhythm)
+            } header: {
+                GuideHeader(title: "Daily rhythm")
             }
             if !seasons.notes.isEmpty {
-                Section("Season notes") {
-                    ForEach(seasons.notes, id: \.self) { Text($0).font(.callout) }
+                Section {
+                    ProseRows(paragraphs: seasons.notes)
+                } header: {
+                    GuideHeader(title: "Season notes")
                 }
             }
         }
@@ -178,38 +269,57 @@ private struct GearSafetyScreen: View {
 
     var body: some View {
         List {
-            Section("What the rock demands") {
-                ForEach(gear.rockDemands, id: \.self) { Text($0).font(.callout) }
-            }
-            Section("Kit list") {
-                ForEach(gear.kitList, id: \.self) { Text($0).font(.callout) }
-            }
-            Section("Bolts & fixed gear") {
-                Text(gear.bolts).font(.callout)
+            Section {
+                ProseRows(paragraphs: gear.rockDemands)
+            } header: {
+                GuideHeader(title: "What the rock demands")
             }
             Section {
-                ForEach(gear.hazards, id: \.self) { hazard in
-                    Label(hazard, systemImage: "exclamationmark.triangle.fill")
-                        .font(.callout)
-                        .foregroundStyle(.red)
-                }
-            } header: {
-                Text("Hazards")
-            }
-            Section("Gear shops & rental") {
-                ForEach(gear.shops, id: \.self) { shop in
-                    VStack(alignment: .leading, spacing: 3) {
-                        Text(shop.name).font(.subheadline.weight(.medium))
-                        Text(shop.location).font(.caption).foregroundStyle(.secondary)
-                        ForEach(shop.services, id: \.self) { service in
-                            Text("• \(service)").font(.caption)
-                        }
-                        if let verified = shop.verified {
-                            Text(verified).font(.caption2).foregroundStyle(.secondary)
-                        }
+                ForEach(gear.kitList, id: \.self) { item in
+                    Label {
+                        Text(item).font(.body)
+                    } icon: {
+                        Image(systemName: "checkmark.circle")
+                            .foregroundStyle(.green)
                     }
                     .padding(.vertical, 1)
                 }
+            } header: {
+                GuideHeader(title: "Kit list")
+            }
+            Section {
+                Text(gear.bolts)
+                    .font(.body)
+                    .padding(.vertical, 2)
+            } header: {
+                GuideHeader(title: "Bolts & fixed gear")
+            }
+            Section {
+                CalloutRows(items: gear.hazards, tint: .red)
+            } header: {
+                GuideHeader(title: "Hazards", subtitle: "Worth reading before your first day out.")
+            }
+            Section {
+                ForEach(gear.shops, id: \.self) { shop in
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text(shop.name)
+                            .font(.headline)
+                        Text(shop.location)
+                            .font(.subheadline)
+                            .foregroundStyle(.secondary)
+                        Text(shop.services.joined(separator: " · "))
+                            .font(.caption)
+                            .padding(.top, 1)
+                        if let verified = shop.verified {
+                            Text(verified)
+                                .font(.caption2)
+                                .foregroundStyle(.secondary)
+                        }
+                    }
+                    .padding(.vertical, 3)
+                }
+            } header: {
+                GuideHeader(title: "Gear shops & rental")
             }
         }
         .navigationTitle("Gear & Safety")
@@ -225,17 +335,29 @@ private struct EthicsScreen: View {
     var body: some View {
         List {
             Section {
-                ForEach(ethics.officialLine, id: \.self) { Text($0).font(.callout) }
+                ProseRows(paragraphs: ethics.officialLine)
             } header: {
-                Text("Access — the official line")
+                GuideHeader(title: "The official line")
             } footer: {
                 Text(ethics.officialLineSource)
             }
-            Section("Rules") {
-                ForEach(ethics.rules, id: \.self) { Text($0).font(.callout) }
+            Section {
+                ForEach(ethics.rules, id: \.self) { rule in
+                    Label {
+                        Text(rule).font(.body)
+                    } icon: {
+                        Image(systemName: "leaf")
+                            .foregroundStyle(.teal)
+                    }
+                    .padding(.vertical, 1)
+                }
+            } header: {
+                GuideHeader(title: "Rules")
             }
-            Section("The fuller picture") {
-                ForEach(ethics.fullerPicture, id: \.self) { Text($0).font(.callout) }
+            Section {
+                ProseRows(paragraphs: ethics.fullerPicture)
+            } header: {
+                GuideHeader(title: "The fuller picture")
             }
         }
         .navigationTitle("Ethics & Access")
@@ -250,22 +372,39 @@ private struct ItinerariesScreen: View {
 
     var body: some View {
         List {
-            Section("Suggested itineraries") {
+            Section {
                 ForEach(itineraries) { itinerary in
                     DisclosureGroup {
                         ForEach(itinerary.days, id: \.self) { day in
-                            VStack(alignment: .leading, spacing: 3) {
-                                Text(day.label).font(.subheadline.weight(.medium))
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text(day.label)
+                                    .font(.subheadline.weight(.semibold))
                                 ForEach(day.steps, id: \.self) { step in
-                                    Text("• \(step)").font(.caption)
+                                    HStack(alignment: .top, spacing: 8) {
+                                        Circle()
+                                            .fill(.tertiary)
+                                            .frame(width: 5, height: 5)
+                                            .padding(.top, 7)
+                                        Text(step)
+                                            .font(.callout)
+                                    }
                                 }
                             }
-                            .padding(.vertical, 2)
+                            .padding(.vertical, 3)
                         }
                     } label: {
-                        Text(itinerary.name).font(.subheadline.weight(.medium))
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text(itinerary.name)
+                                .font(.headline)
+                            Text(itinerary.days.count == 1 ? "1 day" : "\(itinerary.days.count) days")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                        }
+                        .padding(.vertical, 2)
                     }
                 }
+            } header: {
+                GuideHeader(title: "Suggested itineraries", subtitle: "Expand one to see the day-by-day plan.")
             }
         }
         .navigationTitle("Itineraries")
@@ -280,25 +419,34 @@ private struct GuidebooksScreen: View {
 
     var body: some View {
         List {
-            Section("Guidebooks") {
+            Section {
                 ForEach(guidebooks, id: \.self) { book in
-                    VStack(alignment: .leading, spacing: 3) {
-                        HStack {
-                            Text(book.title).font(.subheadline.weight(.medium))
+                    VStack(alignment: .leading, spacing: 4) {
+                        HStack(alignment: .firstTextBaseline, spacing: 8) {
+                            Text(book.title)
+                                .font(.headline)
                             if book.current {
                                 StyleBadge(text: "current", color: .green)
                             }
                         }
-                        Text("\(book.author) · \(book.year)").font(.caption).foregroundStyle(.secondary)
-                        Text(book.note).font(.caption)
+                        Text("\(book.author) · \(book.year)")
+                            .font(.subheadline)
+                            .foregroundStyle(.secondary)
+                        Text(book.note)
+                            .font(.callout)
+                            .padding(.top, 1)
                         if let urlString = book.url, let url = URL(string: urlString) {
                             Link(destination: url) {
-                                Label("Open", systemImage: "safari").font(.caption)
+                                Label("Open", systemImage: "safari")
+                                    .font(.subheadline)
                             }
+                            .padding(.top, 2)
                         }
                     }
-                    .padding(.vertical, 1)
+                    .padding(.vertical, 3)
                 }
+            } header: {
+                GuideHeader(title: "Guidebooks")
             }
         }
         .navigationTitle("Guidebooks")
@@ -313,27 +461,48 @@ private struct ServicesScreen: View {
 
     var body: some View {
         List {
-            Section("Services & operators") {
+            Section {
                 ForEach(services) { service in
-                    VStack(alignment: .leading, spacing: 3) {
-                        Text(service.name).font(.subheadline.weight(.medium))
-                        Text("\(service.role) · since \(service.since)").font(.caption).foregroundStyle(.secondary)
-                        Text(service.summary).font(.callout)
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text(service.name)
+                            .font(.headline)
+                        Text("\(service.role) · since \(service.since)")
+                            .font(.subheadline)
+                            .foregroundStyle(.secondary)
+                        Text(service.summary)
+                            .font(.callout)
+                            .padding(.top, 1)
                         ForEach(service.bullets, id: \.self) { bullet in
-                            Text("• \(bullet)").font(.caption)
-                        }
-                        Text(service.contact).font(.caption).foregroundStyle(.secondary)
-                        if let url = URL(string: service.url) {
-                            Link(destination: url) {
-                                Label("Website", systemImage: "safari").font(.caption)
+                            HStack(alignment: .top, spacing: 8) {
+                                Circle()
+                                    .fill(.tertiary)
+                                    .frame(width: 5, height: 5)
+                                    .padding(.top, 6)
+                                Text(bullet)
+                                    .font(.caption)
                             }
                         }
+                        Text(service.contact)
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                            .padding(.top, 2)
+                        if let url = URL(string: service.url) {
+                            Link(destination: url) {
+                                Label("Website", systemImage: "safari")
+                                    .font(.subheadline)
+                            }
+                            .padding(.top, 2)
+                        }
                         if let verified = service.verified {
-                            Text(verified).font(.caption2).foregroundStyle(.secondary)
+                            Text(verified)
+                                .font(.caption2)
+                                .foregroundStyle(.secondary)
                         }
                     }
-                    .padding(.vertical, 2)
+                    .padding(.vertical, 4)
                 }
+            } header: {
+                GuideHeader(title: "Services & operators")
             }
         }
         .navigationTitle("Services")
@@ -345,23 +514,63 @@ private struct ServicesScreen: View {
 
 private struct SourcesScreen: View {
     let sources: [SourceLink]
+    var guidebooks: [Guidebook] = []
 
     var body: some View {
         List {
-            Section("Sources") {
+            Section {
+                Text("This guide is an original compilation for Koh Tao — not a white-label template. Every entry below was used while fact-checking the on-device database.")
+                    .font(.body)
+                    .padding(.vertical, 2)
+            }
+            Section {
+                let downloads = guidebooks.filter { $0.url != nil }
+                if downloads.isEmpty {
+                    Text("No downloadable paper guides listed.")
+                        .font(.callout)
+                        .foregroundStyle(.secondary)
+                } else {
+                    ForEach(downloads, id: \.self) { book in
+                        if let urlString = book.url, let url = URL(string: urlString) {
+                            Link(destination: url) {
+                                Label(
+                                    urlString.lowercased().hasSuffix(".pdf")
+                                        ? "Download \(book.title)"
+                                        : book.title,
+                                    systemImage: urlString.lowercased().hasSuffix(".pdf")
+                                        ? "arrow.down.doc" : "safari"
+                                )
+                            }
+                            Text("\(book.author) · \(book.year)")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                        }
+                    }
+                }
+            } header: {
+                GuideHeader(title: "Paper guide downloads")
+            }
+
+            Section {
                 ForEach(sources) { source in
-                    VStack(alignment: .leading, spacing: 2) {
+                    VStack(alignment: .leading, spacing: 3) {
                         if let url = URL(string: source.url) {
                             Link(destination: url) {
-                                Text(source.name).font(.subheadline)
+                                Label(source.name, systemImage: "safari")
+                                    .font(.subheadline.weight(.medium))
                             }
                         } else {
-                            Text(source.name).font(.subheadline)
+                            Text(source.name)
+                                .font(.subheadline.weight(.medium))
                         }
-                        Text("Used for: \(source.used)").font(.caption).foregroundStyle(.secondary)
+                        Text("Used for: \(source.used)")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
                     }
-                    .padding(.vertical, 1)
+                    .padding(.vertical, 2)
                 }
+            } header: {
+                GuideHeader(title: "Sources")
             }
         }
         .navigationTitle("Sources")

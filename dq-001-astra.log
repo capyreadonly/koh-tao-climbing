@@ -1,0 +1,2088 @@
+OpenAI Codex v0.153.2
+--------
+workdir: /workspace/koh-tao-briefs
+model: gpt-6-astra
+provider: openai
+approval: never
+sandbox: read-only
+reasoning effort: none
+reasoning summaries: none
+session id: 01a0bd7b-87ab-7231-be23-33618a3da79e
+--------
+user
+You are running a FIRST-PASS photo↔route DQ judgment for Koh Tao Climbing.
+Model must behave as analysis-only. Never invent routes, grades, coords, or URLs.
+
+Read the JSON package that follows in the <stdin> block (also mirrored at /workspace/koh-tao-briefs/dq-001-codex-slim.json if readable).
+
+Produce a single JSON object matching the required schema:
+- model_confirm: state you are gpt-6-astra
+- top10: exactly 10 worst photo↔route problems ranked
+- schema_suggestion: brief suggestion for routeAnnotations / multi-route linking (no invented routes)
+- pr_batches: 3–6 small proposed fix batches for Claude/Mini (JSON patches as lists only; do not edit files)
+- notes: any blockers / thin evidence
+
+Prioritize:
+1) dual-crag photo.crag labels that DataStore.photoBelongs cannot resolve to both crags
+2) multi-route topo captions with no routeId (schema gap)
+3) confirmed spelling drift between caption and routes.json (Mosquit/Btich etc.) — only if present in provided data
+4) grade mismatches caption vs DB
+5) caption route names not in DB (do NOT invent new routes; propose caption fix or mark unverified)
+6) community crag aliases (Backyard/Frontyard) and scenic_non_crag
+
+Evidence must cite provided captions, scan flags, or sources.json URLs already present.
+
+<stdin>
+{
+  "task": "DQ-001 first-pass photo↔route data-quality judgment",
+  "rules": [
+    "Never invent route names, grades, coords, or source URLs",
+    "Mark unverified when evidence is thin",
+    "Propose JSON field edits / caption corrections / schema annotations only — no invented routes",
+    "Prefer public evidence only from URLs already in photo.sourceUrl, route.sourceUrl, or sources.json",
+    "Output top 10 worst photo↔route problems with proposed fixes and suggested PR batch ids"
+  ],
+  "inventory": {
+    "photo_model": {
+      "struct": "PhotoEntry",
+      "fields": [
+        "file",
+        "kind",
+        "caption",
+        "crag?",
+        "credit?",
+        "license?",
+        "sourceUrl?",
+        "page?"
+      ],
+      "NO_routeId": true,
+      "join_to_crag": "photo.crag exact name OR prefix 'Name (' via DataStore.photoBelongs",
+      "join_to_routes": "NONE — routes only shown as separate list on CragDetailView; caption text is display-only",
+      "ui": "CragDetailView.photos(forCrag) → PhotoGalleryRow; caption shown in PhotoViewerSheet only",
+      "nd": "isNdLicense → cropToFill=false + NdBadge"
+    },
+    "counts": {
+      "routes": 624,
+      "crags": 29,
+      "guide_photos": 179,
+      "community_photos": 72
+    },
+    "kinds_guide": {
+      "action-photo": 16,
+      "other-unusable": 51,
+      "crag-photo": 41,
+      "map": 10,
+      "other": 5,
+      "topo-diagram": 13,
+      "photo-topo": 24,
+      "crag-photo-unusable": 7,
+      "scenic-unusable": 1,
+      "scenic": 8,
+      "topo-diagram-unusable": 3
+    },
+    "multi_route_gap": "Topo captions list many routes; schema has no routeIds/annotations; UI cannot deep-link photo lines to RouteRecord",
+    "kinds_community": {
+      "community-photo": 71,
+      "map": 1
+    }
+  },
+  "sources_json": [
+    {
+      "name": "Mapo Tapo — Koh Tao rock climbing guide",
+      "url": "https://www.mapotapo.com/blog/koh-tao",
+      "used": "Crag circuit, itineraries, granite, Goodtime/Zen Gecko history"
+    },
+    {
+      "name": "theCrag — Koh Tao",
+      "url": "https://www.thecrag.com/en/climbing/thailand/koh-tao",
+      "used": "Access & ethics, gear rental, guidebook listings"
+    },
+    {
+      "name": "theCrag — The Elephant",
+      "url": "https://www.thecrag.com/en/climbing/thailand/koh-tao/area/9797417472",
+      "used": "Sairee Beach boulder detail"
+    },
+    {
+      "name": "Mountain Project — Koh Tao",
+      "url": "https://www.mountainproject.com/area/108569570/koh-tao",
+      "used": "Area tree, 96 routes (deep scrape 2026-08-04 with FA/length/protection), GPS, bolt warnings"
+    },
+    {
+      "name": "Mountain Project — Tanote Bay",
+      "url": "https://www.mountainproject.com/area/123981447/tanote-bay",
+      "used": "Sub-crags, linkups, bolt warnings, sun timing"
+    },
+    {
+      "name": "27crags — Koh Tao",
+      "url": "https://27crags.com/crags/koh-tao",
+      "used": "258 boulder/DWS routes with sectors, tick counts and ratings (deep fetch 2026-08-04)"
+    },
+    {
+      "name": "Goodtime Adventures — free PDF guide v1/14",
+      "url": "http://www.railay.com/railay/climbing/KT-Climbing-guide-1.14-sm.compressed.pdf",
+      "used": "Authoritative print source: 325 route entries, page-to-crag mapping, fees, warnings (research2, 2026-08)"
+    },
+    {
+      "name": "Goodtime Adventures — Climbing guidebook page",
+      "url": "https://goodtimethailand.com/climbing-guidebook/",
+      "used": "200+ routes; rakkup guide called 'the most up to date resource available' (page updated 2026-07-30)"
+    },
+    {
+      "name": "rakkup — Thailand: Koh Tao Rock Climbing (guidebook page)",
+      "url": "https://rakkup.com/guidebooks/thailand-koh-tao-rock-climbing/",
+      "used": "Current edition: 180 routes; Temple Rock sector (hardest route on the island)"
+    },
+    {
+      "name": "Rakkup — Koh Tao guide by Kelsey Gray",
+      "url": "https://rakkup.com/koh-tao-thailand-rock-climbing-by-kelsey-gray/",
+      "used": "Current digital guidebook release article, route photos"
+    },
+    {
+      "name": "railay.com — free Koh Tao climbing & bouldering PDF",
+      "url": "http://www.railay.com/railay/climbing/KT-Climbing-guide-1.14-sm.compressed.pdf",
+      "used": "Boulder names/grades, Zen Gecko guide"
+    },
+    {
+      "name": "Imperial College — 2017 SE Asia expedition",
+      "url": "https://www.imperial.ac.uk/be-inspired/exploration-board/previous-expeditions/2010s/2017-south-east-asia-climbing/",
+      "used": "Mek’s Mountain route grades"
+    },
+    {
+      "name": "Goodtime Adventures — Climbing",
+      "url": "https://goodtimethailand.com/climbing/",
+      "used": "200+ routes, Rock 1–5 course pathway and prices (verified 2026-08-02)"
+    },
+    {
+      "name": "Goodtime Adventures — Discover Rock Climbing",
+      "url": "https://goodtimethailand.com/climbing/discover-rock-climbing/",
+      "used": "Half-day price ฿2,600, guide service from ฿2,000, rental prices"
+    },
+    {
+      "name": "The Bunker — 5D4N package",
+      "url": "https://kohtao-rockclimbing.com/warehouse-hostel-climbing-package-5d4n/",
+      "used": "Gym services, packages"
+    },
+    {
+      "name": "SoTravel — Koh Tao dry-day activities",
+      "url": "https://blog.sotravel.com/2024/06/28/koh-taos-best-dive-sites-your-complete-guide-to-underwater-adventures/",
+      "used": "Bunker day pass price (secondary source)"
+    },
+    {
+      "name": "DiveZone — Koh Tao travel guide",
+      "url": "https://divezone.net/travel/koh-tao",
+      "used": "Climate, seasons"
+    },
+    {
+      "name": "Travel Happy — Koh Tao quick guide",
+      "url": "https://travelhappy.info/koh-tao-quick-guide/",
+      "used": "Activity context"
+    },
+    {
+      "name": "Mountain Project — Thailand",
+      "url": "https://www.mountainproject.com/area/105894648/thailand",
+      "used": "Thaitanium Project rebolting context"
+    },
+    {
+      "name": "Koh Tao Complete Guide — getting there",
+      "url": "https://www.kohtaocompleteguide.com/de/reisefakten/anreise-nach-koh-tao/",
+      "used": "Ferry operators incl. Boonsiri + Songserm, night boats (2026-05)"
+    },
+    {
+      "name": "UKC Logbook — Frontyard and Backyard",
+      "url": "https://www.ukclimbing.com/logbook/crags/frontyard_and_backyard-19525/",
+      "used": "'Climbs are no longer climbable' fragment (search snippet, partially-verified 2026-08-04)"
+    },
+    {
+      "name": "Wonderland Koh Tao — best month to visit",
+      "url": "https://wonderlandkohtao.com/best-month-to-visit-koh-tao/",
+      "used": "Dry season Dec–Apr, October wettest (2026)"
+    }
+  ],
+  "known_typos_in_routes_json_to_verify": [
+    {
+      "crag": "Mek's Mountain",
+      "db_name": "Mosquit Burrito",
+      "caption_seen": "Mosquito Burrito"
+    },
+    {
+      "crag": "Mek's Mountain",
+      "db_name": "Son of A Btich",
+      "caption_seen": "Son of a bitch"
+    },
+    {
+      "crag": "Mek's Mountain",
+      "db_name": "Devine Intervention",
+      "caption_grade": "6a+",
+      "db_grade": "5c"
+    },
+    {
+      "crag": "Mek's Mountain",
+      "db_name": "The bitch in me",
+      "caption_grade": "6c",
+      "db_grade": "6b+"
+    }
+  ],
+  "worst_scan_rows": [
+    {
+      "severity": "102",
+      "bucket": "guide",
+      "file": "Images/guide/p42-2-X154.jpg",
+      "kind": "topo-diagram",
+      "photo_crag": "Aow Luek / Lang Khai",
+      "resolved_slug": "aow-luek",
+      "resolved_name": "Aow Luek",
+      "resolve_how": "dual_crag_partial",
+      "alt_crags": "Aow Luek; Lang Khai",
+      "page": "42",
+      "license": "",
+      "sourceUrl": "",
+      "flags": "dual_crag_label|multi_route_caption|no_routeId_multi_route_gap|grade_mismatch_vs_db",
+      "n_candidates": "9",
+      "n_matched": "9",
+      "n_routes_at_crag": "69",
+      "unmatched_names": "",
+      "matched_names": "Planet Paradise→Planet Paradise[exact]; Tantalis→Tantalis[exact]; Pinatubo→Pinatubo[exact]; Hairy Classic Right→Hairy  Classic Right[exact]; Hairy Classic Left→Hairy Classic Left[exact]; Zenalithic→Zenalithic[exact]; Difensless→Difensless[exact]; Seafluzy→Seafluzy[exact]; Infra-bubba→Infra-bubba[exact]",
+      "grade_conflicts": "Tantalis:caption=V6 db=7B; Hairy Classic Right:caption=V2 db=6B; Zenalithic:caption=V2 db=6B+",
+      "sector_hints": "",
+      "caption_excerpt": "Full guidebook page \"Lang Khaai Bay\": intro text (secluded seaside granite, Tantalis roof, Yang's Bungalows, potential DWS/cliff-jumping spot toward Tanote bay), compass rose and hand-drawn topo with 12 numbered problems: 1. ***Planet Parad"
+    },
+    {
+      "severity": "95",
+      "bucket": "guide",
+      "file": "Images/guide/p15-0-X43.jpg",
+      "kind": "topo-diagram",
+      "photo_crag": "Mek's Mountain",
+      "resolved_slug": "meks-mountain",
+      "resolved_name": "Mek's Mountain",
+      "resolve_how": "exact_name",
+      "alt_crags": "Mek's Mountain",
+      "page": "15",
+      "license": "",
+      "sourceUrl": "",
+      "flags": "multi_route_caption|no_routeId_multi_route_gap|caption_says_unverified|grade_mismatch_vs_db|name_spelling_drift",
+      "n_candidates": "8",
+      "n_matched": "8",
+      "n_routes_at_crag": "49",
+      "unmatched_names": "",
+      "matched_names": "Mosquito Burrito→Mosquit Burrito[fuzzy]; Devine Intervention→Devine Intervention[exact]; Daddy Long Legs→Daddy Long Legs[exact]; Tim and Charly's only Friend→Tim and Charly's only Friend[exact]; Arabian Balls→Arabian Balls[exact]; Squirming Worm→Squirming Worm[exact]; Dirty Squirrel→Dirty Squirrel[exact]; Bees Knees→Bees Knees[exact]",
+      "grade_conflicts": "Devine Intervention:caption=6a db=5c",
+      "sector_hints": "DE-VINE WALL; 12M",
+      "caption_excerpt": "Drawn topo titled 'DE-VINE WALL' with two inset photos. Routes (left to right): Mosquito Burrito 6a, Devine Intervention 6a+, Dirty Squirrel (by 'Tree'), Daddy Long Legs 6a, Tim and Charly's only Friend 4+ (4 bolts), Squirming Worm, Bees Kn"
+    },
+    {
+      "severity": "95",
+      "bucket": "guide",
+      "file": "Images/guide/p15-1-X44.jpg",
+      "kind": "topo-diagram",
+      "photo_crag": "Mek's Mountain",
+      "resolved_slug": "meks-mountain",
+      "resolved_name": "Mek's Mountain",
+      "resolve_how": "exact_name",
+      "alt_crags": "Mek's Mountain",
+      "page": "15",
+      "license": "",
+      "sourceUrl": "",
+      "flags": "multi_route_caption|no_routeId_multi_route_gap|caption_says_unverified|grade_mismatch_vs_db|name_spelling_drift",
+      "n_candidates": "4",
+      "n_matched": "4",
+      "n_routes_at_crag": "49",
+      "unmatched_names": "",
+      "matched_names": "C U Next Tuesday→C U Next Tuesday[exact]; Son of a bitch→Son of A Btich[fuzzy]; The bitch in me→The bitch in me[exact]; Naughty or Nice→Naughty or Nice[exact]",
+      "grade_conflicts": "The bitch in me:caption=6c db=6b+",
+      "sector_hints": "QUIT YOUR; 16M; Quit Youre Bitchin",
+      "caption_excerpt": "Drawn topo titled 'QUIT YOUR'E BITCHIN' with two inset photos. Routes (left to right): Naughty or Nice (Chimney), C U Next Tuesday 5c, Son of a bitch 7a (2 bolt anchor), an unlabeled 6c+ line (1 bolt anchor backup), The bitch in me 6c (2 bo"
+    },
+    {
+      "severity": "92",
+      "bucket": "guide",
+      "file": "Images/guide/p27-0-X73.jpg",
+      "kind": "map",
+      "photo_crag": "Backyard & Frontyard",
+      "resolved_slug": "backyard-frontyard",
+      "resolved_name": "Backyard & Frontyard",
+      "resolve_how": "exact_name",
+      "alt_crags": "Backyard & Frontyard",
+      "page": "27",
+      "license": "",
+      "sourceUrl": "",
+      "flags": "caption_routes_not_in_db|multi_route_caption|no_routeId_multi_route_gap|grade_mismatch_vs_db",
+      "n_candidates": "6",
+      "n_matched": "3",
+      "n_routes_at_crag": "166",
+      "unmatched_names": "Jungle Science(V9); Mantle(V6); Predator(V7)",
+      "matched_names": "The Lost Idol→The Lost Idol[exact]; Big Brother→Big Brother[exact]; Tao→Tao[exact]",
+      "grade_conflicts": "The Lost Idol:caption=V8 db=8B",
+      "sector_hints": "",
+      "caption_excerpt": "Hand-drawn bouldering area map titled 'The Frontyard', labeled 'Tantoe Bay / Aow Leuk' (Tanote Bay). Shows ~60 numbered boulders. Legible route/problem names: The Lost Idol V8, Jungle Science V9, Mantle V6, Predator V7. Landmarks: Big Broth"
+    },
+    {
+      "severity": "92",
+      "bucket": "guide",
+      "file": "Images/guide/p29-0-X82.jpg",
+      "kind": "map",
+      "photo_crag": "Secret Garden Boulders",
+      "resolved_slug": "secret-garden-boulders",
+      "resolved_name": "Secret Garden Boulders",
+      "resolve_how": "exact_name",
+      "alt_crags": "Secret Garden Boulders",
+      "page": "29",
+      "license": "",
+      "sourceUrl": "",
+      "flags": "caption_routes_not_in_db|multi_route_caption|no_routeId_multi_route_gap|grade_mismatch_vs_db",
+      "n_candidates": "6",
+      "n_matched": "5",
+      "n_routes_at_crag": "83",
+      "unmatched_names": "Under Frondly Fire(V4)",
+      "matched_names": "James and the Giant Peach→James and the Giant Peach[exact]; Pancake Ninja→Pancake Ninja[exact]; Exploding Epitaph→Exploding Epitaph[exact]; Spaceship→Spaceship[exact]; Egg→Egg[exact]",
+      "grade_conflicts": "James and the Giant Peach:caption=V11 db=8A+; Pancake Ninja:caption=V6/VH db=7A",
+      "sector_hints": "",
+      "caption_excerpt": "Detailed hand-drawn bouldering map of the Secret Garden boulder field. Header: 'Upper Secret Garden (see separate map)'. Legible problem/boulder names: James and the Giant Peach V11, Pancake Ninja V6/VH, Jawa Ship, Under Frondly Fire V4, Su"
+    },
+    {
+      "severity": "92",
+      "bucket": "guide",
+      "file": "Images/guide/p34-0-X112.jpg",
+      "kind": "map",
+      "photo_crag": "Secret Garden Boulders",
+      "resolved_slug": "secret-garden-boulders",
+      "resolved_name": "Secret Garden Boulders",
+      "resolve_how": "exact_name",
+      "alt_crags": "Secret Garden Boulders",
+      "page": "34",
+      "license": "",
+      "sourceUrl": "",
+      "flags": "caption_routes_not_in_db|multi_route_caption|no_routeId_multi_route_gap|grade_mismatch_vs_db",
+      "n_candidates": "8",
+      "n_matched": "7",
+      "n_routes_at_crag": "83",
+      "unmatched_names": "Under Friendly Fire(V4)",
+      "matched_names": "Pancake Ninja→Pancake Ninja[exact]; James and the Giant Peach→James and the Giant Peach[exact]; I Just Need a Hug→I Just Need a Hug[exact]; Chiropractor→Chiropractor[exact]; Kit Kat→Kit Kat[exact]; Shadows→Shadows[exact]; Groovy→Groovy[exact]",
+      "grade_conflicts": "Pancake Ninja:caption=V6 db=7A",
+      "sector_hints": "E / MH / V0",
+      "caption_excerpt": "Top-down map titled 'Upper Secret Garden' with compass rose (N/E) and 25m scale. Legible labels: 'Dense Jungle', 'To Star Villa and Buddha Temple' (uphill), 'Hill Top', 'Water Tank', 'Bldg' (several buildings), 'Please be considerate with n"
+    },
+    {
+      "severity": "92",
+      "bucket": "guide",
+      "file": "Images/guide/p37-0-X123.jpg",
+      "kind": "topo-diagram",
+      "photo_crag": "The Peak Boulders / Sai Tong",
+      "resolved_slug": "the-peak-boulders",
+      "resolved_name": "The Peak Boulders",
+      "resolve_how": "dual_crag_partial",
+      "alt_crags": "The Peak Boulders; Sai Tong",
+      "page": "37",
+      "license": "",
+      "sourceUrl": "",
+      "flags": "dual_crag_label|multi_route_caption|no_routeId_multi_route_gap|caption_says_unverified",
+      "n_candidates": "7",
+      "n_matched": "7",
+      "n_routes_at_crag": "10",
+      "unmatched_names": "",
+      "matched_names": "Long live the Buddha→Long live the Buddha[exact]; Baseball mantle→Baseball mantle[exact]; Nak Lung Noi→Nak Lung Noi[exact]; Pete's arete→Pete's arete[exact]; Crimpology→Crimpology[exact]; Kanom Wan→Kanom Wan[exact]; Slinky→Slinky[exact]",
+      "grade_conflicts": "",
+      "sector_hints": "",
+      "caption_excerpt": "Topo diagram titled 'The Peak Boulders' at June Jua Beach (area not among the 9 known crags - crag unverified). Boulder layout with letter/grade labels: MH - Pete's arete, Pro, M, M, Pro, MH - Nak Lung Noi, M - Kanom Wan, H - Crimpology, E "
+    },
+    {
+      "severity": "92",
+      "bucket": "guide",
+      "file": "Images/guide/p37-1-X124.jpg",
+      "kind": "topo-diagram",
+      "photo_crag": "The Peak Boulders / Sai Tong",
+      "resolved_slug": "the-peak-boulders",
+      "resolved_name": "The Peak Boulders",
+      "resolve_how": "dual_crag_partial",
+      "alt_crags": "The Peak Boulders; Sai Tong",
+      "page": "37",
+      "license": "",
+      "sourceUrl": "",
+      "flags": "dual_crag_label|multi_route_caption|no_routeId_multi_route_gap|caption_says_unverified",
+      "n_candidates": "2",
+      "n_matched": "2",
+      "n_routes_at_crag": "10",
+      "unmatched_names": "",
+      "matched_names": "Return of the Jeddi→Return of the Jeddi[exact]; Hels's arete→Hels's arete[exact]",
+      "grade_conflicts": "",
+      "sector_hints": "",
+      "caption_excerpt": "Topo diagram titled 'Sai Tong area' (near Jansom Bay per map labels). Boulder layout near Small Coral Beach, Sai Tong beach, Jansom Bay; features a 'Cave'. Labels: H - Return of the Jeddi, M/MH/H/E difficulty markers, M - Hels's arete (part"
+    },
+    {
+      "severity": "85",
+      "bucket": "guide",
+      "file": "Images/guide/p10-2-X26.jpg",
+      "kind": "topo-diagram",
+      "photo_crag": "Mek's Mountain",
+      "resolved_slug": "meks-mountain",
+      "resolved_name": "Mek's Mountain",
+      "resolve_how": "exact_name",
+      "alt_crags": "Mek's Mountain",
+      "page": "10",
+      "license": "",
+      "sourceUrl": "",
+      "flags": "multi_route_caption|no_routeId_multi_route_gap|grade_mismatch_vs_db|name_spelling_drift",
+      "n_candidates": "10",
+      "n_matched": "10",
+      "n_routes_at_crag": "49",
+      "unmatched_names": "",
+      "matched_names": "Easy Eagle→Easy Eagle[exact]; Moguls→Moguls[exact]; Clear Horizons→Clear Horizons[exact]; Step→2 Step[fuzzy]; Charly's Crack→Charly's Crack[exact]; Moguls→Moguls[exact]; Clear Horizons→Clear Horizons[exact]; Charly's Crack→Charly's Crack[exact]; I Got a Feeling→I Got a Feeling[exact]; 2 Step→2 Step[exact]",
+      "grade_conflicts": "Charly's Crack:caption=5 db=6a",
+      "sector_hints": "Eagle Wall",
+      "caption_excerpt": "Drawn topo titled 'Eagle Wall' (14M scale). Routes left to right: Easy Eagle (4), Moguls (5c), I got a feeling (6a, 6a+ variation), Clear Horizons (5a), 2 Step (5c), Charly's Crack (6a). Bolt counts noted: Moguls 5 bolts, I got a feeling 5 "
+    },
+    {
+      "severity": "82",
+      "bucket": "guide",
+      "file": "Images/guide/p18-0-X52.jpg",
+      "kind": "photo-topo",
+      "photo_crag": "Sairee Beach Boulders",
+      "resolved_slug": "sairee-beach-boulders",
+      "resolved_name": "Sairee Beach Boulders",
+      "resolve_how": "exact_name",
+      "alt_crags": "Sairee Beach Boulders",
+      "page": "18",
+      "license": "",
+      "sourceUrl": "",
+      "flags": "caption_routes_not_in_db|multi_route_caption|no_routeId_multi_route_gap",
+      "n_candidates": "2",
+      "n_matched": "1",
+      "n_routes_at_crag": "40",
+      "unmatched_names": "The Trunk(7a)",
+      "matched_names": "The Wet Beaver→The Wet Beaver[exact]",
+      "grade_conflicts": "",
+      "sector_hints": "6. MH; 7. E; 8. MH; 10. H; The Elephant",
+      "caption_excerpt": "Photo-topo titled 'The Elephant – North Side' with compass rose. Dashed route lines with star anchor. Route list at bottom: '6. MH', '7. E', '8. MH', '9. The Wet Beaver 4', '10. H', '11. The Trunk 7a'. Beach, longtail boats and buildings vi"
+    },
+    {
+      "severity": "82",
+      "bucket": "guide",
+      "file": "Images/guide/p42-0-X152.jpg",
+      "kind": "topo-diagram",
+      "photo_crag": "Aow Luek / Lang Khai",
+      "resolved_slug": "aow-luek",
+      "resolved_name": "Aow Luek",
+      "resolve_how": "dual_crag_partial",
+      "alt_crags": "Aow Luek; Lang Khai",
+      "page": "42",
+      "license": "",
+      "sourceUrl": "",
+      "flags": "dual_crag_label|multi_route_caption|no_routeId_multi_route_gap",
+      "n_candidates": "8",
+      "n_matched": "8",
+      "n_routes_at_crag": "69",
+      "unmatched_names": "",
+      "matched_names": "Wonderlust→Wonderlust[exact]; The Naturalist→The Naturalist[exact]; Naturalist Extension→Naturalist Extension[exact]; Boop Boop Chomp→Boop Boop Chomp[exact]; Rhythm Splitter→Rhythm Splitter[exact]; Clam Sandwich→Clam Sandwich[exact]; Caluga→Caluga[exact]; Fish Supper→Fish Supper[exact]",
+      "grade_conflicts": "",
+      "sector_hints": "",
+      "caption_excerpt": "Full guidebook page \"Aow Luek\": intro text (beach, snorkelling, warning about grumpy local) plus hand-drawn boulder topo with numbered problems and route list: 1. **Wonderlust V0 (great slab), 2. **V0 (traverse right from #1), 3. ***The Nat"
+    },
+    {
+      "severity": "77",
+      "bucket": "guide",
+      "file": "Images/guide/p10-0-X24.jpg",
+      "kind": "topo-diagram",
+      "photo_crag": "Mek's Mountain",
+      "resolved_slug": "meks-mountain",
+      "resolved_name": "Mek's Mountain",
+      "resolve_how": "exact_name",
+      "alt_crags": "Mek's Mountain",
+      "page": "10",
+      "license": "",
+      "sourceUrl": "",
+      "flags": "multi_route_caption|no_routeId_multi_route_gap|caption_says_unverified|grade_mismatch_vs_db",
+      "n_candidates": "3",
+      "n_matched": "3",
+      "n_routes_at_crag": "49",
+      "unmatched_names": "",
+      "matched_names": "A1→A1[exact]; A2→A2[exact]; Route B→Route B[exact]",
+      "grade_conflicts": "Route B:caption=6c db=6a",
+      "sector_hints": "Shady Crack",
+      "caption_excerpt": "Composite layout: small crag photo (dark overhanging crack with rope) plus bullets 'Easy crack climb that is always in the shade / Difficult face climb / Need to abseil or lower from bolt near ladder to anchor point to set up', beside a dra"
+    },
+    {
+      "severity": "75",
+      "bucket": "community",
+      "file": "Images/community/report-golden-view-kelsey-gray-01.jpg",
+      "kind": "community-photo",
+      "photo_crag": "Golden View",
+      "resolved_slug": "golden-view",
+      "resolved_name": "Golden View",
+      "resolve_how": "exact_name",
+      "alt_crags": "Golden View",
+      "page": "",
+      "license": "user-contributed, all rights reserved — shown with attribution and source link",
+      "sourceUrl": "https://rakkup.com/koh-tao-thailand-rock-climbing-by-kelsey-gray/",
+      "flags": "multi_route_caption|no_routeId_multi_route_gap|grade_mismatch_vs_db|name_spelling_drift",
+      "n_candidates": "2",
+      "n_matched": "2",
+      "n_routes_at_crag": "6",
+      "unmatched_names": "",
+      "matched_names": "Rachel Fagan climbing Do It!→Do It![fuzzy]; Do It!→Do It![exact]",
+      "grade_conflicts": "Rachel Fagan climbing Do It!:caption=6c+ db=6b",
+      "sector_hints": "",
+      "caption_excerpt": "Rachel Fagan climbing Do It! (6c+) at Golden View. Photo by Kelsey Gray."
+    },
+    {
+      "severity": "75",
+      "bucket": "community",
+      "file": "Images/community/report-lang-khai-kelsey-gray-01.jpg",
+      "kind": "community-photo",
+      "photo_crag": "Lang Khai",
+      "resolved_slug": "lang-khai",
+      "resolved_name": "Lang Khai",
+      "resolve_how": "exact_name",
+      "alt_crags": "Lang Khai",
+      "page": "",
+      "license": "user-contributed, all rights reserved — shown with attribution and source link",
+      "sourceUrl": "https://rakkup.com/koh-tao-thailand-rock-climbing-by-kelsey-gray/",
+      "flags": "multi_route_caption|no_routeId_multi_route_gap|grade_mismatch_vs_db|name_spelling_drift",
+      "n_candidates": "2",
+      "n_matched": "2",
+      "n_routes_at_crag": "58",
+      "unmatched_names": "",
+      "matched_names": "Rachal Fagan climbing Forewarned→Forewarned[fuzzy]; Forewarned→Forewarned[exact]",
+      "grade_conflicts": "Rachal Fagan climbing Forewarned:caption=6a db=5c",
+      "sector_hints": "",
+      "caption_excerpt": "Rachal Fagan climbing Forewarned (6a) at Lang Khai. Photo by Kelsey Gray."
+    },
+    {
+      "severity": "75",
+      "bucket": "guide",
+      "file": "Images/guide/p43-0-X155.jpg",
+      "kind": "topo-diagram",
+      "photo_crag": "Sai Daeng High Balls",
+      "resolved_slug": "sai-daeng-high-balls",
+      "resolved_name": "Sai Daeng High Balls",
+      "resolve_how": "exact_name",
+      "alt_crags": "Sai Daeng High Balls",
+      "page": "43",
+      "license": "",
+      "sourceUrl": "",
+      "flags": "caption_routes_not_in_db|topo_names_unmatched",
+      "n_candidates": "1",
+      "n_matched": "0",
+      "n_routes_at_crag": "1",
+      "unmatched_names": "Route A(5)",
+      "matched_names": "",
+      "grade_conflicts": "",
+      "sector_hints": "",
+      "caption_excerpt": "Sketch topo page \"Sai Daeng High Balls\": text warns of VERY dangerous highball bouldering with bad landings (\"Not recommended for the feint of heart!!!\"); access is a 5-minute boulder hop left from the Coral View Resort; views of Shark Isla"
+    },
+    {
+      "severity": "57",
+      "bucket": "guide",
+      "file": "Images/guide/p11-1-X28.jpg",
+      "kind": "photo-topo",
+      "photo_crag": "Mek's Mountain",
+      "resolved_slug": "meks-mountain",
+      "resolved_name": "Mek's Mountain",
+      "resolve_how": "exact_name",
+      "alt_crags": "Mek's Mountain",
+      "page": "11",
+      "license": "",
+      "sourceUrl": "",
+      "flags": "multi_route_caption|no_routeId_multi_route_gap|caption_says_unverified",
+      "n_candidates": "4",
+      "n_matched": "4",
+      "n_routes_at_crag": "49",
+      "unmatched_names": "",
+      "matched_names": "Holy Exposure!→Holy Exposure![exact]; 'The Kiddie Slope→The Kiddie Slope[exact]; Pow, Right in the Baby Maker→Pow, Right in the Baby Maker[exact]; Stringer→Stringer[exact]",
+      "grade_conflicts": "",
+      "sector_hints": "The Watchtower; Watchtower",
+      "caption_excerpt": "Photo-topo titled 'The Watchtower': tall boulder/rock tower with two dashed lines - 'Holy Exposure!' (6a) to a starred anchor at the summit, and 'The Kiddie Slope' (4). Notes: 'Stringer to fixed anchor, please be careful and use tape to aff"
+    },
+    {
+      "severity": "57",
+      "bucket": "guide",
+      "file": "Images/guide/p12-0-X33.jpg",
+      "kind": "topo-diagram",
+      "photo_crag": "Mek's Mountain",
+      "resolved_slug": "meks-mountain",
+      "resolved_name": "Mek's Mountain",
+      "resolve_how": "exact_name",
+      "alt_crags": "Mek's Mountain",
+      "page": "12",
+      "license": "",
+      "sourceUrl": "",
+      "flags": "multi_route_caption|no_routeId_multi_route_gap|caption_says_unverified",
+      "n_candidates": "2",
+      "n_matched": "2",
+      "n_routes_at_crag": "49",
+      "unmatched_names": "",
+      "matched_names": "Pow, Right in the Baby Maker→Pow, Right in the Baby Maker[exact]; Lower Fraggle→Lower Fraggle[exact]",
+      "grade_conflicts": "",
+      "sector_hints": "The Watchtower; Watchtower; Lower Fraggle",
+      "caption_excerpt": "Large drawn multi-pitch topo. Upper section labeled 'The Watchtower' with '2 bolt Anchor' and 'South Abseil' (17m scale). Route 'Pow, Right in the Baby Maker': P1 5b, 18m, 6 bolts, 1 sling, 2 bolt anchor ('squeezing through the eerie flake "
+    },
+    {
+      "severity": "55",
+      "bucket": "community",
+      "file": "Images/community/report-big-brother-slab-kelsey-gray-01.jpg",
+      "kind": "community-photo",
+      "photo_crag": "Big Brother Slab (exact location unverified)",
+      "resolved_slug": "big-brother-slab",
+      "resolved_name": "Big Brother Slab",
+      "resolve_how": "prefix_name",
+      "alt_crags": "Big Brother Slab",
+      "page": "",
+      "license": "user-contributed, all rights reserved — shown with attribution and source link",
+      "sourceUrl": "https://rakkup.com/koh-tao-thailand-rock-climbing-by-kelsey-gray/",
+      "flags": "multi_route_caption|no_routeId_multi_route_gap|name_spelling_drift",
+      "n_candidates": "2",
+      "n_matched": "2",
+      "n_routes_at_crag": "5",
+      "unmatched_names": "",
+      "matched_names": "Ryan Senko following Drunken Yorkshireman→drunken yorkshireman[fuzzy]; drunken yorkshireman→drunken yorkshireman[exact]",
+      "grade_conflicts": "",
+      "sector_hints": "",
+      "caption_excerpt": "Ryan Senko following Drunken Yorkshireman (6a+) at Big Brother Slab. Photo by Kelsey Gray."
+    }
+  ],
+  "photo_details_for_worst": [
+    {
+      "bucket": "guide",
+      "file": "Images/guide/p09-0-X21.jpg",
+      "kind": "topo-diagram",
+      "caption": "Topo diagram 'LOW BULGE' (16M wall, 10M right side) with 3 bolt anchor (star) and routes A 6b, B 6a, C 5b, D (grade not marked). Inset photo of the boulder wall bottom right. Notes: wall is two large boulders stacked; significant rope drag; climbs similar to boulder problems with crux harder than the rest; best before 1130.",
+      "crag": "Mek's Mountain",
+      "page": 9,
+      "credit": null,
+      "license": null,
+      "sourceUrl": null
+    },
+    {
+      "bucket": "guide",
+      "file": "Images/guide/p10-0-X24.jpg",
+      "kind": "topo-diagram",
+      "caption": "Composite layout: small crag photo (dark overhanging crack with rope) plus bullets 'Easy crack climb that is always in the shade / Difficult face climb / Need to abseil or lower from bolt near ladder to anchor point to set up', beside a drawn topo titled 'SHADY CRACK' (16M scale). Topo shows routes A1 (4), A2 (5b, 'Many variations'), B (6c), with 1-bolt and 2-bolt anchors marked. Crag attribution unverified (adjacent to Mek's Mountain pages, so possibly that crag).",
+      "crag": "Mek's Mountain",
+      "page": 10,
+      "credit": null,
+      "license": null,
+      "sourceUrl": null
+    },
+    {
+      "bucket": "guide",
+      "file": "Images/guide/p10-2-X26.jpg",
+      "kind": "topo-diagram",
+      "caption": "Drawn topo titled 'Eagle Wall' (14M scale). Routes left to right: Easy Eagle (4), Moguls (5c), I got a feeling (6a, 6a+ variation), Clear Horizons (5a), 2 Step (5c), Charly's Crack (6a). Bolt counts noted: Moguls 5 bolts, I got a feeling 5 bolts, Clear Horizons 5 bolts, Charly's Crack 5 bolts. Anchors: 'Fixed 3 Bolt Anchor', '3 bolt TR anchor', 'Top out and use hanging anchor'. Notes: first wall used for guides and courses; training wall; 'Charly's Crack' and 'I got a feeling' are the two classic climbs; best from 1400 onwards.",
+      "crag": "Mek's Mountain",
+      "page": 10,
+      "credit": null,
+      "license": null,
+      "sourceUrl": null
+    },
+    {
+      "bucket": "guide",
+      "file": "Images/guide/p11-1-X28.jpg",
+      "kind": "photo-topo",
+      "caption": "Photo-topo titled 'The Watchtower': tall boulder/rock tower with two dashed lines - 'Holy Exposure!' (6a) to a starred anchor at the summit, and 'The Kiddie Slope' (4). Notes: 'Stringer to fixed anchor, please be careful and use tape to affix rope'; 'Great climb!'; 'Please be careful getting to and at the base of the climb as a fall will be deadly'; 'One of the best views of Koh Tao from the top'. Crag unverified (same guidebook section as Mek's Mountain pages; nearby 'Pow, Right in the Baby Maker' mentions views over Sairee).",
+      "crag": "Mek's Mountain",
+      "page": 11,
+      "credit": null,
+      "license": null,
+      "sourceUrl": null
+    },
+    {
+      "bucket": "guide",
+      "file": "Images/guide/p12-0-X33.jpg",
+      "kind": "topo-diagram",
+      "caption": "Large drawn multi-pitch topo. Upper section labeled 'The Watchtower' with '2 bolt Anchor' and 'South Abseil' (17m scale). Route 'Pow, Right in the Baby Maker': P1 5b, 18m, 6 bolts, 1 sling, 2 bolt anchor ('squeezing through the eerie flake at the 4th bolt; use an extender draw on 6th bolt'); P2 5c, 17m, 7 bolts, 2 bolt anchor ('face climbing into a chimney; amazing views over Sairee and some decent exposure'). Also shows 'Lower Fraggle' sector (18m) with sling anchor. Boxed text block 'Multipitch Climbing' safety notes (helmets, loose rock, climbing calls, go with experienced partner). Crag unverified (The Watchtower links it to the p11 Watchtower topo; 'views over Sairee' suggests Mek's Mountain area).",
+      "crag": "Mek's Mountain",
+      "page": 12,
+      "credit": null,
+      "license": null,
+      "sourceUrl": null
+    },
+    {
+      "bucket": "guide",
+      "file": "Images/guide/p15-0-X43.jpg",
+      "kind": "topo-diagram",
+      "caption": "Drawn topo titled 'DE-VINE WALL' with two inset photos. Routes (left to right): Mosquito Burrito 6a, Devine Intervention 6a+, Dirty Squirrel (by 'Tree'), Daddy Long Legs 6a, Tim and Charly's only Friend 4+ (4 bolts), Squirming Worm, Bees Knees (4 bolts), Arabian Balls 6a. Notes: 'Bolts only', '12M' height scale, 'Start in chimney and switch to boulder at top', 'training anchor'. Which of the 9 known crags this wall belongs to is unverified.",
+      "crag": "Mek's Mountain",
+      "page": 15,
+      "credit": null,
+      "license": null,
+      "sourceUrl": null
+    },
+    {
+      "bucket": "guide",
+      "file": "Images/guide/p15-1-X44.jpg",
+      "kind": "topo-diagram",
+      "caption": "Drawn topo titled 'QUIT YOUR'E BITCHIN' with two inset photos. Routes (left to right): Naughty or Nice (Chimney), C U Next Tuesday 5c, Son of a bitch 7a (2 bolt anchor), an unlabeled 6c+ line (1 bolt anchor backup), The bitch in me 6c (2 bolt anchor). Notes: 'Anchor approach is to the rear and care should be taken', 'Best before 1230', 'Naughty or Nice is a classic which can be face climbed or chimneyed. Great views at the top', '16M' height scale. Crag identity unverified; 'The bitch in me 6c' matches a known classic route.",
+      "crag": "Mek's Mountain",
+      "page": 15,
+      "credit": null,
+      "license": null,
+      "sourceUrl": null
+    },
+    {
+      "bucket": "guide",
+      "file": "Images/guide/p18-0-X52.jpg",
+      "kind": "photo-topo",
+      "caption": "Photo-topo titled 'The Elephant – North Side' with compass rose. Dashed route lines with star anchor. Route list at bottom: '6. MH', '7. E', '8. MH', '9. The Wet Beaver 4', '10. H', '11. The Trunk 7a'. Beach, longtail boats and buildings visible.",
+      "crag": "Sairee Beach Boulders",
+      "page": 18,
+      "credit": null,
+      "license": null,
+      "sourceUrl": null
+    },
+    {
+      "bucket": "guide",
+      "file": "Images/guide/p27-0-X73.jpg",
+      "kind": "map",
+      "caption": "Hand-drawn bouldering area map titled 'The Frontyard', labeled 'Tantoe Bay / Aow Leuk' (Tanote Bay). Shows ~60 numbered boulders. Legible route/problem names: The Lost Idol V8, Jungle Science V9, Mantle V6, Predator V7. Landmarks: Big Brother, Mini-crag, Hill Top, Cave, Small Stream, Park Here, The Backyard, Chalok Baan Kao, Mae Haad, Koh Tao Info, several 'Bldg' icons, compass rose. 'Distance not to scale' note.",
+      "crag": "Backyard & Frontyard",
+      "page": 27,
+      "credit": null,
+      "license": null,
+      "sourceUrl": null
+    },
+    {
+      "bucket": "guide",
+      "file": "Images/guide/p29-0-X82.jpg",
+      "kind": "map",
+      "caption": "Detailed hand-drawn bouldering map of the Secret Garden boulder field. Header: 'Upper Secret Garden (see separate map)'. Legible problem/boulder names: James and the Giant Peach V11, Pancake Ninja V6/VH, Jawa Ship, Under Frondly Fire V4, Super pinch, Exploding epitaph; landmarks: Jawa Ship, Stacking boxes, Court yard, spaceship, Nose, The egg, The Tombstone, letter box, JP Guest house, Jungle, Park Here, Up Hill, Barbed wire fence / Concrete wall, several 'Bldg' icons. Boulder problems annotated with difficulty codes (VE, E, M, MH, H, VH) and 'High ball' notes. Compass rose marked 'Z' (north arrow), 25m scale bar.",
+      "crag": "Secret Garden Boulders",
+      "page": 29,
+      "credit": null,
+      "license": null,
+      "sourceUrl": null
+    },
+    {
+      "bucket": "guide",
+      "file": "Images/guide/p34-0-X112.jpg",
+      "kind": "map",
+      "caption": "Top-down map titled 'Upper Secret Garden' with compass rose (N/E) and 25m scale. Legible labels: 'Dense Jungle', 'To Star Villa and Buddha Temple' (uphill), 'Hill Top', 'Water Tank', 'Bldg' (several buildings), 'Please be considerate with noise when close to bungalows', 'Secret Garden (see separate map)', Downhill/Uphill arrows. Boulder problems marked with grades: 'MH / V1 Groovy', 'H / V7 (project)' (twice), 'H / V2 (project)', 'E / MH / V0', 'VE - Kit Kat, MH / V2', 'H / V7 (project)', 'MH / V1 - I just need a hug', 'H / MH / V3 - Chiropractor', 'MH / V3 - Shadows', 'James and the Giant Peach - V11', 'Under Friendly Fire V4', 'Jawa Ship', 'High ball', 'Pancake Ninja V6 / VH'. Grade letters H/MH/E/VE appear to be quality/star markers alongside V-grades.",
+      "crag": "Secret Garden Boulders",
+      "page": 34,
+      "credit": null,
+      "license": null,
+      "sourceUrl": null
+    },
+    {
+      "bucket": "guide",
+      "file": "Images/guide/p37-0-X123.jpg",
+      "kind": "topo-diagram",
+      "caption": "Topo diagram titled 'The Peak Boulders' at June Jua Beach (area not among the 9 known crags - crag unverified). Boulder layout with letter/grade labels: MH - Pete's arete, Pro, M, M, Pro, MH - Nak Lung Noi, M - Kanom Wan, H - Crimpology, E - Baseball mantle, MH - Long live the Buddha, *M, MH - Slinky, MH, E, E, *E Sit. Landmarks: Viewpoint of Chalok Baan Kao, The Castle, steep sandy/rocky road. Compass rose.",
+      "crag": "The Peak Boulders / Sai Tong",
+      "page": 37,
+      "credit": null,
+      "license": null,
+      "sourceUrl": null
+    },
+    {
+      "bucket": "guide",
+      "file": "Images/guide/p37-1-X124.jpg",
+      "kind": "topo-diagram",
+      "caption": "Topo diagram titled 'Sai Tong area' (near Jansom Bay per map labels). Boulder layout near Small Coral Beach, Sai Tong beach, Jansom Bay; features a 'Cave'. Labels: H - Return of the Jeddi, M/MH/H/E difficulty markers, M - Hels's arete (partially legible). Compass rose. Area attribution per the PDF page text: the page covers both The Peak Boulders and the Sai Tong area; the exact placement of this topo is inferred, unverified.",
+      "crag": "The Peak Boulders / Sai Tong",
+      "page": 37,
+      "credit": null,
+      "license": null,
+      "sourceUrl": null
+    },
+    {
+      "bucket": "guide",
+      "file": "Images/guide/p42-0-X152.jpg",
+      "kind": "topo-diagram",
+      "caption": "Full guidebook page \"Aow Luek\": intro text (beach, snorkelling, warning about grumpy local) plus hand-drawn boulder topo with numbered problems and route list: 1. **Wonderlust V0 (great slab), 2. **V0 (traverse right from #1), 3. ***The Naturalist V4, 4. ***Naturalist Extension V4, 5. *Boop Boop Chomp V2, 6. **Rhythm Splitter V4 (crack and face), 7. **Clam Sandwich V1, 8. *V0, 9. *Caluga V0, 10. *V4 (sit start on low flake), 11. **Fish Supper V2. Credit: \"Maps and problems by Matt Pierson, July 2010\". Aow Luek is a beach adjacent to Lang Khai Bay but is not one of the 9 main crags, so crag is null.",
+      "crag": "Aow Luek / Lang Khai",
+      "page": 42,
+      "credit": null,
+      "license": null,
+      "sourceUrl": null
+    },
+    {
+      "bucket": "guide",
+      "file": "Images/guide/p42-2-X154.jpg",
+      "kind": "topo-diagram",
+      "caption": "Full guidebook page \"Lang Khaai Bay\": intro text (secluded seaside granite, Tantalis roof, Yang's Bungalows, potential DWS/cliff-jumping spot toward Tanote bay), compass rose and hand-drawn topo with 12 numbered problems: 1. ***Planet Paradise V4, 2. ***Tantalis V6 (traverse right along break, crank through jugs), 3. ***Pinatubo V4, 4. *Hairy Classic Right V2 (splitter crack), 5. *Hairy Classic Left V3 (vertical break), 6. ***Zenalithic V2, 7. **Difensless V3 (arete), 8. *V1, 9. *V1, 10. *Seafluzy V4, 11. ***Infra-bubba V2, 12. *V0. Credit: \"Maps and problems by Matt Pierson, July 2010\".",
+      "crag": "Aow Luek / Lang Khai",
+      "page": 42,
+      "credit": null,
+      "license": null,
+      "sourceUrl": null
+    },
+    {
+      "bucket": "guide",
+      "file": "Images/guide/p43-0-X155.jpg",
+      "kind": "topo-diagram",
+      "caption": "Sketch topo page \"Sai Daeng High Balls\": text warns of VERY dangerous highball bouldering with bad landings (\"Not recommended for the feint of heart!!!\"); access is a 5-minute boulder hop left from the Coral View Resort; views of Shark Island. Hand-drawn boulder map with compass rose and grades marked V0, V1, V2 and \"VE\" (unusual grade label, as printed), plus \"(+down climb)\" and \"P\" markers. No route names given.",
+      "crag": "Sai Daeng High Balls",
+      "page": 43,
+      "credit": null,
+      "license": null,
+      "sourceUrl": null
+    },
+    {
+      "bucket": "guide",
+      "file": "Images/guide/p44-1-X158.jpg",
+      "kind": "action-photo",
+      "caption": "Climber in helmet on a sea cliff of stacked granite blocks above turquoise water; ropes/gear visible at base. No route names legible. Crag unverified (sea-cliff setting, possibly Tanote Bay or Lang Khai area).",
+      "crag": null,
+      "page": 44,
+      "credit": null,
+      "license": null,
+      "sourceUrl": null
+    },
+    {
+      "bucket": "community",
+      "file": "Images/community/report-lang-khai-kelsey-gray-01.jpg",
+      "kind": "community-photo",
+      "caption": "Rachal Fagan climbing Forewarned (6a) at Lang Khai. Photo by Kelsey Gray.",
+      "crag": "Lang Khai",
+      "page": null,
+      "credit": "Kelsey Gray",
+      "license": "user-contributed, all rights reserved — shown with attribution and source link",
+      "sourceUrl": "https://rakkup.com/koh-tao-thailand-rock-climbing-by-kelsey-gray/"
+    },
+    {
+      "bucket": "community",
+      "file": "Images/community/report-golden-view-kelsey-gray-01.jpg",
+      "kind": "community-photo",
+      "caption": "Rachel Fagan climbing Do It! (6c+) at Golden View. Photo by Kelsey Gray.",
+      "crag": "Golden View",
+      "page": null,
+      "credit": "Kelsey Gray",
+      "license": "user-contributed, all rights reserved — shown with attribution and source link",
+      "sourceUrl": "https://rakkup.com/koh-tao-thailand-rock-climbing-by-kelsey-gray/"
+    },
+    {
+      "bucket": "community",
+      "file": "Images/community/report-big-brother-slab-kelsey-gray-01.jpg",
+      "kind": "community-photo",
+      "caption": "Ryan Senko following Drunken Yorkshireman (6a+) at Big Brother Slab. Photo by Kelsey Gray.",
+      "crag": "Big Brother Slab (exact location unverified)",
+      "page": null,
+      "credit": "Kelsey Gray",
+      "license": "user-contributed, all rights reserved — shown with attribution and source link",
+      "sourceUrl": "https://rakkup.com/koh-tao-thailand-rock-climbing-by-kelsey-gray/"
+    }
+  ],
+  "route_subsets_by_crag": {
+    "Aow Luek": [
+      {
+        "name": "(Aow Luek #2)",
+        "grade": "V0",
+        "sector": null,
+        "sourceUrl": "http://www.railay.com/railay/climbing/KT-Climbing-guide-1.14-sm.compressed.pdf",
+        "verified": false
+      },
+      {
+        "name": "(Aow Luek #8)",
+        "grade": "V0",
+        "sector": null,
+        "sourceUrl": "http://www.railay.com/railay/climbing/KT-Climbing-guide-1.14-sm.compressed.pdf",
+        "verified": false
+      },
+      {
+        "name": "Caluga",
+        "grade": "V0",
+        "sector": null,
+        "sourceUrl": "http://www.railay.com/railay/climbing/KT-Climbing-guide-1.14-sm.compressed.pdf",
+        "verified": false
+      },
+      {
+        "name": "Wonderlust",
+        "grade": "V0",
+        "sector": null,
+        "sourceUrl": "http://www.railay.com/railay/climbing/KT-Climbing-guide-1.14-sm.compressed.pdf",
+        "verified": false
+      },
+      {
+        "name": "Clam Sandwich",
+        "grade": "V1",
+        "sector": null,
+        "sourceUrl": "http://www.railay.com/railay/climbing/KT-Climbing-guide-1.14-sm.compressed.pdf",
+        "verified": false
+      },
+      {
+        "name": "Boop Boop Chomp",
+        "grade": "V2",
+        "sector": null,
+        "sourceUrl": "http://www.railay.com/railay/climbing/KT-Climbing-guide-1.14-sm.compressed.pdf",
+        "verified": false
+      },
+      {
+        "name": "Fish Supper",
+        "grade": "V2",
+        "sector": null,
+        "sourceUrl": "http://www.railay.com/railay/climbing/KT-Climbing-guide-1.14-sm.compressed.pdf",
+        "verified": false
+      },
+      {
+        "name": "(Aow Luek #10)",
+        "grade": "V4",
+        "sector": null,
+        "sourceUrl": "http://www.railay.com/railay/climbing/KT-Climbing-guide-1.14-sm.compressed.pdf",
+        "verified": false
+      },
+      {
+        "name": "Naturalist Extension",
+        "grade": "V4",
+        "sector": null,
+        "sourceUrl": "http://www.railay.com/railay/climbing/KT-Climbing-guide-1.14-sm.compressed.pdf",
+        "verified": false
+      },
+      {
+        "name": "Rhythm Splitter",
+        "grade": "V4",
+        "sector": null,
+        "sourceUrl": "http://www.railay.com/railay/climbing/KT-Climbing-guide-1.14-sm.compressed.pdf",
+        "verified": false
+      },
+      {
+        "name": "The Naturalist",
+        "grade": "V4",
+        "sector": null,
+        "sourceUrl": "http://www.railay.com/railay/climbing/KT-Climbing-guide-1.14-sm.compressed.pdf",
+        "verified": false
+      }
+    ],
+    "Lang Khai": [
+      {
+        "name": "Afternoon Delights",
+        "grade": "5c",
+        "sector": null,
+        "sourceUrl": "http://www.railay.com/railay/climbing/KT-Climbing-guide-1.14-sm.compressed.pdf",
+        "verified": true
+      },
+      {
+        "name": "Forewarned",
+        "grade": "5c",
+        "sector": null,
+        "sourceUrl": "http://www.railay.com/railay/climbing/KT-Climbing-guide-1.14-sm.compressed.pdf",
+        "verified": true
+      },
+      {
+        "name": "Hung over",
+        "grade": "5c",
+        "sector": null,
+        "sourceUrl": "https://www.mountainproject.com/route/110064535/hung-over",
+        "verified": true
+      },
+      {
+        "name": "jam on Toast",
+        "grade": "5c",
+        "sector": null,
+        "sourceUrl": "https://www.mountainproject.com/route/110064565/jam-on-toast",
+        "verified": true
+      },
+      {
+        "name": "Pocket a hoy .",
+        "grade": "5c",
+        "sector": null,
+        "sourceUrl": "https://www.mountainproject.com/route/110064411/pocket-a-hoy",
+        "verified": true
+      },
+      {
+        "name": "Shin splints",
+        "grade": "5c",
+        "sector": null,
+        "sourceUrl": "https://www.mountainproject.com/route/110064243/shin-splints",
+        "verified": true
+      },
+      {
+        "name": "Forearmed",
+        "grade": "6a",
+        "sector": null,
+        "sourceUrl": "http://www.railay.com/railay/climbing/KT-Climbing-guide-1.14-sm.compressed.pdf",
+        "verified": true
+      },
+      {
+        "name": "Laura's reach around",
+        "grade": "6a",
+        "sector": null,
+        "sourceUrl": "http://www.railay.com/railay/climbing/KT-Climbing-guide-1.14-sm.compressed.pdf",
+        "verified": true
+      },
+      {
+        "name": "Retey",
+        "grade": "6a",
+        "sector": null,
+        "sourceUrl": "https://www.mountainproject.com/route/110064572/retey",
+        "verified": true
+      },
+      {
+        "name": "Slab back",
+        "grade": "6a",
+        "sector": null,
+        "sourceUrl": "https://www.mountainproject.com/route/110064540/slab-back",
+        "verified": true
+      },
+      {
+        "name": "Sol Solei",
+        "grade": "6a+",
+        "sector": null,
+        "sourceUrl": "https://www.mountainproject.com/route/110064580/sol-solei",
+        "verified": true
+      },
+      {
+        "name": "Underclinged",
+        "grade": "6a+",
+        "sector": null,
+        "sourceUrl": "https://www.mountainproject.com/route/110064547/underclinged",
+        "verified": true
+      },
+      {
+        "name": "Dave Bottled it",
+        "grade": "6b",
+        "sector": null,
+        "sourceUrl": "https://www.mountainproject.com/route/110064605/dave-bottled-it",
+        "verified": true
+      },
+      {
+        "name": "Swooping Seabirds",
+        "grade": "6b",
+        "sector": null,
+        "sourceUrl": "https://www.thecrag.com/en/climbing/thailand/koh-tao",
+        "verified": false
+      },
+      {
+        "name": "Give a shit",
+        "grade": "6b+",
+        "sector": null,
+        "sourceUrl": "https://www.mountainproject.com/route/110064595/give-a-shit",
+        "verified": true
+      },
+      {
+        "name": "Banana Shake",
+        "grade": "4+",
+        "sector": "Agglomerato",
+        "sourceUrl": "https://27crags.com/crags/koh-tao-yang/routes/saskia-533986",
+        "verified": true
+      },
+      {
+        "name": "10Bath",
+        "grade": "5",
+        "sector": "Agglomerato",
+        "sourceUrl": "https://27crags.com/crags/koh-tao-yang/routes/10bath",
+        "verified": true
+      },
+      {
+        "name": "Big fried noodles with chicken",
+        "grade": "5",
+        "sector": "MasterComplainer",
+        "sourceUrl": "https://27crags.com/crags/koh-tao-yang/routes/big-fried-noodles-with-chicken",
+        "verified": true
+      },
+      {
+        "name": "For the Girls",
+        "grade": "5",
+        "sector": "Buco",
+        "sourceUrl": "https://27crags.com/crags/koh-tao-yang/routes/for-the-girls",
+        "verified": true
+      },
+      {
+        "name": "The Burger",
+        "grade": "5",
+        "sector": "Tetris",
+        "sourceUrl": "https://27crags.com/crags/koh-tao-yang/routes/the-burger",
+        "verified": true
+      },
+      {
+        "name": "High Tide",
+        "grade": "5+",
+        "sector": "Tetris",
+        "sourceUrl": "https://27crags.com/crags/koh-tao-yang/routes/high-tide-533463",
+        "verified": true
+      },
+      {
+        "name": "La Pietra Ollare",
+        "grade": "5+",
+        "sector": "Ceffoni",
+        "sourceUrl": "https://27crags.com/crags/koh-tao-yang/routes/la-pietra-ollare",
+        "verified": true
+      },
+      {
+        "name": "Lost in Koh Yao Noi",
+        "grade": "5+",
+        "sector": "Agglomerato",
+        "sourceUrl": "https://27crags.com/crags/koh-tao-yang/routes/saskia-533983",
+        "verified": true
+      },
+      {
+        "name": "Sa se é li?",
+        "grade": "5+",
+        "sector": "Agglomerato",
+        "sourceUrl": "https://27crags.com/crags/koh-tao-yang/routes/sa-se-e-li",
+        "verified": true
+      },
+      {
+        "name": "120 Euro",
+        "grade": "6A",
+        "sector": "Visa",
+        "sourceUrl": "https://27crags.com/crags/koh-tao-yang/routes/120-euro",
+        "verified": true
+      },
+      {
+        "name": "8 Homestel",
+        "grade": "6A",
+        "sector": "Bath",
+        "sourceUrl": "https://27crags.com/crags/koh-tao-yang/routes/8-homestel",
+        "verified": true
+      },
+      {
+        "name": "Fire Distinguisher",
+        "grade": "6A",
+        "sector": "Tetris",
+        "sourceUrl": "https://27crags.com/crags/koh-tao-yang/routes/fire-distinguisher",
+        "verified": true
+      },
+      {
+        "name": "No Groupers",
+        "grade": "6A",
+        "sector": "MasterComplainer",
+        "sourceUrl": "https://27crags.com/crags/koh-tao-yang/routes/no-groupers",
+        "verified": true
+      },
+      {
+        "name": "Prima o poi pescheremo",
+        "grade": "6A",
+        "sector": "Agglomerato",
+        "sourceUrl": "https://27crags.com/crags/koh-tao-yang/routes/prima-o-poi-pescheremo",
+        "verified": true
+      },
+      {
+        "name": "Saskia",
+        "grade": "6A",
+        "sector": "Ceffoni",
+        "sourceUrl": "https://27crags.com/crags/koh-tao-yang/routes/saskia",
+        "verified": true
+      },
+      {
+        "name": "Cruzer",
+        "grade": "6A+",
+        "sector": "Tetris",
+        "sourceUrl": "https://27crags.com/crags/koh-tao-yang/routes/cruzer-533493",
+        "verified": true
+      },
+      {
+        "name": "Giazú Berfutt e l&#39;accampamento Thai",
+        "grade": "6A+",
+        "sector": "Ceffoni",
+        "sourceUrl": "https://27crags.com/crags/koh-tao-yang/routes/giazu-berfutt-e-l-accampamento-thai",
+        "verified": true
+      },
+      {
+        "name": "Snoreling",
+        "grade": "6A+",
+        "sector": "Buco",
+        "sourceUrl": "https://27crags.com/crags/koh-tao-yang/routes/snoreling",
+        "verified": true
+      },
+      {
+        "name": "Cascata Avvolgente, Memoria Incompetente",
+        "grade": "6B",
+        "sector": "Bath",
+        "sourceUrl": "https://27crags.com/crags/koh-tao-yang/routes/cascata-avvolgente-memoria-incompetente",
+        "verified": true
+      },
+      {
+        "name": "Hairy  Classic Right",
+        "grade": "6B",
+        "sector": "Roof",
+        "sourceUrl": "https://27crags.com/crags/koh-tao-yang/routes/crack-533460",
+        "verified": false
+      },
+      {
+        "name": "La mia linea era più bella",
+        "grade": "6B",
+        "sector": "Tetris",
+        "sourceUrl": "https://27crags.com/crags/koh-tao-yang/routes/la-mia-linea-era-piu-bella",
+        "verified": true
+      },
+      {
+        "name": "Stella Maris",
+        "grade": "6B",
+        "sector": "Agglomerato",
+        "sourceUrl": "https://27crags.com/crags/koh-tao-yang/routes/long-road-of-life-533980",
+        "verified": true
+      },
+      {
+        "name": "Abbraccio Lontano",
+        "grade": "6B+",
+        "sector": "Ceffoni",
+        "sourceUrl": "https://27crags.com/crags/koh-tao-yang/routes/abbraccio-lontano",
+        "verified": true
+      },
+      {
+        "name": "Andr3ix",
+        "grade": "6B+",
+        "sector": "Buco",
+        "sourceUrl": "https://27crags.com/crags/koh-tao-yang/routes/for-the-boys",
+        "verified": true
+      },
+      {
+        "name": "Diffensless",
+        "grade": "6B+",
+        "sector": "Roof",
+        "sourceUrl": "https://27crags.com/crags/koh-tao-yang/routes/two-534205",
+        "verified": true
+      },
+      {
+        "name": "Fire Extinguisher",
+        "grade": "6B+",
+        "sector": "Albero",
+        "sourceUrl": "https://27crags.com/crags/koh-tao-yang/routes/rigth",
+        "verified": true
+      },
+      {
+        "name": "La Mussa",
+        "grade": "6B+",
+        "sector": "Bath",
+        "sourceUrl": "https://27crags.com/crags/koh-tao-yang/routes/la-mussa",
+        "verified": true
+      },
+      {
+        "name": "Zenalithic",
+        "grade": "6B+",
+        "sector": "Roof",
+        "sourceUrl": "https://27crags.com/crags/koh-tao-yang/routes/one-534204",
+        "verified": false
+      },
+      {
+        "name": "Zorro",
+        "grade": "6B+",
+        "sector": "Buco",
+        "sourceUrl": "https://27crags.com/crags/koh-tao-yang/routes/pinza",
+        "verified": true
+      },
+      {
+        "name": "Povero Albero",
+        "grade": "6C",
+        "sector": "Albero",
+        "sourceUrl": "https://27crags.com/crags/koh-tao-yang/routes/left-533465",
+        "verified": true
+      },
+      {
+        "name": "Marino",
+        "grade": "6C+",
+        "sector": "Roof",
+        "sourceUrl": "https://27crags.com/crags/koh-tao-yang/routes/marino-536191",
+        "verified": true
+      },
+      {
+        "name": "Tao",
+        "grade": "6C+",
+        "sector": "Agglomerato",
+        "sourceUrl": "https://27crags.com/crags/koh-tao-yang/routes/tao-533529",
+        "verified": true
+      },
+      {
+        "name": "Fligth to Dammam - W62299",
+        "grade": "7A",
+        "sector": "Buco",
+        "sourceUrl": "https://27crags.com/crags/koh-tao-yang/routes/fligth-to-dammam",
+        "verified": true
+      },
+      {
+        "name": "Tantalis",
+        "grade": "7B",
+        "sector": "Roof",
+        "sourceUrl": "https://27crags.com/crags/koh-tao-yang/routes/new-lan-kai-co-ver",
+        "verified": false
+      },
+      {
+        "name": "(Lang Khaai Bay #12)",
+        "grade": "V0",
+        "sector": "Lang Khaai Bay",
+        "sourceUrl": "http://www.railay.com/railay/climbing/KT-Climbing-guide-1.14-sm.compressed.pdf",
+        "verified": false
+      },
+      {
+        "name": "(Lang Khaai Bay #8)",
+        "grade": "V1",
+        "sector": "Lang Khaai Bay",
+        "sourceUrl": "http://www.railay.com/railay/climbing/KT-Climbing-guide-1.14-sm.compressed.pdf",
+        "verified": false
+      },
+      {
+        "name": "(Lang Khaai Bay #9)",
+        "grade": "V1",
+        "sector": "Lang Khaai Bay",
+        "sourceUrl": "http://www.railay.com/railay/climbing/KT-Climbing-guide-1.14-sm.compressed.pdf",
+        "verified": false
+      },
+      {
+        "name": "Infra-bubba",
+        "grade": "V2",
+        "sector": "Lang Khaai Bay",
+        "sourceUrl": "http://www.railay.com/railay/climbing/KT-Climbing-guide-1.14-sm.compressed.pdf",
+        "verified": false
+      },
+      {
+        "name": "Difensless",
+        "grade": "V3",
+        "sector": "Lang Khaai Bay",
+        "sourceUrl": "http://www.railay.com/railay/climbing/KT-Climbing-guide-1.14-sm.compressed.pdf",
+        "verified": false
+      },
+      {
+        "name": "Hairy Classic Left",
+        "grade": "V3",
+        "sector": "Lang Khaai Bay",
+        "sourceUrl": "http://www.railay.com/railay/climbing/KT-Climbing-guide-1.14-sm.compressed.pdf",
+        "verified": false
+      },
+      {
+        "name": "Pinatubo",
+        "grade": "V4",
+        "sector": "Lang Khaai Bay",
+        "sourceUrl": "http://www.railay.com/railay/climbing/KT-Climbing-guide-1.14-sm.compressed.pdf",
+        "verified": false
+      },
+      {
+        "name": "Planet Paradise",
+        "grade": "V4",
+        "sector": "Lang Khaai Bay",
+        "sourceUrl": "http://www.railay.com/railay/climbing/KT-Climbing-guide-1.14-sm.compressed.pdf",
+        "verified": false
+      },
+      {
+        "name": "Seafluzy",
+        "grade": "V4",
+        "sector": "Lang Khaai Bay",
+        "sourceUrl": "http://www.railay.com/railay/climbing/KT-Climbing-guide-1.14-sm.compressed.pdf",
+        "verified": false
+      }
+    ],
+    "Mek's Mountain": [
+      {
+        "name": "A1",
+        "grade": "4",
+        "sector": "Shady Crack",
+        "sourceUrl": "http://www.railay.com/railay/climbing/KT-Climbing-guide-1.14-sm.compressed.pdf",
+        "verified": true
+      },
+      {
+        "name": "Easy Eagle",
+        "grade": "4",
+        "sector": "Eagle Wall",
+        "sourceUrl": "https://www.mountainproject.com/route/111700562/easy-eagle",
+        "verified": false
+      },
+      {
+        "name": "Multi-pitch training line",
+        "grade": "4",
+        "sector": "Sairee Face",
+        "sourceUrl": "http://www.railay.com/railay/climbing/KT-Climbing-guide-1.14-sm.compressed.pdf",
+        "verified": true
+      },
+      {
+        "name": "Route D",
+        "grade": "4",
+        "sector": "Low Bulge",
+        "sourceUrl": "http://www.railay.com/railay/climbing/KT-Climbing-guide-1.14-sm.compressed.pdf",
+        "verified": true
+      },
+      {
+        "name": "The Kiddie Slope",
+        "grade": "4",
+        "sector": "The Watchtower",
+        "sourceUrl": "http://www.railay.com/railay/climbing/KT-Climbing-guide-1.14-sm.compressed.pdf",
+        "verified": true
+      },
+      {
+        "name": "Tim and Charly's only Friend",
+        "grade": "4+",
+        "sector": "De-Vine Wall",
+        "sourceUrl": "https://www.mountainproject.com/route/111697096/tim-and-charlys-only-friend",
+        "verified": false
+      },
+      {
+        "name": "Bees Knees",
+        "grade": "4b",
+        "sector": "De-Vine Wall",
+        "sourceUrl": "https://www.mountainproject.com/route/111697047/bees-knees",
+        "verified": true
+      },
+      {
+        "name": "Squirming Worm",
+        "grade": "4c",
+        "sector": "De-Vine Wall",
+        "sourceUrl": "https://www.mountainproject.com/route/111697074/squirming-worm",
+        "verified": true
+      },
+      {
+        "name": "Clear Horizons",
+        "grade": "5a",
+        "sector": "Eagle Wall",
+        "sourceUrl": "https://www.mountainproject.com/route/111700609/clear-horizons",
+        "verified": true
+      },
+      {
+        "name": "Good Morning Koh Tao",
+        "grade": "5a",
+        "sector": "Sairee Face",
+        "sourceUrl": "https://www.mountainproject.com/route/111705209/good-morning-koh-tao",
+        "verified": true
+      },
+      {
+        "name": "A2",
+        "grade": "5b",
+        "sector": "Shady Crack",
+        "sourceUrl": "http://www.railay.com/railay/climbing/KT-Climbing-guide-1.14-sm.compressed.pdf",
+        "verified": true
+      },
+      {
+        "name": "Pow, Right in the Baby Maker",
+        "grade": "5b–5c",
+        "sector": "Multipitch (The Watchtower)",
+        "sourceUrl": "http://www.railay.com/railay/climbing/KT-Climbing-guide-1.14-sm.compressed.pdf",
+        "verified": true
+      },
+      {
+        "name": "Route C",
+        "grade": "5b",
+        "sector": "Low Bulge",
+        "sourceUrl": "http://www.railay.com/railay/climbing/KT-Climbing-guide-1.14-sm.compressed.pdf",
+        "verified": true
+      },
+      {
+        "name": "Smeartastic",
+        "grade": "5b",
+        "sector": "Sairee Face",
+        "sourceUrl": "https://www.mountainproject.com/route/111705266/smeartastic",
+        "verified": true
+      },
+      {
+        "name": "2 Step",
+        "grade": "5c",
+        "sector": "Eagle Wall",
+        "sourceUrl": "https://www.mountainproject.com/route/111700619/2-step",
+        "verified": true
+      },
+      {
+        "name": "C U Next Tuesday",
+        "grade": "5c",
+        "sector": "Quit Your'e Bitchin'",
+        "sourceUrl": "https://www.mountainproject.com/route/111697272/c-u-next-tuesday",
+        "verified": false
+      },
+      {
+        "name": "Crazy Damn Erk and Jerk",
+        "grade": "5c",
+        "sector": "Two Face Wall",
+        "sourceUrl": "https://www.mountainproject.com/route/111675850/crazy-damn-erk-and-jerk",
+        "verified": true
+      },
+      {
+        "name": "Devine Intervention",
+        "grade": "5c",
+        "sector": "De-Vine Wall",
+        "sourceUrl": "https://www.mountainproject.com/route/111673047/devine-intervention",
+        "verified": false
+      },
+      {
+        "name": "Heat Rations",
+        "grade": "5c",
+        "sector": "Two Face Wall",
+        "sourceUrl": "https://www.mountainproject.com/route/111675888/heat-rations",
+        "verified": true
+      },
+      {
+        "name": "Moguls",
+        "grade": "5c",
+        "sector": "Eagle Wall",
+        "sourceUrl": "https://www.mountainproject.com/route/111700591/moguls",
+        "verified": true
+      },
+      {
+        "name": "Naughty or Nice",
+        "grade": "5c",
+        "sector": "Quit Your'e Bitchin'",
+        "sourceUrl": "https://www.mountainproject.com/route/111697197/naughty-or-nice",
+        "verified": true
+      },
+      {
+        "name": "Placebo Junction",
+        "grade": "5c",
+        "sector": "Lower Fraggle",
+        "sourceUrl": "http://www.railay.com/railay/climbing/KT-Climbing-guide-1.14-sm.compressed.pdf",
+        "verified": true
+      },
+      {
+        "name": "Return of the Ent Wife",
+        "grade": "5c",
+        "sector": "Two Face Wall",
+        "sourceUrl": "https://www.mountainproject.com/route/111672885/return-of-the-ent-wife",
+        "verified": true
+      },
+      {
+        "name": "Arabian Balls",
+        "grade": "6a",
+        "sector": "De-Vine Wall",
+        "sourceUrl": "http://www.railay.com/railay/climbing/KT-Climbing-guide-1.14-sm.compressed.pdf",
+        "verified": true
+      },
+      {
+        "name": "Charly's Crack",
+        "grade": "6a",
+        "sector": "Eagle Wall",
+        "sourceUrl": "https://www.mountainproject.com/route/111672906/charlys-crack",
+        "verified": false
+      },
+      {
+        "name": "Daddy Long Legs",
+        "grade": "6a",
+        "sector": "De-Vine Wall",
+        "sourceUrl": "https://www.mountainproject.com/route/111697163/daddy-long-legs",
+        "verified": true
+      },
+      {
+        "name": "Holy Exposure!",
+        "grade": "6a",
+        "sector": "The Watchtower",
+        "sourceUrl": "http://www.railay.com/railay/climbing/KT-Climbing-guide-1.14-sm.compressed.pdf",
+        "verified": true
+      },
+      {
+        "name": "I Got a Feeling",
+        "grade": "6a",
+        "sector": "Eagle Wall",
+        "sourceUrl": "https://www.mountainproject.com/route/111700599/i-got-a-feeling",
+        "verified": false
+      },
+      {
+        "name": "Mosquit Burrito",
+        "grade": "6a",
+        "sector": "De-Vine Wall",
+        "sourceUrl": "https://www.mountainproject.com/route/111697188/mosquit-burrito",
+        "verified": true
+      },
+      {
+        "name": "Route B",
+        "grade": "6a",
+        "sector": "Low Bulge",
+        "sourceUrl": "http://www.railay.com/railay/climbing/KT-Climbing-guide-1.14-sm.compressed.pdf",
+        "verified": true
+      },
+      {
+        "name": "Broken But Not Beaten",
+        "grade": "6a+",
+        "sector": "Two Face Wall",
+        "sourceUrl": "https://www.mountainproject.com/route/111675836/broken-but-not-beaten",
+        "verified": false
+      },
+      {
+        "name": "Dirty Squirrel",
+        "grade": "6a+",
+        "sector": "De-Vine Wall",
+        "sourceUrl": "https://www.mountainproject.com/route/111697176/dirty-squirrel",
+        "verified": true
+      },
+      {
+        "name": "Jack Crack",
+        "grade": "6a+",
+        "sector": "Car Jack",
+        "sourceUrl": "http://www.railay.com/railay/climbing/KT-Climbing-guide-1.14-sm.compressed.pdf",
+        "verified": true
+      },
+      {
+        "name": "The Chameleon's Noose",
+        "grade": "6a+",
+        "sector": "The Tongue Twister Wall",
+        "sourceUrl": "http://www.railay.com/railay/climbing/KT-Climbing-guide-1.14-sm.compressed.pdf",
+        "verified": true
+      },
+      {
+        "name": "Car Jack",
+        "grade": "6b",
+        "sector": "Car Jack",
+        "sourceUrl": "https://www.mountainproject.com/route/109808726/car-jack",
+        "verified": false
+      },
+      {
+        "name": "Poker Face",
+        "grade": "6b",
+        "sector": "South Abseil climb",
+        "sourceUrl": "http://www.railay.com/railay/climbing/KT-Climbing-guide-1.14-sm.compressed.pdf",
+        "verified": true
+      },
+      {
+        "name": "Project (The Tongue Twister Wall)",
+        "grade": "6b",
+        "sector": "The Tongue Twister Wall",
+        "sourceUrl": "http://www.railay.com/railay/climbing/KT-Climbing-guide-1.14-sm.compressed.pdf",
+        "verified": true
+      },
+      {
+        "name": "Route A",
+        "grade": "6b",
+        "sector": "Low Bulge",
+        "sourceUrl": "http://www.railay.com/railay/climbing/KT-Climbing-guide-1.14-sm.compressed.pdf",
+        "verified": true
+      },
+      {
+        "name": "Sairee Pull",
+        "grade": "6b",
+        "sector": "Sairee Face",
+        "sourceUrl": "https://www.mountainproject.com/route/111705272/sairee-pull",
+        "verified": true
+      },
+      {
+        "name": "Tongue Twister",
+        "grade": "6b",
+        "sector": "The Tongue Twister Wall",
+        "sourceUrl": "http://www.railay.com/railay/climbing/KT-Climbing-guide-1.14-sm.compressed.pdf",
+        "verified": true
+      },
+      {
+        "name": "The bitch in me",
+        "grade": "6b+",
+        "sector": "Quit Your'e Bitchin'",
+        "sourceUrl": "https://www.mountainproject.com/route/111672817/the-bitch-in-me",
+        "verified": false
+      },
+      {
+        "name": "B",
+        "grade": "6c",
+        "sector": "Shady Crack",
+        "sourceUrl": "http://www.railay.com/railay/climbing/KT-Climbing-guide-1.14-sm.compressed.pdf",
+        "verified": true
+      },
+      {
+        "name": "Stringer",
+        "grade": "6c",
+        "sector": "Lower Fraggle",
+        "sourceUrl": "http://www.railay.com/railay/climbing/KT-Climbing-guide-1.14-sm.compressed.pdf",
+        "verified": true
+      },
+      {
+        "name": "(unlabeled line)",
+        "grade": "6c+",
+        "sector": "Quit Your'e Bitchin'",
+        "sourceUrl": "http://www.railay.com/railay/climbing/KT-Climbing-guide-1.14-sm.compressed.pdf",
+        "verified": true
+      },
+      {
+        "name": "Dance your cares away",
+        "grade": "7a",
+        "sector": "Lower Fraggle",
+        "sourceUrl": "http://www.railay.com/railay/climbing/KT-Climbing-guide-1.14-sm.compressed.pdf",
+        "verified": true
+      },
+      {
+        "name": "Son of A Btich",
+        "grade": "7a",
+        "sector": "Quit Your'e Bitchin'",
+        "sourceUrl": "https://www.mountainproject.com/route/111697248/son-of-a-btich",
+        "verified": false
+      },
+      {
+        "name": "Under Klingon",
+        "grade": "7b",
+        "sector": "Two Face Wall",
+        "sourceUrl": "https://www.mountainproject.com/route/111673040/under-klingon",
+        "verified": false
+      },
+      {
+        "name": "Lower Fraggle",
+        "grade": "ungraded",
+        "sector": "Lower Fraggle",
+        "sourceUrl": "http://www.railay.com/railay/climbing/KT-Climbing-guide-1.14-sm.compressed.pdf",
+        "verified": true
+      },
+      {
+        "name": "Trad Spotting",
+        "grade": "ungraded",
+        "sector": "The Tongue Twister Wall",
+        "sourceUrl": "http://www.railay.com/railay/climbing/KT-Climbing-guide-1.14-sm.compressed.pdf",
+        "verified": true
+      }
+    ],
+    "Sai Tong": [
+      {
+        "name": "(others)",
+        "grade": "E / M / MH / H",
+        "sector": null,
+        "sourceUrl": "http://www.railay.com/railay/climbing/KT-Climbing-guide-1.14-sm.compressed.pdf",
+        "verified": false
+      },
+      {
+        "name": "Hels's arete",
+        "grade": "M",
+        "sector": null,
+        "sourceUrl": "http://www.railay.com/railay/climbing/KT-Climbing-guide-1.14-sm.compressed.pdf",
+        "verified": false
+      },
+      {
+        "name": "Return of the Jeddi",
+        "grade": "H",
+        "sector": null,
+        "sourceUrl": "http://www.railay.com/railay/climbing/KT-Climbing-guide-1.14-sm.compressed.pdf",
+        "verified": false
+      }
+    ],
+    "Sairee Beach Boulders": [
+      {
+        "name": "The Wet Beaver",
+        "grade": "4",
+        "sector": "The Elephant",
+        "sourceUrl": "http://www.railay.com/railay/climbing/KT-Climbing-guide-1.14-sm.compressed.pdf",
+        "verified": true
+      },
+      {
+        "name": "Elephant | 7345",
+        "grade": "4c",
+        "sector": null,
+        "sourceUrl": "https://www.mountainproject.com/route/111737345/elephant-7345",
+        "verified": true
+      },
+      {
+        "name": "Yu's Jam Crack",
+        "grade": "5c",
+        "sector": "The Elephant",
+        "sourceUrl": "https://www.mountainproject.com/route/111737316/yus-jam-crack",
+        "verified": false
+      },
+      {
+        "name": "Lobe Lieback",
+        "grade": "6a",
+        "sector": "The Elephant",
+        "sourceUrl": "https://www.mountainproject.com/route/111737306/lobe-lieback",
+        "verified": true
+      },
+      {
+        "name": "Cross Eyed",
+        "grade": "6c",
+        "sector": "The Elephant",
+        "sourceUrl": "https://www.mountainproject.com/route/111737311/cross-eyed",
+        "verified": true
+      },
+      {
+        "name": "Trunk, The",
+        "grade": "7a",
+        "sector": null,
+        "sourceUrl": "https://www.mountainproject.com/route/111737340/the-trunk",
+        "verified": true
+      },
+      {
+        "name": "Zape",
+        "grade": "3",
+        "sector": "Beach",
+        "sourceUrl": "https://27crags.com/crags/koh-tao-frontyard/routes/zape-534937",
+        "verified": true
+      },
+      {
+        "name": "Chicken",
+        "grade": "4+",
+        "sector": "Beach",
+        "sourceUrl": "https://27crags.com/crags/koh-tao-frontyard/routes/chicken-534945",
+        "verified": true
+      },
+      {
+        "name": "Varano's Party",
+        "grade": "4+",
+        "sector": "Varano",
+        "sourceUrl": "https://27crags.com/crags/koh-tao-frontyard/routelist",
+        "verified": true
+      },
+      {
+        "name": "Crazy Driver",
+        "grade": "5",
+        "sector": "Beach",
+        "sourceUrl": "https://27crags.com/crags/koh-tao-frontyard/routes/crazy-driver-534936",
+        "verified": true
+      },
+      {
+        "name": "Zipi",
+        "grade": "5",
+        "sector": "Beach",
+        "sourceUrl": "https://27crags.com/crags/koh-tao-frontyard/routes/zipi-534935",
+        "verified": true
+      },
+      {
+        "name": "Blanes",
+        "grade": "5+",
+        "sector": "Beach",
+        "sourceUrl": "https://27crags.com/crags/koh-tao-frontyard/routes/blanes-534944",
+        "verified": true
+      },
+      {
+        "name": "Gecko's Party",
+        "grade": "5+",
+        "sector": "Varano",
+        "sourceUrl": "https://27crags.com/crags/koh-tao-frontyard/routelist",
+        "verified": true
+      },
+      {
+        "name": "Lotus Night",
+        "grade": "5+",
+        "sector": "Beach",
+        "sourceUrl": "https://27crags.com/crags/koh-tao-frontyard/routes/lotus-night-534938",
+        "verified": true
+      },
+      {
+        "name": "Godella",
+        "grade": "6A",
+        "sector": "Beach",
+        "sourceUrl": "https://27crags.com/crags/koh-tao-frontyard/routes/godella-534943",
+        "verified": true
+      },
+      {
+        "name": "Nit",
+        "grade": "6A",
+        "sector": "Beach",
+        "sourceUrl": "https://27crags.com/crags/koh-tao-frontyard/routes/nit-534939",
+        "verified": true
+      },
+      {
+        "name": "The 5th of July",
+        "grade": "6a",
+        "sector": "July",
+        "sourceUrl": "https://27crags.com/crags/koh-tao-frontyard/routes/the-5th-of-july-534951",
+        "verified": false
+      },
+      {
+        "name": "Pure Climbing",
+        "grade": "6a+",
+        "sector": "July",
+        "sourceUrl": "https://27crags.com/crags/koh-tao-frontyard/routes/pure-climbing",
+        "verified": true
+      },
+      {
+        "name": "Bona Nit",
+        "grade": "6B",
+        "sector": "Beach",
+        "sourceUrl": "https://27crags.com/crags/koh-tao-frontyard/routes/bona-nit-534940",
+        "verified": true
+      },
+      {
+        "name": "Thesun",
+        "grade": "6B+",
+        "sector": "Beach",
+        "sourceUrl": "https://27crags.com/crags/koh-tao-frontyard/routes/thesun",
+        "verified": true
+      },
+      {
+        "name": "Monkey Kid",
+        "grade": "6C",
+        "sector": "Monkey",
+        "sourceUrl": "https://27crags.com/crags/koh-tao-frontyard/routes/monkey-kid-534950",
+        "verified": true
+      },
+      {
+        "name": "Scnitchel",
+        "grade": "6C",
+        "sector": "Beach",
+        "sourceUrl": "https://27crags.com/crags/koh-tao-frontyard/routes/scnitchel-534946",
+        "verified": true
+      },
+      {
+        "name": "The Sun God Traverse",
+        "grade": "6C",
+        "sector": "Beach",
+        "sourceUrl": "https://27crags.com/crags/koh-tao-frontyard/routes/the-sun-god-traverse-534942",
+        "verified": false
+      },
+      {
+        "name": "Suffer for the Children",
+        "grade": "7A",
+        "sector": "Monkey",
+        "sourceUrl": "https://27crags.com/crags/koh-tao-frontyard/routes/suffer-for-the-children-534949",
+        "verified": false
+      },
+      {
+        "name": "(The Elephant #11)",
+        "grade": "VE",
+        "sector": "The Elephant",
+        "sourceUrl": "http://www.railay.com/railay/climbing/KT-Climbing-guide-1.14-sm.compressed.pdf",
+        "verified": true
+      },
+      {
+        "name": "(North Sairee #3)",
+        "grade": "E",
+        "sector": "North Sairee",
+        "sourceUrl": "http://www.railay.com/railay/climbing/KT-Climbing-guide-1.14-sm.compressed.pdf",
+        "verified": true
+      },
+      {
+        "name": "(North Sairee #6)",
+        "grade": "E",
+        "sector": "North Sairee",
+        "sourceUrl": "http://www.railay.com/railay/climbing/KT-Climbing-guide-1.14-sm.compressed.pdf",
+        "verified": true
+      },
+      {
+        "name": "(North Sairee #7)",
+        "grade": "E",
+        "sector": "North Sairee",
+        "sourceUrl": "http://www.railay.com/railay/climbing/KT-Climbing-guide-1.14-sm.compressed.pdf",
+        "verified": true
+      },
+      {
+        "name": "(The Elephant #7)",
+        "grade": "E",
+        "sector": "The Elephant",
+        "sourceUrl": "http://www.railay.com/railay/climbing/KT-Climbing-guide-1.14-sm.compressed.pdf",
+        "verified": true
+      },
+      {
+        "name": "(North Sairee #4)",
+        "grade": "M",
+        "sector": "North Sairee",
+        "sourceUrl": "http://www.railay.com/railay/climbing/KT-Climbing-guide-1.14-sm.compressed.pdf",
+        "verified": true
+      },
+      {
+        "name": "(North Sairee #8)",
+        "grade": "M",
+        "sector": "North Sairee",
+        "sourceUrl": "http://www.railay.com/railay/climbing/KT-Climbing-guide-1.14-sm.compressed.pdf",
+        "verified": true
+      },
+      {
+        "name": "(North Sairee #9)",
+        "grade": "M",
+        "sector": "North Sairee",
+        "sourceUrl": "http://www.railay.com/railay/climbing/KT-Climbing-guide-1.14-sm.compressed.pdf",
+        "verified": true
+      },
+      {
+        "name": "(The Elephant #12)",
+        "grade": "M",
+        "sector": "The Elephant",
+        "sourceUrl": "http://www.railay.com/railay/climbing/KT-Climbing-guide-1.14-sm.compressed.pdf",
+        "verified": true
+      },
+      {
+        "name": "(The Elephant #5)",
+        "grade": "M",
+        "sector": "The Elephant",
+        "sourceUrl": "http://www.railay.com/railay/climbing/KT-Climbing-guide-1.14-sm.compressed.pdf",
+        "verified": true
+      },
+      {
+        "name": "(North Sairee #1)",
+        "grade": "MH",
+        "sector": "North Sairee",
+        "sourceUrl": "http://www.railay.com/railay/climbing/KT-Climbing-guide-1.14-sm.compressed.pdf",
+        "verified": true
+      },
+      {
+        "name": "(The Elephant #4)",
+        "grade": "MH",
+        "sector": "The Elephant",
+        "sourceUrl": "http://www.railay.com/railay/climbing/KT-Climbing-guide-1.14-sm.compressed.pdf",
+        "verified": true
+      },
+      {
+        "name": "(The Elephant #6)",
+        "grade": "MH",
+        "sector": "The Elephant",
+        "sourceUrl": "http://www.railay.com/railay/climbing/KT-Climbing-guide-1.14-sm.compressed.pdf",
+        "verified": true
+      },
+      {
+        "name": "(The Elephant #8)",
+        "grade": "MH",
+        "sector": "The Elephant",
+        "sourceUrl": "http://www.railay.com/railay/climbing/KT-Climbing-guide-1.14-sm.compressed.pdf",
+        "verified": true
+      },
+      {
+        "name": "Gahn Dern Tahng Yahk (The difficult journey)",
+        "grade": "H",
+        "sector": "The Elephant",
+        "sourceUrl": "http://www.railay.com/railay/climbing/KT-Climbing-guide-1.14-sm.compressed.pdf",
+        "verified": true
+      },
+      {
+        "name": "Shuns Breakfast",
+        "grade": "H",
+        "sector": "North Sairee",
+        "sourceUrl": "http://www.railay.com/railay/climbing/KT-Climbing-guide-1.14-sm.compressed.pdf",
+        "verified": true
+      }
+    ],
+    "The Peak Boulders": [
+      {
+        "name": "Baseball mantle",
+        "grade": "E",
+        "sector": null,
+        "sourceUrl": "http://www.railay.com/railay/climbing/KT-Climbing-guide-1.14-sm.compressed.pdf",
+        "verified": false
+      },
+      {
+        "name": "(others)",
+        "grade": "M / E / VE / projects",
+        "sector": null,
+        "sourceUrl": "http://www.railay.com/railay/climbing/KT-Climbing-guide-1.14-sm.compressed.pdf",
+        "verified": false
+      },
+      {
+        "name": "Kanom Wan",
+        "grade": "M",
+        "sector": null,
+        "sourceUrl": "http://www.railay.com/railay/climbing/KT-Climbing-guide-1.14-sm.compressed.pdf",
+        "verified": false
+      },
+      {
+        "name": "Long live the Buddha",
+        "grade": "MH",
+        "sector": null,
+        "sourceUrl": "http://www.railay.com/railay/climbing/KT-Climbing-guide-1.14-sm.compressed.pdf",
+        "verified": false
+      },
+      {
+        "name": "Nak Lung Noi",
+        "grade": "MH",
+        "sector": null,
+        "sourceUrl": "http://www.railay.com/railay/climbing/KT-Climbing-guide-1.14-sm.compressed.pdf",
+        "verified": false
+      },
+      {
+        "name": "Pete's arete",
+        "grade": "MH",
+        "sector": null,
+        "sourceUrl": "http://www.railay.com/railay/climbing/KT-Climbing-guide-1.14-sm.compressed.pdf",
+        "verified": false
+      },
+      {
+        "name": "Slinky",
+        "grade": "MH",
+        "sector": null,
+        "sourceUrl": "http://www.railay.com/railay/climbing/KT-Climbing-guide-1.14-sm.compressed.pdf",
+        "verified": false
+      },
+      {
+        "name": "Crimpology",
+        "grade": "H",
+        "sector": null,
+        "sourceUrl": "http://www.railay.com/railay/climbing/KT-Climbing-guide-1.14-sm.compressed.pdf",
+        "verified": false
+      }
+    ]
+  },
+  "output_format": {
+    "top10": [
+      {
+        "rank": 1,
+        "severity": "critical|high|medium",
+        "file": "Images/...",
+        "crag": "...",
+        "issue": "...",
+        "evidence": "...",
+        "proposed_fix": "...",
+        "fix_batch_id": "DQ-001-B1",
+        "confidence": "high|medium|low",
+        "unverified": false
+      }
+    ],
+    "schema_suggestion": "optional routeAnnotations on PhotoEntry",
+    "pr_batches": [
+      {
+        "id": "DQ-001-B1",
+        "title": "...",
+        "files": [],
+        "notes": "..."
+      }
+    ]
+  },
+  "instructions": "You are judging DQ-001 photo↔route data quality for Koh Tao Climbing. Produce EXACTLY the JSON object described in output_format: top10 (exactly 10), schema_suggestion, pr_batches (3–6 small batches). Base every claim on the provided scan rows / captions / routes.json subsets / sources.json. Do NOT invent routes or URLs. If only caption-vs-DB mismatch, say so. Prefer concrete file paths and field-level proposed fixes (e.g. rename Mosquit→Mosquito in routes.json; split dual photo.crag; add routeAnnotations schema). Return ONLY valid JSON, no markdown fences."
+}</stdin>
+
+warning: Codex could not find bubblewrap on PATH. Install bubblewrap with your OS package manager. See the sandbox prerequisites: https://developers.openai.com/codex/concepts/sandboxing#prerequisites. Codex will use the bundled bubblewrap in the meantime.

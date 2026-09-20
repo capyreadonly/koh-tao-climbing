@@ -1,0 +1,105 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "model_confirm",
+    "top10",
+    "schema_suggestion",
+    "pr_batches",
+    "notes"
+  ],
+  "properties": {
+    "model_confirm": {
+      "type": "string"
+    },
+    "notes": {
+      "type": "string"
+    },
+    "schema_suggestion": {
+      "type": "string"
+    },
+    "top10": {
+      "type": "array",
+      "minItems": 10,
+      "maxItems": 10,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "rank",
+          "severity",
+          "file",
+          "crag",
+          "issue",
+          "evidence",
+          "proposed_fix",
+          "fix_batch_id",
+          "confidence",
+          "unverified"
+        ],
+        "properties": {
+          "rank": {
+            "type": "integer"
+          },
+          "severity": {
+            "type": "string"
+          },
+          "file": {
+            "type": "string"
+          },
+          "crag": {
+            "type": "string"
+          },
+          "issue": {
+            "type": "string"
+          },
+          "evidence": {
+            "type": "string"
+          },
+          "proposed_fix": {
+            "type": "string"
+          },
+          "fix_batch_id": {
+            "type": "string"
+          },
+          "confidence": {
+            "type": "string"
+          },
+          "unverified": {
+            "type": "boolean"
+          }
+        }
+      }
+    },
+    "pr_batches": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "title",
+          "files",
+          "notes"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "files": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "notes": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}
