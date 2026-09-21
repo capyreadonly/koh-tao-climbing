@@ -2,7 +2,7 @@
 
 **Owner lane:** OpenAI (Astra) audits + drafts; Claude Code fixes; product ships TF/ASC.  
 **Cadence:** Monday weekly loop — research + photo↔route integrity.  
-**Branch audited (DQ-002-B1):** `fix/dq-002-b1-dual-nulls` @ `935e6bf5acf061d1eb4e1a02e2b779cf3274a45a` (B1 data commit).
+**Branch audited (DQ-002):** `fix/map-tap-photo-filter-1.0.3` @ `5f11bcc5d26e2031c1fa11a0ac2b9bfd38164d6a`.  
 **Rule:** no invented routes/photos; mark unverified; don’t ship guesses.  
 **Last DQ-002 pass:** 2026-09-21 Asia/Bangkok · Codex `gpt-6-astra` · session `01a0c214-cc31-7b12-93d4-2b9565b8080c`.  
 **URGENT:** false.  
