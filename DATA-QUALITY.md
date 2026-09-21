@@ -2,7 +2,7 @@
 
 **Owner lane:** OpenAI (Astra) audits + drafts; Claude Code fixes; product ships TF/ASC.  
 **Cadence:** Monday weekly loop — research + photo↔route integrity.  
-**Branch audited (DQ-002):** `fix/map-tap-photo-filter-1.0.3` @ `5f11bcc5d26e2031c1fa11a0ac2b9bfd38164d6a`.  
+**Branch audited (DQ-002-B1):** `fix/dq-002-b1-dual-nulls` @ `ae9e37f7bf91dd18ef7bbe8fa83da83bc09ddefe` (B1 data commit).
 **Rule:** no invented routes/photos; mark unverified; don’t ship guesses.  
 **Last DQ-002 pass:** 2026-09-21 Asia/Bangkok · Codex `gpt-6-astra` · session `01a0c214-cc31-7b12-93d4-2b9565b8080c`.  
 **URGENT:** false.  
@@ -12,7 +12,7 @@
 | ID | Area | Symptom / ask | Status |
 |---|---|---|---|
 | DQ-001 | photo↔route | Guide/community photos with `crag` / captions that don’t resolve; multi-route topos have **no `routeId`** | **partial** — B1 four duals **shipped on tip**; residual duals + B2–B5 carried into DQ-002 |
-| DQ-002 | photo↔route re-audit | Monday re-scan on ship tip; ≤10 verified fixes; residual duals | **patches drafted** — implement via Claude batch (`dq-002-claude-batch.md` / `dq-002-fixes.json` on box) |
+| DQ-002 | photo↔route re-audit | Monday re-scan on ship tip; ≤10 verified fixes; residual duals | **partial — DQ-002-B1 shipped on this tip; B2–B5 remain open/drafted** — see implement batch (`dq-002-claude-batch.md` / `dq-002-fixes.json` on box) |
 | DQ-003 | photo usability | `kind` ending `-unusable` still referenced in UI paths? | open |
 | DQ-004 | ND licenses | Photos with ND license must not be cropped (`isNdLicense`) — verify call sites | open (7 ND photos in scan) |
 | DQ-005 | style strings | Free-form `style` beyond known set — normalize via `CragStyle.primaryStyle` | open |
@@ -25,16 +25,17 @@
 | ID | What | Evidence |
 |---|---|---|
 | DQ-001-B1 (partial) | Dual-label renames for four topo/guide pages | Tip `photos.json`: `p42-2-X154`→Lang Khai; `p37-1-X124`→Sai Tong; `p37-0-X123`→The Peak Boulders; `p42-0-X152`→Aow Luek (confirmed 2026-09-21). |
+| DQ-002-B1 | Cleared three residual decorative-icon dual crag labels (`crag=null`) | Tip `photos.json`: `p37-2-X125`, `p38-0-X126`, `p42-1-X153`; `kind=other-unusable` retained (confirmed 2026-09-21). |
 
-## DQ-002 ranked verified fixes (≤10)
+## DQ-002 ranked verified fixes (B1 shipped; B2–B5 remain open)
 
-**Do not invent routes/grades.** Prefer caption honesty notes + residual dual clears. Concrete field edits are in the implement batch (not auto-applied here).
+**Do not invent routes/grades.** Prefer caption honesty notes + residual dual clears. DQ-002-B1 is shipped below; B2–B5 remain in the implement batch and are not applied here.
 
 | Rank | Sev | File | Issue / edit | Batch |
 |---|---|---|---|---|
-| 1 | low | `Images/guide/p37-2-X125.jpg` | Residual dual on decorative icon → `crag=null` | DQ-002-B1 |
-| 2 | low | `Images/guide/p38-0-X126.jpg` | Residual dual → `crag=null` | DQ-002-B1 |
-| 3 | low | `Images/guide/p42-1-X153.jpg` | Residual dual → `crag=null` | DQ-002-B1 |
+| 1 | low | `Images/guide/p37-2-X125.jpg` | Residual dual on decorative icon → `crag=null` (**shipped**) | DQ-002-B1 |
+| 2 | low | `Images/guide/p38-0-X126.jpg` | Residual dual → `crag=null` (**shipped**) | DQ-002-B1 |
+| 3 | low | `Images/guide/p42-1-X153.jpg` | Residual dual → `crag=null` (**shipped**) | DQ-002-B1 |
 | 4 | medium | `Images/guide/p15-0-X43.jpg` | Mek Mosquito/Mosquit + Devine grade annotate | DQ-002-B2 |
 | 5 | medium | `Images/guide/p15-1-X44.jpg` | Mek Btich spelling + grade annotate | DQ-002-B2 |
 | 6 | medium | `Images/community/report-golden-view-kelsey-gray-01.jpg` | Do It! 6c+ vs DB 6b annotate | DQ-002-B3 |
@@ -55,7 +56,7 @@
 
 | Batch | Title | Primary files |
 |---|---|---|
-| DQ-002-B1 | Clear three decorative-icon dual crag labels | `p37-2`, `p38-0`, `p42-1` |
+| DQ-002-B1 (shipped) | Clear three decorative-icon dual crag labels | `p37-2`, `p38-0`, `p42-1` |
 | DQ-002-B2 | Annotate Mek spelling/grade discrepancies | `p15-0`, `p15-1` |
 | DQ-002-B3 | Annotate Golden View Do It! grade disagreement | `report-golden-view-kelsey-gray-01.jpg` |
 | DQ-002-B4 | Record unresolved map names / letter-code honesty | `p27-0`, `p29-0`, `p34-0` |
@@ -64,7 +65,7 @@
 ## Method
 
 1. Load tip `photos.json` + `crags.json` + `routes.json`.
-2. Confirm B1 four duals fixed; three residual duals remain (`other-unusable`).
+2. Confirm B1 four original duals fixed and three residual decorative duals cleared (`other-unusable`).
 3. Programmatic photo↔route scan → ranked CSV.
 4. Codex `gpt-6-astra` proposes ≤10 verified `photos.json` field edits with evidence.
 5. Claude/Mini applies batch; re-verify on tip before merge.
