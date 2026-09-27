@@ -7,6 +7,7 @@ struct AboutGuideView: View {
     /// When true, show a Continue button (first-run sheet). Plan navigation omits it.
     var showsContinue: Bool = false
     @Environment(\.dismiss) private var dismiss
+    @AppStorage(AppAppearance.storageKey) private var appearance: AppAppearance = .system
 
     var body: some View {
         List {
@@ -14,7 +15,7 @@ struct AboutGuideView: View {
                 VStack(alignment: .leading, spacing: 10) {
                     Image(systemName: "mountain.2.fill")
                         .font(.title)
-                        .foregroundStyle(.teal)
+                        .foregroundStyle(GuideTheme.brand)
                         .accessibilityHidden(true)
                     Text("Koh Tao Climbing")
                         .font(.largeTitle.weight(.bold))
@@ -118,6 +119,22 @@ struct AboutGuideView: View {
             } header: {
                 GuideHeader(title: "Help")
             }
+
+            // Settings live here, in the guide's own screen; not on the first-run sheet.
+            if !showsContinue {
+                Section {
+                    Picker("Appearance", selection: $appearance) {
+                        ForEach(AppAppearance.allCases) { option in
+                            Text(option.title).tag(option)
+                        }
+                    }
+                    .accessibilityIdentifier("appearancePicker")
+                } header: {
+                    GuideHeader(title: "Display")
+                } footer: {
+                    Text("System follows the light or dark setting on your iPhone.")
+                }
+            }
         }
         .navigationTitle("About this guide")
         .navigationBarTitleDisplayMode(.inline)
@@ -139,7 +156,6 @@ struct AboutGuideView: View {
                         .padding(.vertical, 6)
                 }
                 .buttonStyle(.borderedProminent)
-                .tint(.teal)
                 .padding(.horizontal, 20)
                 .padding(.vertical, 12)
                 .background(.bar)

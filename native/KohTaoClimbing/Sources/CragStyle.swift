@@ -40,10 +40,39 @@ enum CragStyle {
 enum GuideTheme {
     static let cornerRadius: CGFloat = 12
     static let heroCornerRadius: CGFloat = 16
+    /// Brand teal from the asset catalog (Any + Dark), also the app-wide tint.
+    static let brand = Color.accentColor
     /// Access warnings, hazards, conflicting sources — amber, not alarm red.
     static let warning = Color.orange
     /// Informational notes.
     static let note = Color.blue
+    /// Star ratings: a deeper amber on light backgrounds, system-yellow bright on dark
+    /// (plain `.yellow` was ~1.5:1 against white).
+    static let star = Color("StarRating")
+    /// Smallest comfortable tap target (HIG).
+    static let minTapTarget: CGFloat = 44
+
+    /// A style/category tint made legible as text or an icon on a pale tint of
+    /// itself: pulled towards the label colour, so it darkens in light mode and
+    /// lifts in dark. System teal, cyan and yellow are too pale as text on white.
+    static func readable(_ tint: Color) -> Color {
+        tint.mix(with: Color(.label), by: 0.35)
+    }
+}
+
+/// Scrim for text laid over photos: a gradient to black that reads the same in
+/// light and dark mode, because the photo — not the app theme — sets the backdrop.
+struct PhotoScrim: View {
+    var height: CGFloat = 110
+
+    var body: some View {
+        LinearGradient(stops: [.init(color: .clear, location: 0),
+                               .init(color: .black.opacity(0.35), location: 0.45),
+                               .init(color: .black.opacity(0.7), location: 1)],
+                       startPoint: .top, endPoint: .bottom)
+            .frame(height: height)
+            .allowsHitTesting(false)
+    }
 }
 
 /// Editorial section header for List sections: sentence case, primary colour and
@@ -89,7 +118,7 @@ struct GuideCallout: View {
                 if let title {
                     Text(title)
                         .font(.subheadline.weight(.semibold))
-                        .foregroundStyle(tint)
+                        .foregroundStyle(GuideTheme.readable(tint))
                 }
                 Text(text)
                     .font(.callout)
@@ -98,7 +127,11 @@ struct GuideCallout: View {
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(12)
-        .background(tint.opacity(0.10), in: RoundedRectangle(cornerRadius: GuideTheme.cornerRadius, style: .continuous))
+        .background(tint.opacity(0.12), in: RoundedRectangle(cornerRadius: GuideTheme.cornerRadius, style: .continuous))
+        .overlay {
+            RoundedRectangle(cornerRadius: GuideTheme.cornerRadius, style: .continuous)
+                .strokeBorder(tint.opacity(0.25), lineWidth: 1)
+        }
         .accessibilityElement(children: .combine)
     }
 }
@@ -171,8 +204,43 @@ struct StyleBadge: View {
             .lineLimit(1)
             .padding(.horizontal, 7)
             .padding(.vertical, 3)
-            .background(color.opacity(0.14), in: Capsule())
-            .foregroundStyle(color)
+            .background(color.opacity(0.16), in: Capsule())
+            .foregroundStyle(GuideTheme.readable(color))
+    }
+}
+
+/// One line of whole badges. When they don't all fit, the tail collapses into a
+/// "+N" badge instead of every badge truncating to "topr…", "multi…".
+struct BadgeRow: View {
+    struct Badge: Hashable {
+        let text: String
+        let color: Color
+    }
+
+    let badges: [Badge]
+
+    var body: some View {
+        ViewThatFits(in: .horizontal) {
+            // Down to "+N" alone, so even accessibility text sizes never overflow.
+            ForEach(Array(stride(from: badges.count, through: 0, by: -1)), id: \.self) { shown in
+                row(showing: shown)
+            }
+        }
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(badges.map(\.text).joined(separator: ", "))
+    }
+
+    private func row(showing shown: Int) -> some View {
+        HStack(spacing: 5) {
+            ForEach(badges.prefix(shown), id: \.self) { badge in
+                StyleBadge(text: badge.text, color: badge.color)
+                    .fixedSize()
+            }
+            if shown < badges.count {
+                StyleBadge(text: "+\(badges.count - shown)")
+                    .fixedSize()
+            }
+        }
     }
 }
 
@@ -192,7 +260,7 @@ struct StarsView: View {
             }
         }
         .font(.caption2)
-        .foregroundStyle(.yellow)
+        .foregroundStyle(GuideTheme.star)
         .accessibilityLabel(Text(String(format: "%.1f stars", stars)))
     }
 }
@@ -203,7 +271,7 @@ struct VerifiedMark: View {
 
     var body: some View {
         Image(systemName: verified ? "checkmark.seal.fill" : "exclamationmark.circle")
-            .foregroundStyle(verified ? Color.green : Color.orange)
+            .foregroundStyle(GuideTheme.readable(verified ? .green : GuideTheme.warning))
             .accessibilityLabel(verified ? "Verified" : "Unverified")
     }
 }

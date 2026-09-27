@@ -77,6 +77,12 @@ struct CragRow: View {
 
     private static let thumbSize: CGFloat = 92
 
+    private var badges: [BadgeRow.Badge] {
+        var list = crag.styles.map { BadgeRow.Badge(text: $0, color: CragStyle.color($0)) }
+        if crag.accessFee != nil { list.append(.init(text: "entry fee", color: GuideTheme.warning)) }
+        return list
+    }
+
     var body: some View {
         HStack(alignment: .top, spacing: 14) {
             thumbnail
@@ -101,16 +107,11 @@ struct CragRow: View {
                     .lineLimit(1)
 
                 HStack(spacing: 5) {
-                    ForEach(crag.styles, id: \.self) { style in
-                        StyleBadge(text: style, color: CragStyle.color(style))
-                    }
-                    if crag.accessFee != nil {
-                        StyleBadge(text: "entry fee", color: GuideTheme.warning)
-                    }
+                    BadgeRow(badges: badges)
                     if crag.accessWarning != nil {
                         Image(systemName: "exclamationmark.triangle.fill")
                             .font(.caption2)
-                            .foregroundStyle(GuideTheme.warning)
+                            .foregroundStyle(GuideTheme.readable(GuideTheme.warning))
                             .accessibilityLabel("Access warning")
                     }
                 }

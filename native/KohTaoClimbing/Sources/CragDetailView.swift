@@ -59,19 +59,51 @@ struct CragDetailView: View {
                 }
             }
 
-            if !routes.isEmpty {
+            // Primary actions side by side: routes (prominent) and the map (secondary).
+            // Replaces a lone "Show on map" row that sat further down between sections.
+            if !routes.isEmpty || crag.coords != nil {
                 Section {
-                    Button {
-                        routesFilter.openCrag(crag.name)
-                    } label: {
-                        Label("Open \(routes.count) routes", systemImage: "figure.climbing")
-                            .font(.body.weight(.semibold))
-                            .frame(maxWidth: .infinity)
+                    HStack(spacing: 10) {
+                        if !routes.isEmpty {
+                            Button {
+                                routesFilter.openCrag(crag.name)
+                            } label: {
+                                // Explicit HStack, not Label: inside a List row a Label's icon
+                                // takes the list icon column (a wide gap) and the tint colour
+                                // (it vanished into the prominent fill).
+                                HStack(spacing: 6) {
+                                    Image(systemName: "figure.climbing")
+                                    Text("Open \(routes.count) routes")
+                                }
+                                    .font(.body.weight(.semibold))
+                                    .foregroundStyle(.white)
+                                    .frame(maxWidth: .infinity, minHeight: GuideTheme.minTapTarget - 10)
+                            }
+                            .buttonStyle(.borderedProminent)
+                            .accessibilityLabel("Open \(routes.count) routes")
+                            .accessibilityHint("Switches to the Routes tab filtered to this crag")
+                            .accessibilityIdentifier("openInRoutesProminent")
+                        }
+                        if crag.coords != nil {
+                            Button {
+                                mapFocus.show(cragSlug: crag.slug)
+                            } label: {
+                                HStack(spacing: 6) {
+                                    Image(systemName: "map")
+                                    Text("Map")
+                                }
+                                    .font(.body.weight(.medium))
+                                    .frame(maxWidth: routes.isEmpty ? .infinity : nil,
+                                           minHeight: GuideTheme.minTapTarget - 10)
+                            }
+                            .buttonStyle(.bordered)
+                            .accessibilityLabel("Show on map")
+                            .accessibilityHint("Switches to the Map tab and focuses this area")
+                        }
                     }
-                    .buttonStyle(.borderedProminent)
-                    .tint(.teal)
+                    .buttonBorderShape(.capsule)
                     .listRowInsets(EdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 16))
-                    .accessibilityIdentifier("openInRoutesProminent")
+                    .listRowBackground(Color.clear)
                 }
             }
 
@@ -82,7 +114,7 @@ struct CragDetailView: View {
                     HStack(alignment: .top, spacing: 8) {
                         Image(systemName: "star.fill")
                             .font(.caption)
-                            .foregroundStyle(.yellow)
+                            .foregroundStyle(GuideTheme.star)
                             .padding(.top, 3)
                         Text(highlight)
                             .font(.callout.weight(.medium))
@@ -96,18 +128,6 @@ struct CragDetailView: View {
                 }
             } header: {
                 GuideHeader(title: "About")
-            }
-
-            if crag.coords != nil {
-                Section {
-                    Button {
-                        mapFocus.show(cragSlug: crag.slug)
-                    } label: {
-                        Label("Show on map", systemImage: "map")
-                            .font(.body.weight(.medium))
-                    }
-                    .accessibilityHint("Switches to the Map tab and focuses this area")
-                }
             }
 
             Section {
@@ -242,22 +262,26 @@ private struct CragHeroPhoto: View {
                 }
                 .background(.quaternary)
                 .overlay(alignment: .bottom) {
-                    LinearGradient(colors: [.clear, .black.opacity(0.55)], startPoint: .top, endPoint: .bottom)
-                        .frame(height: 90)
+                    PhotoScrim()
                 }
                 .overlay(alignment: .bottomLeading) {
                     HStack(alignment: .bottom) {
                         Text(area)
-                            .font(.subheadline.weight(.medium))
+                            .font(.subheadline.weight(.semibold))
                             .foregroundStyle(.white)
-                            .shadow(radius: 2)
+                            .shadow(color: .black.opacity(0.4), radius: 3)
                         Spacer()
-                        Label(photoCount == 1 ? "1 photo" : "\(photoCount) photos", systemImage: "photo.on.rectangle")
-                            .font(.caption.weight(.medium))
+                        HStack(spacing: 5) {
+                            Image(systemName: "photo.on.rectangle")
+                            Text(photoCount == 1 ? "1 photo" : "\(photoCount) photos")
+                        }
+                            .font(.caption.weight(.semibold))
                             .foregroundStyle(.white)
-                            .padding(.horizontal, 9)
+                            .padding(.horizontal, 10)
                             .padding(.vertical, 5)
-                            .background(.black.opacity(0.35), in: Capsule())
+                            .background(.ultraThinMaterial, in: Capsule())
+                            // Photo backdrop, not app theme: keep the chip dark in both modes.
+                            .environment(\.colorScheme, .dark)
                     }
                     .padding(12)
                 }
@@ -413,6 +437,11 @@ struct PhotoViewerSheet: View {
                 .padding()
                 .background(.bar)
             }
+            .toolbarBackground(.visible, for: .navigationBar)
+            .toolbarColorScheme(.dark, for: .navigationBar)
         }
+        // Photos read best on black whatever the system appearance, so the viewer
+        // (its bars, caption panel and controls) is always dark — like Photos.
+        .environment(\.colorScheme, .dark)
     }
 }

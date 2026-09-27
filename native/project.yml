@@ -42,6 +42,9 @@ targets:
         INFOPLIST_FILE: KohTaoClimbing/Info.plist
         SWIFT_VERSION: "6.0"
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        # Brand teal as the app tint: the launch-screen teal in light, a mid teal in dark
+        # that reads as a tint on black and still carries white button text.
+        ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
         TARGETED_DEVICE_FAMILY: "1,2"
         MARKETING_VERSION: "0.1"
         CURRENT_PROJECT_VERSION: "3"

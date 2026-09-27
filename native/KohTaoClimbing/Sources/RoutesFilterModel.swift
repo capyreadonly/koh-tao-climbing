@@ -12,8 +12,10 @@ enum PhotoPresenceFilter: String, CaseIterable, Identifiable, Sendable {
     var chipLabel: String {
         switch self {
         case .all: return "photo"
-        case .hasPhoto: return "has-photo"
-        case .noPhoto: return "no-photo"
+        // Plain words on the chip; distinct from the row labels "Has photo" /
+        // "No photo" so the two never read (or query) as the same thing.
+        case .hasPhoto: return "with photo"
+        case .noPhoto: return "without photo"
         }
     }
 

@@ -268,6 +268,11 @@ struct OfflineMapView: UIViewRepresentable {
         mapView.pointOfInterestFilter = .excludingAll
         mapView.isRotateEnabled = false
         mapView.isPitchEnabled = false
+        // The bundled OSM raster is a light map in every appearance. In dark mode
+        // MapKit drew pin titles white-with-halo on top of it, which washed out;
+        // keeping the map view itself light gives dark pin titles and matching
+        // scale/compass. The SwiftUI chrome over it still follows the system.
+        mapView.overrideUserInterfaceStyle = .light
 
         // Sea backdrop under the tiles: the bundled raster is opaque OSM ocean at its
         // edges, so painting the same colour behind it means panning past the grid

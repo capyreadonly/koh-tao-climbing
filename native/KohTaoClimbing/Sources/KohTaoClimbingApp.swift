@@ -2,9 +2,38 @@ import SwiftUI
 
 @main
 struct KohTaoClimbingApp: App {
+    @AppStorage(AppAppearance.storageKey) private var appearance: AppAppearance = .system
+
     var body: some Scene {
         WindowGroup {
             RootTabView(store: DataStore.shared)
+                .preferredColorScheme(appearance.colorScheme)
+        }
+    }
+}
+
+/// User override for light/dark, set on the About screen. Default follows the system.
+enum AppAppearance: String, CaseIterable, Identifiable {
+    case system, light, dark
+
+    static let storageKey = "appearance"
+
+    var id: String { rawValue }
+
+    var title: String {
+        switch self {
+        case .system: return "System"
+        case .light: return "Light"
+        case .dark: return "Dark"
+        }
+    }
+
+    /// nil hands the choice back to the system.
+    var colorScheme: ColorScheme? {
+        switch self {
+        case .system: return nil
+        case .light: return .light
+        case .dark: return .dark
         }
     }
 }

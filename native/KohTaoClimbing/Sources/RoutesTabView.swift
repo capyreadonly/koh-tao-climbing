@@ -192,10 +192,23 @@ struct RoutesTabView: View {
     private var filterBar: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 8) {
+                // First, so "clear" is on screen whenever a filter is active; always
+                // present (just disabled when there's nothing to clear) so the chips
+                // don't shift sideways under the finger as filters toggle.
+                FilterChip(
+                    text: "clear",
+                    color: .secondary,
+                    systemImage: "xmark",
+                    isSelected: false,
+                    action: clearFilters
+                )
+                .disabled(!hasActiveFilters)
+                .opacity(hasActiveFilters ? 1 : 0.4)
+                .accessibilityLabel("Clear filters")
                 if let cragName = filter.selectedCragName {
                     FilterChip(
                         text: "Crag: \(cragName)",
-                        color: .teal,
+                        color: GuideTheme.brand,
                         systemImage: "xmark",
                         isSelected: true
                     ) {
@@ -203,17 +216,9 @@ struct RoutesTabView: View {
                     }
                     .accessibilityLabel("Crag filter, \(cragName), tap to clear")
                 }
-                ForEach(stylesPresent, id: \.self) { style in
-                    FilterChip(
-                        text: style,
-                        color: CragStyle.color(style),
-                        isSelected: filter.selectedStyle == style
-                    ) {
-                        withAnimation(.snappy) {
-                            filter.selectedStyle = filter.selectedStyle == style ? nil : style
-                        }
-                    }
-                }
+                // Grade and photo menus lead: their selections used to sit off-screen
+                // to the right of five or six style chips, so an active filter was
+                // invisible without scrolling the bar.
                 Menu {
                     Button("Any grade") {
                         withAnimation(.snappy) { filter.gradeBand = nil }
@@ -265,6 +270,17 @@ struct RoutesTabView: View {
                         : "Photo filter, \(filter.photoFilter.chipLabel)"
                 )
                 .accessibilityIdentifier("routesPhotoFilter")
+                ForEach(stylesPresent, id: \.self) { style in
+                    FilterChip(
+                        text: style,
+                        color: CragStyle.color(style),
+                        isSelected: filter.selectedStyle == style
+                    ) {
+                        withAnimation(.snappy) {
+                            filter.selectedStyle = filter.selectedStyle == style ? nil : style
+                        }
+                    }
+                }
                 FilterChip(
                     text: "verified",
                     color: .green,
@@ -288,20 +304,9 @@ struct RoutesTabView: View {
                     )
                 }
                 .accessibilityLabel("Sort routes, \(gradeSort.rawValue)")
-                if hasActiveFilters {
-                    FilterChip(
-                        text: "clear",
-                        color: .secondary,
-                        systemImage: "xmark",
-                        isSelected: false,
-                        action: clearFilters
-                    )
-                    .accessibilityLabel("Clear filters")
-                    .transition(.opacity.combined(with: .scale(scale: 0.9)))
-                }
             }
             .padding(.horizontal, 16)
-            .padding(.vertical, 10)
+            .padding(.vertical, 4)
         }
         .animation(.snappy, value: hasActiveFilters)
     }
@@ -382,7 +387,9 @@ struct FilterChip: View {
     }
 }
 
-/// Filter chip appearance: soft neutral capsule at rest, tinted fill + heavier text when selected.
+/// Filter chip appearance: neutral fill capsule at rest; when selected, a tinted fill
+/// with a tinted border and label, so the state reads without relying on hue alone.
+/// The capsule is drawn 36 pt tall but the tappable area is a full 44 pt.
 struct FilterChipLabel: View {
     let text: String
     var color: Color = .secondary
@@ -401,10 +408,16 @@ struct FilterChipLabel: View {
         .lineLimit(1)
         .padding(.horizontal, 13)
         .padding(.vertical, 7)
-        .frame(minHeight: 34)
-        .background(isSelected ? color.opacity(0.18) : Color.secondary.opacity(0.10), in: Capsule())
-        .foregroundStyle(isSelected ? color : .secondary)
-        .contentShape(Capsule())
+        .frame(minHeight: 36)
+        .background {
+            Capsule().fill(isSelected ? AnyShapeStyle(color.opacity(0.2)) : AnyShapeStyle(.fill.tertiary))
+        }
+        .overlay {
+            Capsule().strokeBorder(isSelected ? color.opacity(0.6) : .clear, lineWidth: 1)
+        }
+        .foregroundStyle(isSelected ? GuideTheme.readable(color) : Color.primary)
+        .frame(minHeight: GuideTheme.minTapTarget)
+        .contentShape(Rectangle())
     }
 }
 
@@ -428,17 +441,26 @@ struct RouteRow: View {
                 Text(route.name)
                     .font(.body)
                     .lineLimit(2)
-                HStack(spacing: 6) {
-                    StyleBadge(text: route.style, color: CragStyle.color(forStyleString: route.style))
-                    Text(hasPhoto ? "Has photo" : "No photo")
-                        .font(.caption2.weight(.medium))
-                        .foregroundStyle(hasPhoto ? Color.pink : .secondary)
-                        .accessibilityLabel(hasPhoto ? "Has photo" : "No photo")
-                    if let sector = route.sector {
-                        Text(sector)
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
-                            .lineLimit(1)
+                // Style and photo label keep their full width (they used to squeeze
+                // "sport/toprope" to "sport/t…" and wrap "Has photo" onto two lines).
+                // The sector sits beside them when it fits, else on its own line.
+                ViewThatFits(in: .horizontal) {
+                    HStack(spacing: 6) {
+                        metaTags
+                        // Full width here, so a long sector fails this layout and
+                        // ViewThatFits falls through to the two-line one.
+                        sectorText.fixedSize()
+                    }
+                    VStack(alignment: .leading, spacing: 3) {
+                        HStack(spacing: 6) { metaTags }
+                        sectorText
+                    }
+                    // Last resort (accessibility text sizes): one item per line, and
+                    // the badge may truncate rather than spill into the stars column.
+                    VStack(alignment: .leading, spacing: 3) {
+                        StyleBadge(text: route.style, color: CragStyle.color(forStyleString: route.style))
+                        photoLabel
+                        sectorText
                     }
                 }
             }
@@ -454,6 +476,32 @@ struct RouteRow: View {
             }
         }
         .padding(.vertical, 3)
+    }
+
+    @ViewBuilder
+    private var metaTags: some View {
+        StyleBadge(text: route.style, color: CragStyle.color(forStyleString: route.style))
+            .fixedSize()
+        photoLabel
+            .fixedSize()
+    }
+
+    private var photoLabel: some View {
+        Text(hasPhoto ? "Has photo" : "No photo")
+            .font(.caption2.weight(.medium))
+            .foregroundStyle(hasPhoto ? GuideTheme.readable(.pink) : .secondary)
+            .lineLimit(1)
+            .accessibilityLabel(hasPhoto ? "Has photo" : "No photo")
+    }
+
+    @ViewBuilder
+    private var sectorText: some View {
+        if let sector = route.sector {
+            Text(sector)
+                .font(.caption)
+                .foregroundStyle(.secondary)
+                .lineLimit(1)
+        }
     }
 }
 
@@ -503,7 +551,7 @@ struct RouteDetailView: View {
                     Label(route.verified ? "Verified against the sources" : "Unverified — sources conflict or unconfirmed",
                           systemImage: route.verified ? "checkmark.seal.fill" : "exclamationmark.circle")
                         .font(.footnote)
-                        .foregroundStyle(route.verified ? Color.green : GuideTheme.warning)
+                        .foregroundStyle(GuideTheme.readable(route.verified ? .green : GuideTheme.warning))
                 }
                 .padding(.vertical, 6)
                 .accessibilityElement(children: .combine)

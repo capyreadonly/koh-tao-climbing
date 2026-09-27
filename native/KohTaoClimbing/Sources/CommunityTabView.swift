@@ -67,8 +67,14 @@ struct CommunityTabView: View {
         return args[i + 1].lowercased()
     }()
 
+    private var trimmedQuery: String {
+        searchText.trimmingCharacters(in: .whitespaces)
+    }
+
+    private var isSearching: Bool { !trimmedQuery.isEmpty }
+
     private var filteredReports: [CommunityReport] {
-        let query = searchText.trimmingCharacters(in: .whitespaces).lowercased()
+        let query = trimmedQuery.lowercased()
         guard !query.isEmpty else { return store.reports }
         return store.reports.filter {
             $0.title.lowercased().contains(query)
@@ -80,17 +86,45 @@ struct CommunityTabView: View {
     var body: some View {
         NavigationStack(path: $path) {
             List {
-                Section("Trip reports (\(filteredReports.count))") {
-                    ForEach(filteredReports) { report in
-                        NavigationLink(value: report) {
-                            ReportRow(report: report)
+                if !filteredReports.isEmpty {
+                    Section {
+                        ForEach(filteredReports) { report in
+                            NavigationLink(value: report) {
+                                ReportRow(report: report)
+                            }
                         }
+                    } header: {
+                        GuideHeader(
+                            title: "Trip reports",
+                            subtitle: isSearching
+                                ? "\(filteredReports.count) of \(store.reports.count) reports"
+                                : "\(store.reports.count) reports, each linked to its source"
+                        )
                     }
                 }
 
-                Section("Community photos (\(store.communityPhotos.count))") {
-                    CommunityPhotoGrid(photos: store.communityPhotos)
-                        .listRowInsets(EdgeInsets(top: 8, leading: 0, bottom: 8, trailing: 0))
+                // The photo library isn't searchable, so it steps aside during a search.
+                if !isSearching, !store.communityPhotos.isEmpty {
+                    Section {
+                        CommunityPhotoGrid(photos: store.communityPhotos)
+                            .listRowInsets(EdgeInsets(top: 8, leading: 0, bottom: 8, trailing: 0))
+                            .listRowBackground(Color.clear)
+                    } header: {
+                        GuideHeader(title: "Community photos",
+                                    subtitle: "\(store.communityPhotos.count) photos · tap to view full screen")
+                    }
+                }
+            }
+            .overlay {
+                if isSearching, filteredReports.isEmpty {
+                    GuideEmptyState(
+                        title: "No reports match",
+                        message: "Nothing mentions “\(trimmedQuery)”. Try a crag name, an author or a word like “boulder”.",
+                        systemImage: "text.magnifyingglass",
+                        actionTitle: "Show all reports"
+                    ) {
+                        searchText = ""
+                    }
                 }
             }
             .navigationTitle("Community")
@@ -118,26 +152,34 @@ struct ReportRow: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
             Text(report.title)
-                .font(.subheadline.weight(.medium))
+                .font(.body.weight(.medium))
+                .lineLimit(3)
             Text("\(report.author) · \(report.date)")
                 .font(.caption)
                 .foregroundStyle(.secondary)
-            HStack(spacing: 4) {
+            HStack(spacing: 6) {
                 StyleBadge(text: category.label, color: category.color)
                 if category == .video {
                     Image(systemName: "play.circle.fill")
                         .font(.caption)
-                        .foregroundStyle(.red)
+                        .foregroundStyle(GuideTheme.readable(.red))
                         .accessibilityLabel("Video report")
                 }
                 if let count = report.photos?.count, count > 0 {
-                    Label("\(count)", systemImage: "photo.stack")
-                        .font(.caption2)
-                        .foregroundStyle(.secondary)
+                    // Tight icon + number (Label's default spacing left a wide gap).
+                    HStack(spacing: 3) {
+                        Image(systemName: "photo.stack")
+                        Text("\(count)")
+                            .monospacedDigit()
+                    }
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                    .accessibilityElement(children: .ignore)
+                    .accessibilityLabel(count == 1 ? "1 photo" : "\(count) photos")
                 }
             }
         }
-        .padding(.vertical, 1)
+        .padding(.vertical, 3)
     }
 }
 
@@ -158,9 +200,13 @@ struct CommunityPhotoGrid: View {
                 Button {
                     selected = photo
                 } label: {
-                    BundledPhoto(file: photo.file, maxPixel: 300, cropToFill: !photo.isNdLicense)
+                    Color.clear
                         .aspectRatio(1, contentMode: .fit)
-                        .clipped()
+                        .overlay {
+                            BundledPhoto(file: photo.file, maxPixel: 300, cropToFill: !photo.isNdLicense)
+                        }
+                        .background(.quaternary)
+                        .clipShape(RoundedRectangle(cornerRadius: 6, style: .continuous))
                         .overlay(alignment: .bottomTrailing) {
                             if photo.isNdLicense {
                                 NdBadge()
@@ -169,6 +215,8 @@ struct CommunityPhotoGrid: View {
                         }
                 }
                 .buttonStyle(.plain)
+                .accessibilityLabel(photo.caption.isEmpty ? "Community photo" : photo.caption)
+                .accessibilityHint("Opens the photo full screen")
             }
         }
         .padding(.horizontal, 16)
@@ -203,8 +251,8 @@ struct ReportDetailView: View {
                 Section {
                     Link(destination: url) {
                         Label("Watch the video", systemImage: "play.rectangle.fill")
-                            .font(.callout.weight(.medium))
-                            .foregroundStyle(.red)
+                            .font(.body.weight(.semibold))
+                            .foregroundStyle(GuideTheme.readable(.red))
                     }
                 }
             }
@@ -217,14 +265,20 @@ struct ReportDetailView: View {
                 }
             }
 
-            Section("Summary") {
-                Text(report.summary).font(.callout)
+            Section {
+                Text(report.summary).font(.body)
+            } header: {
+                GuideHeader(title: "Summary")
             }
 
             if !photoEntries.isEmpty {
-                Section("Photos (\(photoEntries.count))") {
+                Section {
                     PhotoGalleryRow(photos: photoEntries)
                         .listRowInsets(EdgeInsets(top: 8, leading: 0, bottom: 8, trailing: 0))
+                        .listRowBackground(Color.clear)
+                } header: {
+                    GuideHeader(title: "Photos",
+                                subtitle: photoEntries.count == 1 ? "1 photo" : "\(photoEntries.count) photos")
                 }
             }
 
