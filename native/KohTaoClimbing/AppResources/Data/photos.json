@@ -304,14 +304,14 @@
     {
       "file": "Images/guide/p15-0-X43.jpg",
       "kind": "topo-diagram",
-      "caption": "Drawn topo titled 'DE-VINE WALL' with two inset photos. Routes (left to right): Mosquito Burrito 6a, Devine Intervention 6a+, Dirty Squirrel (by 'Tree'), Daddy Long Legs 6a, Tim and Charly's only Friend 4+ (4 bolts), Squirming Worm, Bees Knees (4 bolts), Arabian Balls 6a. Notes: 'Bolts only', '12M' height scale, 'Start in chimney and switch to boulder at top', 'training anchor'. Which of the 9 known crags this wall belongs to is unverified.",
+      "caption": "Drawn topo titled 'DE-VINE WALL' with two inset photos. Routes (left to right): Mosquito Burrito 6a, Devine Intervention 6a+, Dirty Squirrel (by 'Tree'), Daddy Long Legs 6a, Tim and Charly's only Friend 4+ (4 bolts), Squirming Worm, Bees Knees (4 bolts), Arabian Balls 6a. Notes: 'Bolts only', '12M' height scale, 'Start in chimney and switch to boulder at top', 'training anchor'. Which of the 9 known crags this wall belongs to is unverified. DQ-002: The caption's Mosquito Burrito 6a is a candidate spelling match for database Mosquit Burrito 6a. Devine Intervention is transcribed here as 6a+; the database lists 5c. Grade discrepancy unresolved; preserve both source values. The scan's 6a extraction omits the plus sign.",
       "crag": "Mek's Mountain",
       "page": 15
     },
     {
       "file": "Images/guide/p15-1-X44.jpg",
       "kind": "topo-diagram",
-      "caption": "Drawn topo titled 'QUIT YOUR'E BITCHIN' with two inset photos. Routes (left to right): Naughty or Nice (Chimney), C U Next Tuesday 5c, Son of a bitch 7a (2 bolt anchor), an unlabeled 6c+ line (1 bolt anchor backup), The bitch in me 6c (2 bolt anchor). Notes: 'Anchor approach is to the rear and care should be taken', 'Best before 1230', 'Naughty or Nice is a classic which can be face climbed or chimneyed. Great views at the top', '16M' height scale. Crag identity unverified; 'The bitch in me 6c' matches a known classic route.",
+      "caption": "Drawn topo titled 'QUIT YOUR'E BITCHIN' with two inset photos. Routes (left to right): Naughty or Nice (Chimney), C U Next Tuesday 5c, Son of a bitch 7a (2 bolt anchor), an unlabeled 6c+ line (1 bolt anchor backup), The bitch in me 6c (2 bolt anchor). Notes: 'Anchor approach is to the rear and care should be taken', 'Best before 1230', 'Naughty or Nice is a classic which can be face climbed or chimneyed. Great views at the top', '16M' height scale. Crag identity unverified; 'The bitch in me 6c' matches a known classic route. DQ-002: Son of a bitch 7a is a candidate spelling match for database Son of A Btich 7a. The bitch in me is transcribed here as 6c; the database lists 6b+. Grade discrepancy unresolved. The unlabeled 6c+ line remains separate.",
       "crag": "Mek's Mountain",
       "page": 15
     },
@@ -367,7 +367,7 @@
     {
       "file": "Images/guide/p18-0-X52.jpg",
       "kind": "photo-topo",
-      "caption": "Photo-topo titled 'The Elephant – North Side' with compass rose. Dashed route lines with star anchor. Route list at bottom: '6. MH', '7. E', '8. MH', '9. The Wet Beaver 4', '10. H', '11. The Trunk 7a'. Beach, longtail boats and buildings visible.",
+      "caption": "Photo-topo titled 'The Elephant – North Side' with compass rose. Dashed route lines with star anchor. Route list at bottom: '6. MH', '7. E', '8. MH', '9. The Wet Beaver 4', '10. H', '11. The Trunk 7a'. Beach, longtail boats and buildings visible. DQ-002: The Trunk 7a corresponds to the database entry Trunk, The (French 7a) at Sairee Beach Boulders; the names differ by article inversion.",
       "crag": "Sairee Beach Boulders",
       "page": 18
     },
@@ -514,7 +514,7 @@
     {
       "file": "Images/guide/p27-0-X73.jpg",
       "kind": "map",
-      "caption": "Hand-drawn bouldering area map titled 'The Frontyard', labeled 'Tantoe Bay / Aow Leuk' (Tanote Bay). Shows ~60 numbered boulders. Legible route/problem names: The Lost Idol V8, Jungle Science V9, Mantle V6, Predator V7. Landmarks: Big Brother, Mini-crag, Hill Top, Cave, Small Stream, Park Here, The Backyard, Chalok Baan Kao, Mae Haad, Koh Tao Info, several 'Bldg' icons, compass rose. 'Distance not to scale' note.",
+      "caption": "Hand-drawn bouldering area map titled 'The Frontyard', labeled 'Tantoe Bay / Aow Leuk' (Tanote Bay). Shows ~60 numbered boulders. Legible route/problem names: The Lost Idol V8, Jungle Science V9, Mantle V6, Predator V7. Landmarks: Big Brother, Mini-crag, Hill Top, Cave, Small Stream, Park Here, The Backyard, Chalok Baan Kao, Mae Haad, Koh Tao Info, several 'Bldg' icons, compass rose. 'Distance not to scale' note. DQ-002: Jungle Science V9, Mantle V6 and Predator V7 remain unresolved map labels in the supplied route scan. The Lost Idol is transcribed here as V8; the database's same-name entry is Font 8B, with identity and grade reconciliation pending. Big Brother is described here as a landmark; the scan's Tao match does not establish a route label.",
       "crag": "Backyard & Frontyard",
       "page": 27
     },
@@ -577,7 +577,7 @@
     {
       "file": "Images/guide/p29-0-X82.jpg",
       "kind": "map",
-      "caption": "Detailed hand-drawn bouldering map of the Secret Garden boulder field. Header: 'Upper Secret Garden (see separate map)'. Legible problem/boulder names: James and the Giant Peach V11, Pancake Ninja V6/VH, Jawa Ship, Under Frondly Fire V4, Super pinch, Exploding epitaph; landmarks: Jawa Ship, Stacking boxes, Court yard, spaceship, Nose, The egg, The Tombstone, letter box, JP Guest house, Jungle, Park Here, Up Hill, Barbed wire fence / Concrete wall, several 'Bldg' icons. Boulder problems annotated with difficulty codes (VE, E, M, MH, H, VH) and 'High ball' notes. Compass rose marked 'Z' (north arrow), 25m scale bar.",
+      "caption": "Detailed hand-drawn bouldering map of the Secret Garden boulder field. Header: 'Upper Secret Garden (see separate map)'. Legible problem/boulder names: James and the Giant Peach V11, Pancake Ninja V6/VH, Jawa Ship, Under Frondly Fire V4, Super pinch, Exploding epitaph; landmarks: Jawa Ship, Stacking boxes, Court yard, spaceship, Nose, The egg, The Tombstone, letter box, JP Guest house, Jungle, Park Here, Up Hill, Barbed wire fence / Concrete wall, several 'Bldg' icons. Boulder problems annotated with difficulty codes (VE, E, M, MH, H, VH) and 'High ball' notes. Compass rose marked 'Z' (north arrow), 25m scale bar. DQ-002: Under Frondly Fire V4 is unresolved; page 34 instead transcribes Under Friendly Fire V4. Preserve both readings pending image verification. James and the Giant Peach is recorded here as V11 versus database Font 8A+; Pancake Ninja is V6/VH versus database Font 7A. These mixed-system labels do not alone establish erroneous grades. Landmark names do not automatically identify route records.",
       "crag": "Secret Garden Boulders",
       "page": 29
     },
@@ -787,7 +787,7 @@
     {
       "file": "Images/guide/p34-0-X112.jpg",
       "kind": "map",
-      "caption": "Top-down map titled 'Upper Secret Garden' with compass rose (N/E) and 25m scale. Legible labels: 'Dense Jungle', 'To Star Villa and Buddha Temple' (uphill), 'Hill Top', 'Water Tank', 'Bldg' (several buildings), 'Please be considerate with noise when close to bungalows', 'Secret Garden (see separate map)', Downhill/Uphill arrows. Boulder problems marked with grades: 'MH / V1 Groovy', 'H / V7 (project)' (twice), 'H / V2 (project)', 'E / MH / V0', 'VE - Kit Kat, MH / V2', 'H / V7 (project)', 'MH / V1 - I just need a hug', 'H / MH / V3 - Chiropractor', 'MH / V3 - Shadows', 'James and the Giant Peach - V11', 'Under Friendly Fire V4', 'Jawa Ship', 'High ball', 'Pancake Ninja V6 / VH'. Grade letters H/MH/E/VE appear to be quality/star markers alongside V-grades.",
+      "caption": "Top-down map titled 'Upper Secret Garden' with compass rose (N/E) and 25m scale. Legible labels: 'Dense Jungle', 'To Star Villa and Buddha Temple' (uphill), 'Hill Top', 'Water Tank', 'Bldg' (several buildings), 'Please be considerate with noise when close to bungalows', 'Secret Garden (see separate map)', Downhill/Uphill arrows. Boulder problems marked with grades: 'MH / V1 Groovy', 'H / V7 (project)' (twice), 'H / V2 (project)', 'E / MH / V0', 'VE - Kit Kat, MH / V2', 'H / V7 (project)', 'MH / V1 - I just need a hug', 'H / MH / V3 - Chiropractor', 'MH / V3 - Shadows', 'James and the Giant Peach - V11', 'Under Friendly Fire V4', 'Jawa Ship', 'High ball', 'Pancake Ninja V6 / VH'. Letter codes H/MH/E/VE are preserved as transcribed; their interpretation on this map remains unverified. The supplied route database uses these codes under gradeSystem=zen-gecko. DQ-002: Under Friendly Fire V4 remains unresolved and differs from page 29's Under Frondly Fire V4; neither spelling is assigned a route link.",
       "crag": "Secret Garden Boulders",
       "page": 34
     },
@@ -1582,7 +1582,7 @@
     {
       "file": "Images/community/report-lang-khai-kelsey-gray-01.jpg",
       "kind": "community-photo",
-      "caption": "Rachal Fagan climbing Forewarned (6a) at Lang Khai. Photo by Kelsey Gray.",
+      "caption": "Rachal Fagan climbing Forewarned (6a) at Lang Khai. Photo by Kelsey Gray. DQ-003: Forewarned is recorded as 6a in this photo caption; the database lists French 5c at Lang Khai. The grade discrepancy is unresolved; preserve both source values.",
       "crag": "Lang Khai",
       "credit": "Kelsey Gray",
       "license": "user-contributed, all rights reserved — shown with attribution and source link",
@@ -1591,7 +1591,7 @@
     {
       "file": "Images/community/report-golden-view-kelsey-gray-01.jpg",
       "kind": "community-photo",
-      "caption": "Rachel Fagan climbing Do It! (6c+) at Golden View. Photo by Kelsey Gray.",
+      "caption": "Rachel Fagan climbing Do It! (6c+, as recorded in this photo caption) at Golden View. Photo by Kelsey Gray. DQ-002: The database lists Do It! as French 6b; the grade discrepancy is unresolved.",
       "crag": "Golden View",
       "credit": "Kelsey Gray",
       "license": "user-contributed, all rights reserved — shown with attribution and source link",
@@ -1727,7 +1727,7 @@
       "file": "Images/community/backyard-mp-ways-01.png",
       "kind": "community-photo",
       "caption": "Topo (Mountain Project Backyard area photo by Brian Ways)",
-      "crag": "Backyard",
+      "crag": "Backyard & Frontyard",
       "credit": "Brian Ways",
       "license": "user-contributed, all rights reserved — shown with attribution and source link",
       "sourceUrl": "https://www.mountainproject.com/photo/113972540/topo"
@@ -1736,7 +1736,7 @@
       "file": "Images/community/frontyard-mp-ways-01.png",
       "kind": "community-photo",
       "caption": "topo (Mountain Project Frontyard area photo by Brian Ways)",
-      "crag": "Frontyard",
+      "crag": "Backyard & Frontyard",
       "credit": "Brian Ways",
       "license": "user-contributed, all rights reserved — shown with attribution and source link",
       "sourceUrl": "https://www.mountainproject.com/photo/113972561/topo"
