@@ -66,7 +66,7 @@ final class MapTapRoutesUITests: XCTestCase {
         )
     }
 
-    /// Photo presence filter chip + Has photo / No photo row labels.
+    /// Crag photo filter chip + "Crag photos" row labels (crag-level signal, DQ-003-F2).
     @MainActor
     func testRoutesPhotoFilterExists() throws {
         let app = XCUIApplication()
@@ -81,12 +81,20 @@ final class MapTapRoutesUITests: XCTestCase {
         let photoFilter = app.descendants(matching: .any)["routesPhotoFilter"]
         XCTAssertTrue(
             photoFilter.waitForExistence(timeout: 12),
-            "Photo filter control should be in the Routes filter bar"
+            "Crag photo filter control should be in the Routes filter bar"
         )
-        let hasPhoto = app.staticTexts["Has photo"]
+        XCTAssertEqual(
+            photoFilter.label, "Crag photo filter, crag has photos",
+            "Chip should say the filter is crag-level"
+        )
+        let cragPhotos = app.staticTexts["Crag photos"]
         XCTAssertTrue(
-            hasPhoto.waitForExistence(timeout: 10),
-            "Filtered routes should show Has photo labels"
+            cragPhotos.waitForExistence(timeout: 10),
+            "Filtered routes should show Crag photos labels"
+        )
+        XCTAssertFalse(
+            app.staticTexts["Has photo"].exists,
+            "Rows must not claim the route itself has a photo"
         )
     }
 }

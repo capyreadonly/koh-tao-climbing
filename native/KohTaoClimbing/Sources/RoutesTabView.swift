@@ -245,33 +245,29 @@ struct RoutesTabView: View {
                 .accessibilityLabel(filter.gradeBand.map { "Grade filter, \($0.rawValue)" } ?? "Grade filter")
                 .accessibilityIdentifier("routesGradeFilter")
                 Menu {
-                    Button("Any photo") {
+                    Button(PhotoPresenceFilter.all.menuTitle) {
                         withAnimation(.snappy) { filter.photoFilter = .all }
                     }
                     Divider()
-                    Button("Has photo") {
+                    Button(PhotoPresenceFilter.hasPhoto.menuTitle) {
                         withAnimation(.snappy) {
                             filter.photoFilter = filter.photoFilter == .hasPhoto ? .all : .hasPhoto
                         }
                     }
-                    Button("No photo") {
+                    Button(PhotoPresenceFilter.noPhoto.menuTitle) {
                         withAnimation(.snappy) {
                             filter.photoFilter = filter.photoFilter == .noPhoto ? .all : .noPhoto
                         }
                     }
                 } label: {
                     FilterChipLabel(
-                        text: filter.photoFilter == .all ? "photo" : filter.photoFilter.chipLabel,
+                        text: filter.photoFilter.chipLabel,
                         color: .pink,
                         systemImage: "photo",
                         isSelected: filter.photoFilter != .all
                     )
                 }
-                .accessibilityLabel(
-                    filter.photoFilter == .all
-                        ? "Photo filter"
-                        : "Photo filter, \(filter.photoFilter.chipLabel)"
-                )
+                .accessibilityLabel(filter.photoFilter.accessibilityLabel)
                 .accessibilityIdentifier("routesPhotoFilter")
                 ForEach(stylesPresent, id: \.self) { style in
                     FilterChip(
@@ -445,7 +441,7 @@ struct RouteRow: View {
                     .font(.body)
                     .lineLimit(2)
                 // Style and photo label keep their full width (they used to squeeze
-                // "sport/toprope" to "sport/t…" and wrap "Has photo" onto two lines).
+                // "sport/toprope" to "sport/t…" and wrap the photo label onto two lines).
                 // The sector sits beside them when it fits, else on its own line.
                 ViewThatFits(in: .horizontal) {
                     HStack(spacing: 6) {
@@ -489,12 +485,16 @@ struct RouteRow: View {
             .fixedSize()
     }
 
+    /// Crag-level, not per-route (DQ-003-F2): photos have no route link. Shown only
+    /// when true; "No crag photos" on the rest would add noise without adding truth.
+    @ViewBuilder
     private var photoLabel: some View {
-        Text(hasPhoto ? "Has photo" : "No photo")
-            .font(.caption2.weight(.medium))
-            .foregroundStyle(hasPhoto ? GuideTheme.readable(.pink) : .secondary)
-            .lineLimit(1)
-            .accessibilityLabel(hasPhoto ? "Has photo" : "No photo")
+        if hasPhoto {
+            Text("Crag photos")
+                .font(.caption2.weight(.medium))
+                .foregroundStyle(GuideTheme.readable(.pink))
+                .lineLimit(1)
+        }
     }
 
     @ViewBuilder

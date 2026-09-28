@@ -104,6 +104,8 @@ final class DataStore {
         return cragNamesWithPhotos.contains { $0.hasPrefix(name + " (") }
     }
 
+    /// Crag-level only: photos.json has no per-route link (no `routeId`), so this says
+    /// "the route's crag has photos", never "this route is pictured" (DQ-003-F2).
     func hasPhotos(forRoute route: RouteRecord) -> Bool {
         hasPhotos(forCragName: route.crag)
     }

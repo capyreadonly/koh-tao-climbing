@@ -63,4 +63,21 @@ final class DataStoreTests: XCTestCase {
             XCTAssert((0...4).contains(key.system), "Unexpected grade system in \(route.gradeSystem)")
         }
     }
+
+    /// DQ-003-F2: photos have no per-route link, so the route photo signal must equal
+    /// the crag's, and the filter copy must say "crag" while raw values stay stable.
+    func testRoutePhotoSignalIsCragLevelAndLabelledSo() {
+        for route in store.routes {
+            XCTAssertEqual(store.hasPhotos(forRoute: route), store.hasPhotos(forCragName: route.crag),
+                           "\(route.name) photo signal differs from its crag's")
+        }
+        XCTAssertEqual(PhotoPresenceFilter.fromLaunchArg("has-photo"), .hasPhoto)
+        XCTAssertEqual(PhotoPresenceFilter.fromLaunchArg("no-photo"), .noPhoto)
+        XCTAssertEqual(PhotoPresenceFilter.hasPhoto.rawValue, "has-photo")
+        XCTAssertEqual(PhotoPresenceFilter.noPhoto.rawValue, "no-photo")
+        XCTAssertEqual(PhotoPresenceFilter.hasPhoto.chipLabel, "crag has photos")
+        XCTAssertEqual(PhotoPresenceFilter.noPhoto.chipLabel, "no crag photos")
+        XCTAssertEqual(PhotoPresenceFilter.all.accessibilityLabel, "Crag photo filter")
+        XCTAssertEqual(PhotoPresenceFilter.hasPhoto.accessibilityLabel, "Crag photo filter, crag has photos")
+    }
 }

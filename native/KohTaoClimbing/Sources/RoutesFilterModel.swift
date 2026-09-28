@@ -2,6 +2,8 @@ import Foundation
 import Observation
 
 /// Photo presence for Routes filter chips (uses crag-linked PhotoEntry data only).
+/// Photos have no per-route link, so the copy says "crag", never "route" (DQ-003-F2).
+/// Raw values stay "has-photo" / "no-photo" for launch args and deep links.
 enum PhotoPresenceFilter: String, CaseIterable, Identifiable, Sendable {
     case all
     case hasPhoto = "has-photo"
@@ -11,12 +13,25 @@ enum PhotoPresenceFilter: String, CaseIterable, Identifiable, Sendable {
 
     var chipLabel: String {
         switch self {
-        case .all: return "photo"
-        // Plain words on the chip; distinct from the row labels "Has photo" /
-        // "No photo" so the two never read (or query) as the same thing.
-        case .hasPhoto: return "with photo"
-        case .noPhoto: return "without photo"
+        case .all: return "crag photos"
+        // Lowercase on the chip; distinct from the row label "Crag photos" so the
+        // two never read (or query) as the same thing.
+        case .hasPhoto: return "crag has photos"
+        case .noPhoto: return "no crag photos"
         }
+    }
+
+    /// Menu option titles (sentence case).
+    var menuTitle: String {
+        switch self {
+        case .all: return "All routes"
+        case .hasPhoto: return "Crag has photos"
+        case .noPhoto: return "No crag photos"
+        }
+    }
+
+    var accessibilityLabel: String {
+        self == .all ? "Crag photo filter" : "Crag photo filter, \(chipLabel)"
     }
 
     static func fromLaunchArg(_ arg: String) -> PhotoPresenceFilter? {
