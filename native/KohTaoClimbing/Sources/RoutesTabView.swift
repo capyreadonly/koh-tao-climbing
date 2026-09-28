@@ -620,10 +620,12 @@ struct RouteDetailView: View {
             }
 
             Section {
-                LabeledContent("Database", value: route.source)
+                LabeledContent("Database", value: RouteSourceLabel.label(for: route.source))
+                    .accessibilityIdentifier("routeSourceLabel")
                 if let sourceUrl = route.sourceUrl, let url = URL(string: sourceUrl) {
                     Link(destination: url) {
-                        Label("Open original page", systemImage: "safari")
+                        Label(sourceUrl.lowercased().hasSuffix(".pdf") ? "Open the guidebook PDF" : "Open original page",
+                              systemImage: sourceUrl.lowercased().hasSuffix(".pdf") ? "doc.richtext" : "safari")
                     }
                 }
             } header: {

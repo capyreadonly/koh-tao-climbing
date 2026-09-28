@@ -319,3 +319,60 @@ Final full-scheme run: 30 tests, 29 passed, 1 skipped, 0 failed.
   - `testNewDetailDuringDelayCancelsPromptUntilNextReturn`: go back to the list, then open `cragRow-meks-mountain` within a 6 s delay. The marker stays at 0 for 9 s, then reaches 1 after the next return.
 - The screenshot test in capture mode was not re-run for this change; that run needed an approval this session couldn't get. It launches with `-disableReviewPrompt` like the other UI tests.
 - Note for manual testing: the probe tests really call `requestReview()` and write `lastPromptedVersion = 1.0.5` into the test simulator's defaults, so a manual run on `4E8850F7-…` won't prompt again for 1.0.5 until the app is reinstalled.
+
+## 10. Photo & source attribution
+
+Version stays 1.0.5 (8). No image and no photos.json entry was removed or moved.
+
+**Permission.** Nic has asked Goodtime Adventures for permission to use their guidebook images. Until they reply, all 179 Goodtime images and all 29 "all rights reserved" photos stay bundled, with their entries, and each one is credited in the viewer with a link to its source.
+
+### What each item became
+
+1. **Goodtime credit in the viewer.** There is one full-screen viewer, `PhotoViewerSheet`. Crag detail, the crag gallery, report galleries and the Community photo grid all open it. Under the caption, every guide image now shows "From Koh Tao Rock Climbing & Bouldering Guide by Goodtime Adventures (v1/14), p.N" and a "Guidebook PDF (railay.com)" link to the PDF.
+2. **Credit, licence and link for other photos.** The same panel shows the author ("© Brian Ways"; no © on CC0), the licence ("CC BY-SA 4.0", or "All rights reserved" for the long "user-contributed, all rights reserved — …" value) and a tappable `sourceUrl` link labelled by site: Mountain Project, Flickr, Wikimedia Commons, Rakkup, Mapo Tapo, Rock+Run or Tumblr. Before this change the source link was never shown.
+3. **Route source labels.** Route detail → Source now shows plain words. The raw values in routes.json are `guidebook` (Goodtime Adventures guidebook (PDF)), `27crags` (27crags / The Topo; 247 routes), `mountainproject` (Mountain Project) and `vault` (Vault note; 1 route, the same label the web app uses). `thecrag` is mapped too, but no route uses it. Any other value falls back to the raw string. The existing link is kept; it reads "Open the guidebook PDF" when it points at the PDF.
+4. **About and Sources.**
+   - The false "Photos are contributed by members of the Koh Tao climbing community…" text on About now says that photos and topos come from the Goodtime guide (credited, used with thanks) and from public sources credited on each photo, and that route data comes from the Goodtime guidebook and public databases (27crags / The Topo, Mountain Project, theCrag).
+   - About and Sources both show a Goodtime credit: title, publisher, edition and the PDF link.
+   - Sources has a new **Photo credits** list, built from photos.json at runtime (`PhotoCredits.sources`). It starts with the Goodtime guide and its image count (179), then each site with its photo count, then each author with licence, photo count and the source link. Authors with several photos open a list of links, one per photo.
+5. **Text claims:** see the table below.
+
+Code: `Sources/Attribution.swift` is new: `GoodtimeGuide`, `PhotoCredit`, `LicenseLabel`, `SourceHost`, `RouteSourceLabel` and `PhotoCredits`. The views are `PhotoCreditLine` in `CragDetailView.swift` and `GoodtimeCreditRow` in `AboutGuideView.swift`; `PlanTabView.swift` (Sources) and `RoutesTabView.swift` (route source) use them.
+
+### Where the credit and page data comes from
+
+- **PDF URL, title, publisher, edition:** the Goodtime entry in `info.json` guidebooks. The title is "Koh Tao Rock Climbing & Bouldering Guide (free PDF)", the author starts "Goodtime Adventures", the year is "v1/14", and the url is `http://www.railay.com/railay/climbing/KT-Climbing-guide-1.14-sm.compressed.pdf`. The same URL is in `sources.json`, `GUIDE-ALLOWLIST.json` and `archive/pdfs/README.md`. `AttributionTests.testGoodtimeConstantsMatchInfoJson` fails if the Swift constants drift from info.json.
+- **Page:** the existing `page` field on each photos.json guide entry. If it were missing, the code would fall back to the `p{NN}-` filename prefix, which `app/src/data/photos.ts` documents as "the p{page} file prefix = PDF page number". These are PDF page numbers, not printed page numbers.
+- **All 179 of 179 guide images have a page. 0 do not.** The test also checks that each `page` equals its filename prefix. photos.json was **not** edited to add fields: everything is derived in code.
+- **Credit, licence and link for the other photos:** the existing `credit`, `license` and `sourceUrl` fields in photos.json. All 72 community entries have all three.
+
+### Text claims changed
+
+| File | Before | After |
+|---|---|---|
+| `info.json` gearAndSafety.bolts | "The Thaitanium Project has rebolted the vast majority of popular routes in the main areas with titanium glue-ins (role verified 2026-08-02; its current activity level is unverified — last dated rebolting evidence Oct 2024). Inspect before trusting, …" | "Mountain Project reports titanium rebolting on many popular routes (the Thaitanium Project); current status unconfirmed. Inspect bolts before trusting them, …" The Mountain Project stainless-bolt warning and "ask the Koh Tao Climbing Club" are kept. |
+| `info.json` ethics.fullerPicture | "Support the stewards. Renting gear or booking a day with Goodtime Adventures / The Bunker funds the people maintaining routes; the Thaitanium Project rebolting work runs on community donations." | "Support the stewards. Rent gear or book a day with Goodtime Adventures / The Bunker, and ask them, local climbers or the Koh Tao Climbing Club about current route and bolt condition." The unsupported donation claim is gone. |
+| `info.json` 27crags guidebook note | "The bouldering reference: 258 problems … (deep fetch 2026-08-04). Topo images and descriptions are paywalled (Premium). …" | "The bouldering reference. This app's list data (258 problems …, fetched 2026-08-04) comes from the free 27crags / The Topo pages. The Thai-Climb topo images are Premium and are not included in this app. …" |
+| `crags.json` Jansom Bay details | "Near-coast hardware: verify bolt condition before trusting (Thaitanium rebolting context)." | "Near-coast hardware: verify bolt condition before trusting. Mountain Project reports Thaitanium rebolting on Koh Tao; current status at this crag unconfirmed." The source is `sources.json` "Mountain Project — Thailand", used for "Thaitanium Project rebolting context". |
+| `crags.json` Golden View details | "MP reports “Mostly Thaitanium bolted routes!” — good current bolt condition." | "According to Mountain Project, “Mostly Thaitanium bolted routes!” — bolt condition reported as good." |
+
+Follow-up: the web app's source files (`app/src/data/info.ts`, `app/src/data/climbing.ts`) still carry the old wording. `work/export-data.mjs` regenerates these JSONs from them, so a re-export would undo the five fixes above unless the same edits are made there. The web app was out of scope for this pass.
+
+### Image counts: before = after
+
+| | Before | After |
+|---|---|---|
+| Files in `AppResources/Images/guide` | 179 | 179 |
+| Files in `AppResources/Images/community` | 72 | 72 |
+| photos.json `guide` entries (no licence field) | 179 | 179 |
+| photos.json community entries, CC licences (CC BY/BY-SA/BY-NC/…/CC0) | 43 | 43 |
+| photos.json community entries, "all rights reserved" | 29 | 29 |
+| Total files / entries | 251 / 251 | 251 / 251 |
+
+`AttributionTests.testBundledImageAndEntryCountsUnchanged` checks these numbers against the built app bundle.
+
+### Tests and screenshots
+
+- New unit tests (`AttributionTests`, 12): the route-source labels (known values, the unknown fallback, and every value in routes.json labelled), the Goodtime credit with and without a page, the filename-page fallback, the constants against info.json, every guide image getting the Goodtime credit with a page, every photo with a `sourceUrl` getting an author, licence and link, the licence and host labels, the credits list covering all 72 community photos, and the inventory counts.
+- New UI tests (`PhotoCreditUITests`, 3): the Goodtime credit and PDF link in the viewer, the Mountain Project credit ("© Brian Ways", "All rights reserved", Mountain Project link) in the viewer, and the Sources photo credits list.
+- The screenshot test gained three shots: `photo-viewer-credit`, `photo-viewer-credit-mp` and `sources-credits`. They were captured light and dark to `/tmp/uipass/attrib/`. Copying them into `docs/ui-pass/after/` was blocked in the session that made this change; to copy them, run `cp /tmp/uipass/attrib/{photo-viewer-credit,photo-viewer-credit-mp,sources-credits,about}-{light,dark}.png docs/ui-pass/after/`.

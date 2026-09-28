@@ -56,8 +56,9 @@ struct AboutGuideView: View {
             Section {
                 Text("The database was compiled from public references — Mountain Project, 27crags, theCrag, the Goodtime Adventures guidebook, and the other entries on the Sources screen — and fact-checked. Grades and access change; cross-check before you climb.")
                     .font(.body)
-                Text("Photos are contributed by members of the Koh Tao climbing community. Credits and licenses live on the Sources screen.")
+                Text("Photos and topos come from the \(GoodtimeGuide.title) by \(GoodtimeGuide.publisher) (credited, used with thanks) and from public sources credited on each photo. Route data comes from the Goodtime guidebook and public databases: 27crags / The Topo, Mountain Project and theCrag.")
                     .font(.body)
+                GoodtimeCreditRow()
             } header: {
                 GuideHeader(title: "Sources & photos")
             }
@@ -162,6 +163,36 @@ struct AboutGuideView: View {
                 .accessibilityHint("Closes this introduction and opens the map")
             }
         }
+    }
+}
+
+/// Goodtime Adventures credit with a link to the guidebook PDF, shown on About and Sources.
+struct GoodtimeCreditRow: View {
+    /// Number of bundled guide images, when the caller wants it shown.
+    var imageCount: Int? = nil
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 4) {
+            Text(GoodtimeGuide.title)
+                .font(.subheadline.weight(.semibold))
+            Text("by \(GoodtimeGuide.publisher) · \(GoodtimeGuide.edition)")
+                .font(.caption)
+                .foregroundStyle(.secondary)
+            if let imageCount {
+                Text("\(imageCount) bundled images come from this guide: photos, topos, maps and page graphics. The photo viewer credits each one with its PDF page.")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+            if let url = GoodtimeGuide.pdfURL {
+                Link(destination: url) {
+                    Label("Guidebook PDF (railay.com)", systemImage: "doc.richtext")
+                        .font(.subheadline.weight(.medium))
+                }
+                .accessibilityHint("Opens the Goodtime Adventures guidebook PDF in Safari")
+                .accessibilityIdentifier("goodtimePdfLink")
+            }
+        }
+        .padding(.vertical, 2)
     }
 }
 

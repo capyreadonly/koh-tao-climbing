@@ -85,7 +85,9 @@ struct PlanTabView: View {
         case .services:
             ServicesScreen(services: store.services)
         case .sources:
-            SourcesScreen(sources: store.sources, guidebooks: store.info?.guidebooks ?? [])
+            SourcesScreen(sources: store.sources, guidebooks: store.info?.guidebooks ?? [],
+                          guidePhotoCount: store.guidePhotos.count,
+                          photoCredits: PhotoCredits.sources(from: store.communityPhotos))
         }
     }
 }
@@ -515,6 +517,8 @@ private struct ServicesScreen: View {
 private struct SourcesScreen: View {
     let sources: [SourceLink]
     var guidebooks: [Guidebook] = []
+    var guidePhotoCount: Int = 0
+    var photoCredits: [PhotoCreditSource] = []
 
     var body: some View {
         List {
@@ -522,6 +526,42 @@ private struct SourcesScreen: View {
                 Text("This guide is an original compilation for Koh Tao — not a white-label template. Every entry below was used while fact-checking the on-device database.")
                     .font(.body)
                     .padding(.vertical, 2)
+            }
+            Section {
+                GoodtimeCreditRow(imageCount: guidePhotoCount)
+            } header: {
+                GuideHeader(title: "Guidebook credit")
+            } footer: {
+                Text("Guide photos, topos and route data from this guidebook are credited to Goodtime Adventures and used with thanks.")
+                    .font(.caption)
+            }
+            Section {
+                if let url = GoodtimeGuide.pdfURL {
+                    Link(destination: url) {
+                        HStack {
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text("\(GoodtimeGuide.publisher) guidebook · \(guidePhotoCount) images")
+                                    .font(.subheadline.weight(.semibold))
+                                    .foregroundStyle(.primary)
+                                Text("\(GoodtimeGuide.fullTitle), credited with thanks")
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
+                            }
+                            Spacer(minLength: 0)
+                            Image(systemName: "doc.richtext")
+                                .font(.caption)
+                                .foregroundStyle(GuideTheme.brand)
+                        }
+                    }
+                    .tint(.primary)
+                    .accessibilityHint("Opens the guidebook PDF in Safari")
+                }
+                ForEach(photoCredits) { source in
+                    PhotoCreditSourceRows(source: source)
+                }
+            } header: {
+                GuideHeader(title: "Photo credits",
+                            subtitle: "Every bundled photo, grouped by where it was published")
             }
             Section {
                 let downloads = guidebooks.filter { $0.url != nil }
@@ -575,5 +615,60 @@ private struct SourcesScreen: View {
         }
         .navigationTitle("Sources")
         .navigationBarTitleDisplayMode(.inline)
+    }
+}
+
+/// One source site in the photo-credits list: a heading row, then one row per
+/// author with licence and photo count. A single source page makes the row a link;
+/// several become a disclosure list of links (one tappable link per List row).
+private struct PhotoCreditSourceRows: View {
+    let source: PhotoCreditSource
+
+    var body: some View {
+        Text(source.photoCount == 1 ? "\(source.name) · 1 photo" : "\(source.name) · \(source.photoCount) photos")
+            .font(.subheadline.weight(.semibold))
+            .padding(.top, 6)
+        ForEach(source.authors) { author in
+            if author.links.count == 1, let url = author.links.first {
+                Link(destination: url) {
+                    authorLabel(author, trailing: "safari")
+                }
+                // Keep name and licence readable; only the trailing symbol carries the tint.
+                .tint(.primary)
+                .accessibilityHint("Opens the photo's source page on \(source.name)")
+            } else if author.links.count > 1 {
+                DisclosureGroup {
+                    ForEach(Array(author.links.enumerated()), id: \.element) { index, url in
+                        Link(destination: url) {
+                            Label("Photo \(index + 1) on \(source.name)", systemImage: "safari")
+                                .font(.caption)
+                        }
+                    }
+                } label: {
+                    authorLabel(author, trailing: nil)
+                }
+            } else {
+                authorLabel(author, trailing: nil)
+            }
+        }
+    }
+
+    private func authorLabel(_ author: PhotoCreditAuthor, trailing systemImage: String?) -> some View {
+        HStack {
+            VStack(alignment: .leading, spacing: 2) {
+                Text(author.credit)
+                    .font(.callout)
+                    .foregroundStyle(.primary)
+                Text(author.photoCount == 1 ? author.license : "\(author.license) · \(author.photoCount) photos")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+            Spacer(minLength: 0)
+            if let systemImage {
+                Image(systemName: systemImage)
+                    .font(.caption)
+                    .foregroundStyle(GuideTheme.brand)
+            }
+        }
     }
 }

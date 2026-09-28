@@ -368,8 +368,44 @@ struct NdBadge: View {
     }
 }
 
-/// Full-screen paging photo viewer: pinch-to-zoom + pan per page, caption and
-/// credit/license line, ND badge where the license forbids derivatives.
+/// Credit, licence and source link under a photo in the viewer. Guide images get
+/// the Goodtime guidebook credit with the PDF page and a link to the PDF.
+struct PhotoCreditLine: View {
+    let credit: PhotoCredit
+    var isNd: Bool = false
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 4) {
+            HStack(alignment: .firstTextBaseline, spacing: 6) {
+                if !credit.text.isEmpty {
+                    Text(credit.text)
+                        .fixedSize(horizontal: false, vertical: true)
+                        .accessibilityIdentifier("photoCredit")
+                }
+                if let license = credit.license {
+                    Text(license)
+                        .accessibilityIdentifier("photoLicense")
+                }
+                if isNd {
+                    NdBadge()
+                }
+            }
+            .font(.caption2)
+            .foregroundStyle(.secondary)
+            if let url = credit.link, let label = credit.linkLabel {
+                Link(destination: url) {
+                    Label(label, systemImage: credit.isGuide ? "doc.richtext" : "safari")
+                        .font(.caption.weight(.medium))
+                }
+                .accessibilityHint(credit.isGuide ? "Opens the guidebook PDF in Safari" : "Opens the photo's source page in Safari")
+                .accessibilityIdentifier("photoSourceLink")
+            }
+        }
+    }
+}
+
+/// Full-screen paging photo viewer: pinch-to-zoom + pan per page, caption,
+/// credit/licence line with a source link, ND badge where the license forbids derivatives.
 struct PhotoViewerSheet: View {
     let photos: [PhotoEntry]
     let startIndex: Int
@@ -420,19 +456,9 @@ struct PhotoViewerSheet: View {
                 VStack(alignment: .leading, spacing: 4) {
                     Text(photo.caption)
                         .font(.footnote)
-                    HStack(spacing: 6) {
-                        if let credit = photo.credit {
-                            Text("© \(credit)")
-                        }
-                        if let license = photo.license {
-                            Text(license)
-                        }
-                        if photo.isNdLicense {
-                            NdBadge()
-                        }
+                    if let credit = PhotoCredit.forPhoto(photo) {
+                        PhotoCreditLine(credit: credit, isNd: photo.isNdLicense)
                     }
-                    .font(.caption2)
-                    .foregroundStyle(.secondary)
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding()

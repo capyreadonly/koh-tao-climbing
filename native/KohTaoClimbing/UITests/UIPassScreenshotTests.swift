@@ -45,6 +45,16 @@ final class UIPassScreenshotTests: XCTestCase {
         Shot(name: "route-detail", arguments: ["-initialTab", "routes", "-initialRoute", "a"]),
         Shot(name: "photo-viewer", arguments: ["-initialTab", "crags", "-initialCrag", "meks-mountain", "-showViewer", "0"],
              settle: 3),
+        // Attribution pass: a Goodtime guide image (page 0) and the Mountain Project
+        // photo (an out-of-range index clamps to the last page) with their credits.
+        Shot(name: "photo-viewer-credit", arguments: ["-initialTab", "crags", "-initialCrag", "meks-mountain", "-showViewer", "0"],
+             settle: 3),
+        Shot(name: "photo-viewer-credit-mp", arguments: ["-initialTab", "crags", "-initialCrag", "meks-mountain", "-showViewer", "999"],
+             settle: 3),
+        Shot(name: "sources-credits", arguments: ["-initialTab", "plan", "-planSection", "sources"],
+             prepare: { app in
+                 app.swipeUp(velocity: .slow)
+             }),
         Shot(name: "plan", arguments: ["-initialTab", "plan"]),
         Shot(name: "guidebooks", arguments: ["-initialTab", "plan", "-planSection", "guidebooks"]),
         Shot(name: "gear-safety", arguments: ["-initialTab", "plan", "-planSection", "gear"]),
