@@ -290,7 +290,7 @@ export const crags: Crag[] = [
       'Beach bouldering in the middle of Sairee Beach, dominated by The Elephant — a big boulder directly in front of Sandbar Restaurant. Zero approach, sunset sessions, dinner 20 m away.',
     details: [
       'The Elephant has bolts on top for top-roping the beach-side routes (3-bolt anchor per the PDF; a short rope may be needed — ask Goodtime).',
-      "Safety: The Elephant's top bolts have not been replaced or checked in a long time (rakkup, theCrag, Mountain Project) — inspect them before trusting them.",
+      "Safety: on The Elephant (the elephant-shaped boulder on Sairee Beach, in front of Sandbar), the top bolts have not been replaced or checked in a long time (rakkup, theCrag, Mountain Project) — inspect them before trusting them.",
       'Problems on all four sides: flakes, Yu’s Jam Crack, blunt arêtes, twin cracks, and up the nose facing the beach.',
       '27crags adds the North Sairee beach boulders (Sun God Traverse 6C, Suffer for the Children 7A) and two DWS lines.',
       'Sand landings are friendly; pads optional. Some coastal blocs only doable at low tide (27crags).',
