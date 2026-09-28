@@ -157,7 +157,7 @@ export const gearAndSafety: GearAndSafety = {
     'Or skip it all: rent from Goodtime Adventures or The Bunker',
   ],
   bolts:
-    "Stainless bolts near the sea corrode dangerously across Thailand — Mountain Project carries the warning 'Stainless steel bolts are suspect near the coast!' on all Koh Tao pages. The Thaitanium Project has rebolted the vast majority of popular routes in the main areas with titanium glue-ins (role verified 2026-08-02; its current activity level is unverified — last dated rebolting evidence Oct 2024). Inspect before trusting, especially seaside crags like Tanote Bay's Poseidon and Jansom Bay; when in doubt ask the Koh Tao Climbing Club.",
+    "Stainless bolts near the sea corrode dangerously across Thailand — Mountain Project carries the warning 'Stainless steel bolts are suspect near the coast!' on all Koh Tao pages. Mountain Project reports titanium rebolting on many popular routes (the Thaitanium Project); current status unconfirmed. Inspect bolts before trusting them, especially seaside crags like Tanote Bay's Poseidon and Jansom Bay; when in doubt ask the Koh Tao Climbing Club.",
   hazards: [
     'Heat exhaustion — follow the daily rhythm (early starts, midday siesta)',
     'Steep scooter roads — the most statistically dangerous thing on the island',
@@ -201,7 +201,7 @@ export const ethics: Ethics = {
     'Sensitive access exists. Some crags sit on or beside private land and resorts (Jansom Bay by Jamahkiri; Tao Tower and Phillips Secret Spot at Tanote Bay). Contact the club for current status before exploring off the beaten path.',
     "Be a good guest. Buy a drink or meal from the business whose land you're crossing; keep noise and chalk reasonable at beach crags like Sairee; don't boulder too close to the Secret Garden bungalows.",
     'All land on Koh Tao is private (Goodtime PDF) — pay the access fees: Mek\'s Mountain is 100 THB paid at Goodtime Adventures (receipt issued; PDF p8 attention box), Jansom Bay is paid at the beach office (PDF p5).',
-    'Support the stewards. Renting gear or booking a day with Goodtime Adventures / The Bunker funds the people maintaining routes; the Thaitanium Project rebolting work runs on community donations.',
+    'Support the stewards. Rent gear or book a day with Goodtime Adventures / The Bunker, and ask them, local climbers or the Koh Tao Climbing Club about current route and bolt condition.',
     'Leave No Trace applies doubly on a 21 km² island — pack out tape, tape wrappers and chalk-caked brushes.',
   ],
 }
@@ -301,7 +301,7 @@ export const guidebooks: Guidebook[] = [
     title: '27crags — Koh Tao',
     author: 'community database (topo by Thai-Climb)',
     year: 'live',
-    note: 'The bouldering reference: 258 problems with sectors, tick counts and ratings across 8 crags (deep fetch 2026-08-04). Topo images and descriptions are paywalled (Premium). No roped Koh Tao crags are listed on 27crags.',
+    note: "The bouldering reference. This app's list data (258 problems with sectors, tick counts and ratings across 8 crags, fetched 2026-08-04) comes from the free 27crags / The Topo pages. The Thai-Climb topo images are Premium and are not included in this app. No roped Koh Tao crags are listed on 27crags.",
     url: 'https://27crags.com/crags/koh-tao',
     current: true,
   },

@@ -120,7 +120,7 @@ export const crags: Crag[] = [
       'The wall bakes around noon; the plan is climb → mask and fins → evening session at Golden View.',
       'Big seaside cliffs of 25–30 m+ close to Mae Haad (MP). Mornings only — sun hits from 11:30 (PDF).',
       'Near Jamahkiri resort — be a good guest; buy a drink, keep it clean.',
-      'Near-coast hardware: verify bolt condition before trusting (Thaitanium rebolting context).',
+      'Near-coast hardware: verify bolt condition before trusting. Mountain Project reports Thaitanium rebolting on Koh Tao; current status at this crag unconfirmed.',
       "Real hard lines per MP: Grunt Force Trauma (7a) and Trauma Extension (7a+); the Goodtime PDF adds Xico's Ascent (5c) and Good Intentions (6b+).",
     ],
     highlight: 'Climb + snorkel',
@@ -198,7 +198,7 @@ export const crags: Crag[] = [
       'The sunset crag. Standard plan: bake out of Jansom Bay at noon, rest, then finish the day here watching the sun drop over the horizon.',
     details: [
       'Evening light on the granite is the draw; many technical short routes with a nice breeze (MP).',
-      'MP reports “Mostly Thaitanium bolted routes!” — good current bolt condition.',
+      'According to Mountain Project, “Mostly Thaitanium bolted routes!” — bolt condition reported as good.',
       'Bolted by Rock Junkie and Climbing Project; rebolted and extended by Evasion Koh Tao (theCrag snippet). Do not remove any fixed hardware.',
       'Verify hardware condition near the coast anyway.',
     ],
