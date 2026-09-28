@@ -80,4 +80,27 @@ final class DataStoreTests: XCTestCase {
         XCTAssertEqual(PhotoPresenceFilter.all.accessibilityLabel, "Crag photo filter")
         XCTAssertEqual(PhotoPresenceFilter.hasPhoto.accessibilityLabel, "Crag photo filter, crag has photos")
     }
+
+    /// The old Thaitanium Project website domain is now a hijacked gambling site: never ship it.
+    /// Built from parts so the repo itself never contains the domain.
+    func testNoBundledJSONLinksTheHijackedThaitaniumDomain() throws {
+        let domain = "thaitaniumproject" + ".com"
+        let dir = try XCTUnwrap(Bundle.main.resourceURL?.appendingPathComponent("AppResources/Data"))
+        let files = try FileManager.default.contentsOfDirectory(at: dir, includingPropertiesForKeys: nil)
+            .filter { $0.pathExtension == "json" }
+        XCTAssertEqual(files.count, 7, "Expected the 7 bundled JSON files")
+        for file in files {
+            let text = try String(contentsOf: file, encoding: .utf8).lowercased()
+            XCTAssertFalse(text.contains(domain), "\(file.lastPathComponent) links the hijacked domain")
+        }
+    }
+
+    /// Mek's Mountain entry fee is 200 THB (theCrag + rakkup, 2026-09-28), no longer 100 THB.
+    func testMeksMountainFeeIs200THB() throws {
+        let meks = try XCTUnwrap(store.crags.first { $0.slug == "meks-mountain" })
+        let fee = try XCTUnwrap(meks.accessFee)
+        XCTAssertTrue(fee.hasPrefix("200 THB"), "Mek's fee reads: \(fee)")
+        let ethics = try XCTUnwrap(store.info?.ethics.fullerPicture.first { $0.contains("Mek's Mountain is") })
+        XCTAssertTrue(ethics.contains("Mek's Mountain is 200 THB"), "Ethics fee line reads: \(ethics)")
+    }
 }

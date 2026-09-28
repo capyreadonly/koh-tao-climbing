@@ -24,7 +24,7 @@ export interface Crag {
   sun: string
   approach: string
   access: string
-  /** Entry fee where one is documented (e.g. Mek's Mountain 100 THB at Goodtime Adventures). */
+  /** Entry fee where one is documented (e.g. Mek's Mountain 200 THB, payable locally). */
   accessFee?: string
   /** Access caveat the UI should surface (degraded access, closure reports, verify-locally flags). */
   accessWarning?: string
@@ -74,7 +74,7 @@ export const crags: Crag[] = [
     sun: 'Climbable most of the day — walls face different directions for all-day shade (PDF)',
     approach: 'Motorbike up from the Sairee 7/11 crossroads toward Hin Wong, right turn near the phone tower, short walk',
     access: 'Private land — pay before climbing; receipt issued (Goodtime PDF)',
-    accessFee: '100 THB entry, paid at Goodtime Adventures (PDF p8 attention box, verified)',
+    accessFee: '200 THB entry, payable locally (theCrag and rakkup, 2026)',
     summary:
       "The island's main sport venue and the default first stop: 18 sport routes and 14 top-rope anchors with 20 routes, grades 4–7b (Goodtime PDF area list). Home crag of Goodtime Adventures, with the friendly De-Vine Wall and the steeper Eagle Wall.",
     details: [
@@ -102,7 +102,7 @@ export const crags: Crag[] = [
     coords: { lat: 10.09812, lng: 99.84185 },
     routeCount: '26 routes on Mountain Project (area text says ~35); Goodtime PDF: 18 sport routes + 14 TR anchors with 20 routes; theCrag snippet claims 44 (unverified)',
     bestSeason: 'Year-round',
-    verified: "Routes, GPS and the 100 THB fee confirmed by the 2026-08-02 Mountain Project scrape and the Goodtime PDF (p8 attention box, verified 2026-08). Legacy-draft route names (Morning Glory, High Noon, Sunset Boulevard, 'Fraggle Rock' 6a+) matched no fact-checked source and were removed 2026-08-04.",
+    verified: "Routes and GPS confirmed by the 2026-08-02 Mountain Project scrape and the Goodtime PDF (verified 2026-08). Entry fee updated 2026-09-28 to 200 THB, payable locally, per theCrag (https://www.thecrag.com/en/climbing/thailand/koh-tao/area/509928408) and rakkup (https://rakkup.com/guidebook/thailand-koh-tao-rock-climbing/mek's-mountain/s21818); the Goodtime PDF's 100 THB paid at Goodtime Adventures (p8 attention box) is out of date. Legacy-draft route names (Morning Glory, High Noon, Sunset Boulevard, 'Fraggle Rock' 6a+) matched no fact-checked source and were removed 2026-08-04.",
   },
   {
     slug: 'jansom-bay',
@@ -120,7 +120,7 @@ export const crags: Crag[] = [
       'The wall bakes around noon; the plan is climb → mask and fins → evening session at Golden View.',
       'Big seaside cliffs of 25–30 m+ close to Mae Haad (MP). Mornings only — sun hits from 11:30 (PDF).',
       'Near Jamahkiri resort — be a good guest; buy a drink, keep it clean.',
-      'Near-coast hardware: verify bolt condition before trusting. Mountain Project reports Thaitanium rebolting on Koh Tao; current status at this crag unconfirmed.',
+      'Near-coast hardware: inspect bolts before trusting them. Titanium rebolting on Koh Tao is done by the Koh Tao Climbing Club (ongoing through Aug 2026) and Mountain Project reports newly bolted titanium routes here; ask the club about current bolt condition.',
       "Real hard lines per MP: Grunt Force Trauma (7a) and Trauma Extension (7a+); the Goodtime PDF adds Xico's Ascent (5c) and Good Intentions (6b+).",
     ],
     highlight: 'Climb + snorkel',
@@ -128,7 +128,7 @@ export const crags: Crag[] = [
     coords: { lat: 10.07995, lng: 99.81574 },
     routeCount: '5 routes on Mountain Project; Goodtime PDF lists 6 routes (6a and above)',
     bestSeason: 'Nov–Apr (legacy draft); mornings year-round',
-    verified: "GPS and routes confirmed by MP 2026-08-02. Legacy-draft route names (Tufa King, Coastal Drift, Grunt Force P1/P2, Sea Spray) matched no fact-checked source and were removed 2026-08-04. Legacy-draft GPS was ~4 km off; MP coordinates preferred.",
+    verified: "GPS and routes confirmed by MP 2026-08-02. Legacy-draft route names (Tufa King, Coastal Drift, Grunt Force P1/P2, Sea Spray) matched no fact-checked source and were removed 2026-08-04. Legacy-draft GPS was ~4 km off; MP coordinates preferred. Bolt note updated 2026-09-28: titanium rebolting on Koh Tao is the Koh Tao Climbing Club's (https://www.facebook.com/Climbingkohtao/posts/1571937278304435/ , https://www.facebook.com/groups/1223068794869694/posts/2373081263201769/ , https://www.mountainproject.com/route/201835160/beached-whale); the Thaitanium Project is a separate Railay (Krabi) project (https://www.thecrag.com/en/climbing/thailand/krabi/area/6756380397).",
   },
   {
     slug: 'tanote-bay',
@@ -198,7 +198,7 @@ export const crags: Crag[] = [
       'The sunset crag. Standard plan: bake out of Jansom Bay at noon, rest, then finish the day here watching the sun drop over the horizon.',
     details: [
       'Evening light on the granite is the draw; many technical short routes with a nice breeze (MP).',
-      'According to Mountain Project, “Mostly Thaitanium bolted routes!” — bolt condition reported as good.',
+      'Mountain Project reports mostly titanium-bolted routes in good condition. Titanium rebolting on Koh Tao is done by the Koh Tao Climbing Club (ongoing through Aug 2026); no crag has been closed.',
       'Bolted by Rock Junkie and Climbing Project; rebolted and extended by Evasion Koh Tao (theCrag snippet). Do not remove any fixed hardware.',
       'Verify hardware condition near the coast anyway.',
     ],
@@ -207,7 +207,7 @@ export const crags: Crag[] = [
     coords: { lat: 10.0786, lng: 99.83768 },
     routeCount: '6 routes on Mountain Project; theCrag snippet claims 31 (unverified)',
     bestSeason: 'Year-round — shade and breeze (legacy draft; MP confirms the breeze)',
-    verified: 'MP data confirmed 2026-08-02, including good bolt condition. Legacy-draft route names (Whale of a Time, Big C, Titanium Classic, Old Lady, Schwarz, The Edge) matched no fact-checked source and were removed 2026-08-04; legacy-draft GPS was ~1.8 km off (MP coordinates preferred).',
+    verified: 'MP data confirmed 2026-08-02, including good bolt condition. Legacy-draft route names (Whale of a Time, Big C, Titanium Classic, Old Lady, Schwarz, The Edge) matched no fact-checked source and were removed 2026-08-04; legacy-draft GPS was ~1.8 km off (MP coordinates preferred). Bolt note updated 2026-09-28: titanium rebolting on Koh Tao is the Koh Tao Climbing Club\'s (https://www.facebook.com/Climbingkohtao/posts/1571937278304435/ , https://www.facebook.com/groups/1223068794869694/posts/2373081263201769/ , https://www.mountainproject.com/area/108569570/koh-tao); the Thaitanium Project is a separate Railay (Krabi) project (https://www.thecrag.com/en/climbing/thailand/krabi/area/6756380397).',
   },
   {
     slug: 'machetey-mountain',
@@ -290,6 +290,7 @@ export const crags: Crag[] = [
       'Beach bouldering in the middle of Sairee Beach, dominated by The Elephant — a big boulder directly in front of Sandbar Restaurant. Zero approach, sunset sessions, dinner 20 m away.',
     details: [
       'The Elephant has bolts on top for top-roping the beach-side routes (3-bolt anchor per the PDF; a short rope may be needed — ask Goodtime).',
+      "Safety: The Elephant's top bolts have not been replaced or checked in a long time (rakkup, theCrag, Mountain Project) — inspect them before trusting them.",
       'Problems on all four sides: flakes, Yu’s Jam Crack, blunt arêtes, twin cracks, and up the nose facing the beach.',
       '27crags adds the North Sairee beach boulders (Sun God Traverse 6C, Suffer for the Children 7A) and two DWS lines.',
       'Sand landings are friendly; pads optional. Some coastal blocs only doable at low tide (27crags).',
@@ -299,7 +300,7 @@ export const crags: Crag[] = [
     coords: { lat: 10.09285, lng: 99.82758 },
     routeCount: '5 top-rope lines on MP; 16 boulder + 2 DWS on 27crags; Goodtime PDF lists 12 Elephant + 10 North Sairee problems',
     bestSeason: 'Year-round; tide-dependent for the coastal blocs (27crags)',
-    verified: "The Elephant confirmed by MP and theCrag. Yu's Jam Crack carries a three-way grade conflict (5c top-rope / 5b trad / V1 boulder) — see routes.ts.",
+    verified: "The Elephant confirmed by MP and theCrag. Yu's Jam Crack carries a three-way grade conflict (5c top-rope / 5b trad / V1 boulder) — see routes.ts. Top-bolt warning added 2026-09-28 from rakkup (https://rakkup.com/guidebook/thailand-koh-tao-rock-climbing/the-elephant/s21829), theCrag (https://www.thecrag.com/en/climbing/thailand/koh-tao/area/9797417472) and Mountain Project (https://www.mountainproject.com/area/111737303/elephant).",
   },
   {
     slug: 'secret-garden-boulders',
@@ -309,7 +310,8 @@ export const crags: Crag[] = [
     grades: 'Font 3–8A+ (27crags)',
     sun: 'Jungle shade helps; still humid',
     approach: '3–10 min on foot from the back of Sairee Beach',
-    access: 'Open — free; keep noise down near the bungalows (long-term residents)',
+    access: 'Access limited (construction on site), not closed; keep noise down near the bungalows (long-term residents)',
+    accessWarning: 'Access limited by construction on site; The Bunker moved its guided bouldering sessions to Backyard & Frontyard around mid-2025 (exact date unverified) — check current access with The Bunker or the Koh Tao Climbing Club before going',
     summary:
       "The island's classic jungle boulder field, documented since the Zen Gecko era. Home of James and the Giant Peach (8A+ / V11) and 50+ catalogued problems.",
     details: [
@@ -327,7 +329,7 @@ export const crags: Crag[] = [
     coords: { lat: 10.09554, lng: 99.83484 },
     routeCount: '54 problems on 27crags; 2 on Mountain Project; Goodtime PDF maps 65 with 100s more unmapped',
     bestSeason: 'Year-round (morning shade)',
-    verified: "Location conflict: the vault says 'Tanote Bay / Aow Leuk side' while MP GPS, 27crags and the legacy draft all place it behind Sairee Beach — MP coordinates preferred.",
+    verified: "Location conflict: the vault says 'Tanote Bay / Aow Leuk side' while MP GPS, 27crags and the legacy draft all place it behind Sairee Beach — MP coordinates preferred. Access note added 2026-09-28 (construction on site; guided sessions moved to Backyard & Frontyard ~mid-2025): https://www.instagram.com/reel/DMt-dpAvzjX/ , https://www.facebook.com/thebunkerkohtao/",
   },
   {
     slug: 'babaloo-boulders',
@@ -361,7 +363,6 @@ export const crags: Crag[] = [
     sun: 'Plantation shade, humid',
     approach: 'Backyard to the left, Frontyard right up over the hill; 3–10 min walk-in',
     access: 'Private plantations — owners ask you to buy drinks at the Koh Tao Info shop; a small donation to the Koh Tao school is appreciated (Goodtime PDF)',
-    accessWarning: "A UKC logbook snippet reports 'Climbs are no longer climbable' at Frontyard and Backyard (partially-verified — snippet only, ukclimbing.com blocks fetches; consistent with older reports of boulders lost to resort development) — verify locally before a dedicated trip",
     summary:
       "The island's largest documented boulder field: 68 problems on 27crags up to The Lost Idol (8B), spread through the coconut plantations on the way to Tanote Bay.",
     details: [
@@ -374,7 +375,7 @@ export const crags: Crag[] = [
     coords: { lat: 10.08029, lng: 99.82863 },
     routeCount: '68 problems on 27crags; Goodtime PDF maps 97 across both yards; MP lists 6 boulders + 10 slab routes',
     bestSeason: 'Year-round',
-    verified: '27crags routelist fetched 2026-08-02. MP splits the zone into Backyard, Frontyard, Golden Slab and Big Brother Slab sub-areas.',
+    verified: "27crags routelist fetched 2026-08-02. MP splits the zone into Backyard, Frontyard, Golden Slab and Big Brother Slab sub-areas. Open (rechecked 2026-09-28): theCrag marks the area 'Allowed' (https://www.thecrag.com/en/climbing/thailand/koh-tao/area/10002144399) and The Bunker moved its guided sessions here from Secret Garden around mid-2025. The UKC logbook page (https://www.ukclimbing.com/logbook/crags/frontyard_and_backyard-19525/) carries no closure notice — its 'no longer climbable' text is UKC's icon-legend boilerplate, so the access warning built on it was removed.",
   },
   {
     slug: 'golden-slab',
@@ -578,8 +579,8 @@ export const crags: Crag[] = [
     grades: 'Unverified',
     sun: 'Unverified',
     approach: 'Contact the Koh Tao Climbing Club for directions',
-    access: 'Sensitive — contact the Koh Tao Climbing Club',
-    accessWarning: 'Reported crag with no data in any fact-checked source — intentionally low-profile; go through the Koh Tao Climbing Club',
+    access: 'By arrangement with the Koh Tao Climbing Club — contact them before visiting',
+    accessWarning: 'Access is by arrangement with the Koh Tao Climbing Club (theCrag, rakkup) — intentionally low-profile; contact the club before visiting',
     summary:
       'A secluded sport crag near Tanote Bay whose access runs through the Koh Tao Climbing Club — intentionally low-profile. No route data exists in any fact-checked source.',
     details: [
@@ -591,7 +592,7 @@ export const crags: Crag[] = [
     tags: ['sport', 'secluded', 'unverified'],
     routeCount: 'No route data in any fact-checked source (legacy draft claimed 9 — fabricated metadata removed)',
     bestSeason: 'Unverified',
-    verified: 'Reported, unverified: legacy draft + vault mention only; no fact-checked data. Coordinates dropped (legacy GPS demonstrably unreliable).',
+    verified: 'Reported, unverified: legacy draft + vault mention only; no fact-checked data. Coordinates dropped (legacy GPS demonstrably unreliable). Access by arrangement with the Koh Tao Climbing Club per theCrag (https://www.thecrag.com/en/climbing/thailand/koh-tao/area/7096371039) and rakkup (https://rakkup.com/guidebook/thailand-koh-tao-rock-climbing/phillipe\'s-secret-spot/s23429), both spelling it "Phillipe\'s Secret Spot" (checked 2026-09-28).',
   },
   {
     slug: 'the-peak-boulders',
@@ -804,7 +805,7 @@ export const services: Service[] = [
 export const sources = [
   { name: 'Mapo Tapo — Koh Tao rock climbing guide', url: 'https://www.mapotapo.com/blog/koh-tao', used: 'Crag circuit, itineraries, granite, Goodtime/Zen Gecko history' },
   { name: 'theCrag — Koh Tao', url: 'https://www.thecrag.com/en/climbing/thailand/koh-tao', used: 'Access & ethics, gear rental, guidebook listings' },
-  { name: 'theCrag — The Elephant', url: 'https://www.thecrag.com/en/climbing/thailand/koh-tao/area/9797417472', used: 'Sairee Beach boulder detail' },
+  { name: 'theCrag — The Elephant', url: 'https://www.thecrag.com/en/climbing/thailand/koh-tao/area/9797417472', used: 'Sairee Beach boulder detail; top bolts unchecked for a long time (2026-09-28)' },
   { name: 'Mountain Project — Koh Tao', url: 'https://www.mountainproject.com/area/108569570/koh-tao', used: 'Area tree, 96 routes (deep scrape 2026-08-04 with FA/length/protection), GPS, bolt warnings' },
   { name: 'Mountain Project — Tanote Bay', url: 'https://www.mountainproject.com/area/123981447/tanote-bay', used: 'Sub-crags, linkups, bolt warnings, sun timing' },
   { name: '27crags — Koh Tao', url: 'https://27crags.com/crags/koh-tao', used: '258 boulder/DWS routes with sectors, tick counts and ratings (deep fetch 2026-08-04)' },
@@ -820,9 +821,22 @@ export const sources = [
   { name: 'SoTravel — Koh Tao dry-day activities', url: 'https://blog.sotravel.com/2024/06/28/koh-taos-best-dive-sites-your-complete-guide-to-underwater-adventures/', used: 'Bunker day pass price (secondary source)' },
   { name: 'DiveZone — Koh Tao travel guide', url: 'https://divezone.net/travel/koh-tao', used: 'Climate, seasons' },
   { name: 'Travel Happy — Koh Tao quick guide', url: 'https://travelhappy.info/koh-tao-quick-guide/', used: 'Activity context' },
-  { name: 'Mountain Project — Thailand', url: 'https://www.mountainproject.com/area/105894648/thailand', used: 'Thaitanium Project rebolting context' },
+  { name: 'Mountain Project — Thailand', url: 'https://www.mountainproject.com/area/105894648/thailand', used: 'Generic coastal-Thailand warning that stainless bolts are suspect near the coast' },
+  { name: 'Koh Tao Climbing Club — titanium rebolting post', url: 'https://www.facebook.com/Climbingkohtao/posts/1571937278304435/', used: 'Titanium rebolting on Koh Tao is done by the club, ongoing through Aug 2026; no crag closed (2026-09-28)' },
+  { name: 'Koh Tao Climbing Club — group post on titanium bolts', url: 'https://www.facebook.com/groups/1223068794869694/posts/2373081263201769/', used: 'Club titanium bolts and anchors, Aug 2026 (2026-09-28)' },
+  { name: 'Mountain Project — Beached Whale', url: 'https://www.mountainproject.com/route/201835160/beached-whale', used: 'Dated titanium rebolting on Koh Tao (2026-09-28)' },
+  { name: 'theCrag — Krabi (Railay)', url: 'https://www.thecrag.com/en/climbing/thailand/krabi/area/6756380397', used: 'The Thaitanium Project is a separate Railay (Krabi) rebolting project, not a Koh Tao one (2026-09-28)' },
+  { name: "theCrag — Mek's Mountain", url: 'https://www.thecrag.com/en/climbing/thailand/koh-tao/area/509928408', used: "Mek's Mountain entry fee 200 THB (2026-09-28)" },
+  { name: "rakkup — Mek's Mountain", url: "https://rakkup.com/guidebook/thailand-koh-tao-rock-climbing/mek's-mountain/s21818", used: "Mek's Mountain entry fee 200 THB, payable locally (2026-09-28)" },
+  { name: 'rakkup — The Elephant', url: 'https://rakkup.com/guidebook/thailand-koh-tao-rock-climbing/the-elephant/s21829', used: 'Top bolts not replaced or checked in a long time (2026-09-28)' },
+  { name: 'Mountain Project — Elephant', url: 'https://www.mountainproject.com/area/111737303/elephant', used: 'The Elephant top-rope lines and bolt warning (2026-09-28)' },
+  { name: 'Instagram — Secret Garden construction reel', url: 'https://www.instagram.com/reel/DMt-dpAvzjX/', used: 'Secret Garden access limited by construction; guided sessions moved to Backyard & Frontyard ~mid-2025 (2026-09-28)' },
+  { name: 'The Bunker — Facebook', url: 'https://www.facebook.com/thebunkerkohtao/', used: 'Guided bouldering sessions moved from Secret Garden to Backyard & Frontyard (2026-09-28)' },
+  { name: 'theCrag — Backyard & Frontyard', url: 'https://www.thecrag.com/en/climbing/thailand/koh-tao/area/10002144399', used: "Access marked 'Allowed' — open (2026-09-28)" },
+  { name: "theCrag — Phillipe's Secret Spot", url: 'https://www.thecrag.com/en/climbing/thailand/koh-tao/area/7096371039', used: 'Access by arrangement with the Koh Tao Climbing Club (2026-09-28)' },
+  { name: "rakkup — Phillipe's Secret Spot", url: "https://rakkup.com/guidebook/thailand-koh-tao-rock-climbing/phillipe's-secret-spot/s23429", used: 'Access via the Koh Tao Climbing Club only (2026-09-28)' },
   { name: 'Koh Tao Complete Guide — getting there', url: 'https://www.kohtaocompleteguide.com/de/reisefakten/anreise-nach-koh-tao/', used: 'Ferry operators incl. Boonsiri + Songserm, night boats (2026-05)' },
-  { name: 'UKC Logbook — Frontyard and Backyard', url: 'https://www.ukclimbing.com/logbook/crags/frontyard_and_backyard-19525/', used: "'Climbs are no longer climbable' fragment (search snippet, partially-verified 2026-08-04)" },
+  { name: 'UKC Logbook — Frontyard and Backyard', url: 'https://www.ukclimbing.com/logbook/crags/frontyard_and_backyard-19525/', used: "No closure notice on the crag page; its 'no longer climbable' text is UKC's icon-legend boilerplate, not a closure (rechecked 2026-09-28; theCrag marks the area 'Allowed')" },
   { name: 'Wonderland Koh Tao — best month to visit', url: 'https://wonderlandkohtao.com/best-month-to-visit-koh-tao/', used: 'Dry season Dec–Apr, October wettest (2026)' },
 ]
 

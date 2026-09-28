@@ -12,7 +12,7 @@
   {
     "name": "theCrag — The Elephant",
     "url": "https://www.thecrag.com/en/climbing/thailand/koh-tao/area/9797417472",
-    "used": "Sairee Beach boulder detail"
+    "used": "Sairee Beach boulder detail; top bolts unchecked for a long time (2026-09-28)"
   },
   {
     "name": "Mountain Project — Koh Tao",
@@ -92,7 +92,72 @@
   {
     "name": "Mountain Project — Thailand",
     "url": "https://www.mountainproject.com/area/105894648/thailand",
-    "used": "Thaitanium Project rebolting context"
+    "used": "Generic coastal-Thailand warning that stainless bolts are suspect near the coast"
+  },
+  {
+    "name": "Koh Tao Climbing Club — titanium rebolting post",
+    "url": "https://www.facebook.com/Climbingkohtao/posts/1571937278304435/",
+    "used": "Titanium rebolting on Koh Tao is done by the club, ongoing through Aug 2026; no crag closed (2026-09-28)"
+  },
+  {
+    "name": "Koh Tao Climbing Club — group post on titanium bolts",
+    "url": "https://www.facebook.com/groups/1223068794869694/posts/2373081263201769/",
+    "used": "Club titanium bolts and anchors, Aug 2026 (2026-09-28)"
+  },
+  {
+    "name": "Mountain Project — Beached Whale",
+    "url": "https://www.mountainproject.com/route/201835160/beached-whale",
+    "used": "Dated titanium rebolting on Koh Tao (2026-09-28)"
+  },
+  {
+    "name": "theCrag — Krabi (Railay)",
+    "url": "https://www.thecrag.com/en/climbing/thailand/krabi/area/6756380397",
+    "used": "The Thaitanium Project is a separate Railay (Krabi) rebolting project, not a Koh Tao one (2026-09-28)"
+  },
+  {
+    "name": "theCrag — Mek's Mountain",
+    "url": "https://www.thecrag.com/en/climbing/thailand/koh-tao/area/509928408",
+    "used": "Mek's Mountain entry fee 200 THB (2026-09-28)"
+  },
+  {
+    "name": "rakkup — Mek's Mountain",
+    "url": "https://rakkup.com/guidebook/thailand-koh-tao-rock-climbing/mek's-mountain/s21818",
+    "used": "Mek's Mountain entry fee 200 THB, payable locally (2026-09-28)"
+  },
+  {
+    "name": "rakkup — The Elephant",
+    "url": "https://rakkup.com/guidebook/thailand-koh-tao-rock-climbing/the-elephant/s21829",
+    "used": "Top bolts not replaced or checked in a long time (2026-09-28)"
+  },
+  {
+    "name": "Mountain Project — Elephant",
+    "url": "https://www.mountainproject.com/area/111737303/elephant",
+    "used": "The Elephant top-rope lines and bolt warning (2026-09-28)"
+  },
+  {
+    "name": "Instagram — Secret Garden construction reel",
+    "url": "https://www.instagram.com/reel/DMt-dpAvzjX/",
+    "used": "Secret Garden access limited by construction; guided sessions moved to Backyard & Frontyard ~mid-2025 (2026-09-28)"
+  },
+  {
+    "name": "The Bunker — Facebook",
+    "url": "https://www.facebook.com/thebunkerkohtao/",
+    "used": "Guided bouldering sessions moved from Secret Garden to Backyard & Frontyard (2026-09-28)"
+  },
+  {
+    "name": "theCrag — Backyard & Frontyard",
+    "url": "https://www.thecrag.com/en/climbing/thailand/koh-tao/area/10002144399",
+    "used": "Access marked 'Allowed' — open (2026-09-28)"
+  },
+  {
+    "name": "theCrag — Phillipe's Secret Spot",
+    "url": "https://www.thecrag.com/en/climbing/thailand/koh-tao/area/7096371039",
+    "used": "Access by arrangement with the Koh Tao Climbing Club (2026-09-28)"
+  },
+  {
+    "name": "rakkup — Phillipe's Secret Spot",
+    "url": "https://rakkup.com/guidebook/thailand-koh-tao-rock-climbing/phillipe's-secret-spot/s23429",
+    "used": "Access via the Koh Tao Climbing Club only (2026-09-28)"
   },
   {
     "name": "Koh Tao Complete Guide — getting there",
@@ -102,7 +167,7 @@
   {
     "name": "UKC Logbook — Frontyard and Backyard",
     "url": "https://www.ukclimbing.com/logbook/crags/frontyard_and_backyard-19525/",
-    "used": "'Climbs are no longer climbable' fragment (search snippet, partially-verified 2026-08-04)"
+    "used": "No closure notice on the crag page; its 'no longer climbable' text is UKC's icon-legend boilerplate, not a closure (rechecked 2026-09-28; theCrag marks the area 'Allowed')"
   },
   {
     "name": "Wonderland Koh Tao — best month to visit",
