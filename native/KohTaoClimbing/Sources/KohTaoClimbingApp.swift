@@ -48,6 +48,8 @@ struct RootTabView: View {
     @State private var selection: AppTab
     @State private var mapFocus = MapFocus()
     @State private var routesFilter = RoutesFilterModel()
+    @State private var reviewPrompt = ReviewPromptCoordinator()
+    @Environment(\.scenePhase) private var scenePhase
     @AppStorage("didShowAboutGuide") private var didShowAboutGuide = false
     @State private var showAboutGuide = false
     private let initialCragSlug: String?
@@ -88,15 +90,25 @@ struct RootTabView: View {
                 PlanTabView(store: store)
             }
         }
+        .reviewPromptProbeMarker()
         .environment(mapFocus)
         .environment(routesFilter)
+        .environment(reviewPrompt)
+        .onChange(of: scenePhase, initial: true) { _, phase in
+            reviewPrompt.sceneDidChange(to: phase)
+        }
+        .onChange(of: showAboutGuide, initial: true) { _, showing in
+            reviewPrompt.isBlockingSheetPresented = showing
+        }
         .onChange(of: mapFocus.token) { _, token in
             if token > 0, mapFocus.slug != nil {
+                reviewPrompt.didNavigateProgrammatically()
                 selection = .map
             }
         }
         .onChange(of: routesFilter.tabJumpToken) { _, token in
             if token > 0 {
+                reviewPrompt.didNavigateProgrammatically()
                 selection = .routes
             }
         }

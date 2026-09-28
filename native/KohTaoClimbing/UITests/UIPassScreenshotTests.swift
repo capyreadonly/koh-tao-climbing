@@ -68,7 +68,8 @@ final class UIPassScreenshotTests: XCTestCase {
             let suffix = appearance == .dark ? "dark" : "light"
             for shot in shots where only?.contains(shot.name) ?? true {
                 let app = XCUIApplication()
-                app.launchArguments += shot.arguments
+                // The rating prompt must never land in a screenshot.
+                app.launchArguments += ["-disableReviewPrompt"] + shot.arguments
                 app.launch()
                 XCTAssertTrue(app.tabBars.firstMatch.waitForExistence(timeout: 15), "\(shot.name): app did not launch")
                 Thread.sleep(forTimeInterval: shot.settle)

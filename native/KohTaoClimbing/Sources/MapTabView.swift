@@ -597,6 +597,8 @@ struct MapTabView: View {
     @State private var showingUnmappedCrags = MapTabView.debugShowUnmapped
     @State private var outsideCoverage = false
     @State private var recenterToken = 0
+    /// The `-selectCrag` hook opens the sheet once; onAppear fires again when it closes.
+    @State private var didApplyDebugSelect = false
     // Camera persistence lives in MapCameraStore, not @AppStorage: storing it in SwiftUI
     // state re-rendered this whole view on every region-change callback, which is what
     // made pinch-zoom stutter.
@@ -642,8 +644,9 @@ struct MapTabView: View {
             .toolbarVisibility(.hidden, for: .navigationBar)
             // Testing hook: `-selectCrag` opens the same sheet as a pin tap.
             .onAppear {
-                guard selectedCrag == nil, let slug = Self.debugSelectSlug,
+                guard !didApplyDebugSelect, selectedCrag == nil, let slug = Self.debugSelectSlug,
                       let crag = store.crags.first(where: { $0.slug == slug }) else { return }
+                didApplyDebugSelect = true
                 selectedCrag = crag
             }
             .overlay(alignment: .top) {
@@ -731,6 +734,7 @@ struct MapTabView: View {
                 .allowsHitTesting(false)
             }
             .animation(.easeInOut(duration: 0.2), value: outsideCoverage)
+            .reviewPromptRestingScreen(isResting: selectedCrag == nil && !showingUnmappedCrags)
             .sheet(isPresented: $showingUnmappedCrags) {
                 UnmappedCragsSheet(crags: unmappedCrags, store: store)
             }

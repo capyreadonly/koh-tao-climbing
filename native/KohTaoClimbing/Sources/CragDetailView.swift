@@ -211,6 +211,7 @@ struct CragDetailView: View {
         .navigationTitle(crag.name)
         .toolbarVisibility(.visible, for: .navigationBar)
         .accessibilityIdentifier("cragDetail")
+        .reviewPromptDetail("crag:\(crag.slug)")
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Button("Open in Routes", systemImage: "figure.climbing") {

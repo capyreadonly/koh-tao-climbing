@@ -279,3 +279,43 @@ Test breakdown:
 - **Appearance → System after Dark** is covered for the stored value by the UI test, but I haven't confirmed on screen that the app returns to the system appearance without a relaunch. `.preferredColorScheme(nil)` has had that quirk in some past iOS releases. A 10-second manual check is worth doing.
 - The routes "empty" shot doesn't show an empty state. The launch-arg filter set I chose still matches routes, and I kept it identical in both runs so the pairs stay comparable.
 - `native/build/` shows as untracked in `git status` in this checkout; it isn't git-ignored here. Don't add it. It holds derived data, logs and the exported attachments.
+
+## 9. Rating prompt (StoreKit)
+
+Apple's standard rating sheet, requested with SwiftUI's `@Environment(\.requestReview)`. There is no custom pre-prompt, no incentive and no "rate us" button.
+
+**What triggers it.** All of these must hold:
+
+- The user has opened at least 3 **distinct** crag or route details, ever. They are counted as `crag:<slug>` or `route:<crag|name>`, and reopening one doesn't count again.
+- There have been at least 2 sessions, so it never fires on first launch or in the first session. A session starts when `scenePhase` becomes `.active` after launch or after the app was in the background. The inactive → active blips from Control Center or the app switcher don't count; this is deliberately stricter than counting every `.active`.
+- The user comes **back** to a resting screen: the Map with no sheet up, or the Crags or Routes list root with no pushed detail and no focused search. Only that screen's own rest state going false → true counts. Launching, or switching tabs onto a screen, never triggers it. A detail must also have closed in the last 10 s.
+- After a 1.5 s settle delay, the conditions are checked again: no detail on screen, no first-run About sheet, the scene is active, and no "Show on map" / "Open in Routes" jump in the last 4 s (a sheet closed by one of those jumps is navigation, not a return). Leaving the resting state or the screen during the delay cancels the attempt. The return is marked handled only once the wait completes, because SwiftUI also restarts `.task` on the appear/disappear that follows a sheet dismissal or a pop.
+- The app hasn't already asked in this `CFBundleShortVersionString`.
+
+**Once per version.** `markPrompted()` stores the version that asked. The counts are not reset, so the next version asks once more, at the next return from a detail. That policy is tested. Apple also caps the sheet at 3 a year, and it never shows in TestFlight builds.
+
+**Where the code lives.**
+
+- `native/KohTaoClimbing/Sources/ReviewPromptTracker.swift`: the threshold logic, with `UserDefaults` and the app version injected. Keys: `reviewPrompt.viewedDetails`, `reviewPrompt.sessionCount` and `reviewPrompt.lastPromptedVersion`.
+- `native/KohTaoClimbing/Sources/ReviewPromptCoordinator.swift`: session and detail bookkeeping, the resting-screen gate, and the `.reviewPromptDetail(_:)` and `.reviewPromptRestingScreen(isResting:)` modifiers.
+- Hooks: `RootTabView` (scene phase, About sheet, environment), `CragDetailView`, `RouteDetailView`, and the `MapTabView`, `CragsTabView` and `RoutesTabView` roots.
+
+**How tests disable it.** It is off when the app is launched with `-disableReviewPrompt`, or when `XCTestConfigurationFilePath` is set (unit tests hosted in the app). Every existing UI test and the screenshot test pass `-disableReviewPrompt`. When it's disabled, nothing is recorded either.
+
+**How UI tests observe it (probe).** Apple's sheet is out of process, and StoreKit may suppress it, so the UI tests don't assert on Apple's UI. With `-reviewPromptProbe`, the coordinator counts its own `requestReview()` calls. A 1×1 accessibility element with identifier `reviewPromptRequested` carries the count as its label and the last decision as its value ("asked", "cancelled", "1 detail(s) on screen", …). The element is on the root and on every detail, so it is readable with or without a sheet up. Without the argument the element is never rendered and nothing is counted. `requestReview()` is called on exactly the same path either way. The tests seed eligibility with argument-domain defaults (`-reviewPrompt.sessionCount 5` and so on), which override stored values on every read, so each run starts eligible. `-reviewPromptSettleDelay <s>` lengthens the delay for the cancellation test.
+
+The `-initialCrag` and `-selectCrag` launch hooks are now one-shot. They ran in `onAppear`, which fires again when the Crags list reappears after a pop or the map reappears after its sheet closes, so they re-pushed the detail or reopened the sheet. That is what cancelled every attempt in the first probe runs. They still only act when their launch argument is present.
+
+**Version bump.** `native/project.yml` went from `MARKETING_VERSION "0.1"` / `CURRENT_PROJECT_VERSION "3"` to **`"1.0.5"` / `"8"`**. `Info.plist` already reads both from `$(MARKETING_VERSION)` and `$(CURRENT_PROJECT_VERSION)`, so it is unchanged. The built Debug and Release `.app` Info.plists both show `CFBundleShortVersionString = 1.0.5` and `CFBundleVersion = 8` (`plutil -p`). No branch, tag or doc used 1.0.5 or build 8; the last shipped binary is 1.0.4 (7). `IMPROVEMENTS.md` item 4 (align to `1.0.2`, don't bump the build) predates that release and is now superseded.
+
+**Test results** (simulator `4E8850F7-…`, iPhone 17 Pro, iOS 26.2): Debug and Release builds **SUCCEEDED**; `xcodebuild test` **TEST SUCCEEDED**.
+
+Final full-scheme run: 30 tests, 29 passed, 1 skipped, 0 failed.
+
+- XCTest: 22/22 passed. That is 7 `DataStoreTests` plus 15 new `ReviewPromptTrackerTests`: the 7 threshold cases from the brief, the disable switch, the probe switch, and 6 for the coordinator's gates (including the quiet period after "Show on map").
+- XCUITest: 7 passed, and 1 skipped by design (`UIPassScreenshotTests` is opt-in). The 3 new `ReviewPromptUITests`, all using the probe:
+  - `testRatingPromptRequestedAfterClosingMapCragSheet`: marker at 0 for 4 s while the sheet is up, 1 after Done, and it stays at 1.
+  - `testNoRatingPromptWhenSwitchingTabsAwayFromDetail`: marker at 0 for 6 s after switching tabs away from a pushed detail.
+  - `testNewDetailDuringDelayCancelsPromptUntilNextReturn`: go back to the list, then open `cragRow-meks-mountain` within a 6 s delay. The marker stays at 0 for 9 s, then reaches 1 after the next return.
+- The screenshot test in capture mode was not re-run for this change; that run needed an approval this session couldn't get. It launches with `-disableReviewPrompt` like the other UI tests.
+- Note for manual testing: the probe tests really call `requestReview()` and write `lastPromptedVersion = 1.0.5` into the test simulator's defaults, so a manual run on `4E8850F7-…` won't prompt again for 1.0.5 until the app is reinstalled.

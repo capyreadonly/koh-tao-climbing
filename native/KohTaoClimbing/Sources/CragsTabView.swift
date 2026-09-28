@@ -7,7 +7,10 @@ struct CragsTabView: View {
     var initialCragSlug: String? = nil
 
     @State private var path = NavigationPath()
+    /// The launch hook pushes once; onAppear also fires on every pop back to the list.
+    @State private var didApplyInitialCrag = false
     @State private var searchText = ""
+    @FocusState private var isSearchFocused: Bool
 
     private var trimmedQuery: String {
         searchText.trimmingCharacters(in: .whitespaces)
@@ -31,6 +34,7 @@ struct CragsTabView: View {
                         NavigationLink(value: crag) {
                             CragRow(crag: crag, store: store)
                         }
+                        .accessibilityIdentifier("cragRow-\(crag.slug)")
                         .listRowInsets(EdgeInsets(top: 10, leading: 16, bottom: 10, trailing: 16))
                     }
                 } header: {
@@ -50,6 +54,8 @@ struct CragsTabView: View {
                 CragDetailView(crag: crag, store: store)
             }
             .searchable(text: $searchText, prompt: "Name, area or style")
+            .searchFocused($isSearchFocused)
+            .reviewPromptRestingScreen(isResting: path.isEmpty && !isSearchFocused)
             .overlay {
                 if filtered.isEmpty {
                     GuideEmptyState(
@@ -63,7 +69,9 @@ struct CragsTabView: View {
                 }
             }
             .onAppear {
-                guard path.isEmpty, let slug = initialCragSlug, let crag = store.crag(slug: slug) else { return }
+                guard !didApplyInitialCrag, path.isEmpty, let slug = initialCragSlug,
+                      let crag = store.crag(slug: slug) else { return }
+                didApplyInitialCrag = true
                 path.append(crag)
             }
         }

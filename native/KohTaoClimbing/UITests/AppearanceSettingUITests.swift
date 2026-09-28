@@ -11,7 +11,7 @@ final class AppearanceSettingUITests: XCTestCase {
         let app = XCUIApplication()
         // No `-appearance` launch arg: an argument-domain value would pin the setting
         // and hide whether the picker's write actually lands in UserDefaults.
-        app.launchArguments += ["-initialTab", "plan", "-planSection", "about"]
+        app.launchArguments += ["-disableReviewPrompt", "-initialTab", "plan", "-planSection", "about"]
         app.launch()
 
         let picker = app.descendants(matching: .any)["appearancePicker"].firstMatch

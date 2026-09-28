@@ -12,6 +12,7 @@ final class MapTapRoutesUITests: XCTestCase {
         let app = XCUIApplication()
         app.launchArguments += [
             "-skipAbout",
+            "-disableReviewPrompt",
             "-selectCrag", "meks-mountain",
         ]
         app.launch()
@@ -45,6 +46,7 @@ final class MapTapRoutesUITests: XCTestCase {
         let app = XCUIApplication()
         app.launchArguments += [
             "-skipAbout",
+            "-disableReviewPrompt",
             "-initialTab", "routes",
             "-routesStyle", "boulder",
             "-routesGradeBand", "mid",
@@ -70,6 +72,7 @@ final class MapTapRoutesUITests: XCTestCase {
         let app = XCUIApplication()
         app.launchArguments += [
             "-skipAbout",
+            "-disableReviewPrompt",
             "-initialTab", "routes",
             "-routesPhotoFilter", "has-photo",
         ]

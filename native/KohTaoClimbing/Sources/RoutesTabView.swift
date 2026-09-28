@@ -33,6 +33,7 @@ struct RoutesTabView: View {
     }
 
     @State private var path = NavigationPath()
+    @FocusState private var isSearchFocused: Bool
 
     /// Testing hook: `-routesPhotoFilter has-photo|no-photo` pre-selects photo filter.
     private static let debugPhotoFilter: PhotoPresenceFilter? = {
@@ -141,6 +142,8 @@ struct RoutesTabView: View {
                 CragDetailView(crag: crag, store: store)
             }
             .searchable(text: $filter.searchText, prompt: "Route, crag, sector or grade")
+            .searchFocused($isSearchFocused)
+            .reviewPromptRestingScreen(isResting: path.isEmpty && !isSearchFocused)
             .overlay {
                 if filtered.isEmpty {
                     emptyState
@@ -629,6 +632,7 @@ struct RouteDetailView: View {
         }
         .navigationTitle(route.name)
         .navigationBarTitleDisplayMode(.inline)
+        .reviewPromptDetail("route:\(route.id)")
         .toolbar {
             if let crag = mappedCrag {
                 ToolbarItem(placement: .topBarTrailing) {
