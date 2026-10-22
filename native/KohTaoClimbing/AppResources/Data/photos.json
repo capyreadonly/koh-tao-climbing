@@ -171,7 +171,7 @@
     {
       "file": "Images/guide/p10-0-X24.jpg",
       "kind": "topo-diagram",
-      "caption": "Composite layout: small crag photo (dark overhanging crack with rope) plus bullets 'Easy crack climb that is always in the shade / Difficult face climb / Need to abseil or lower from bolt near ladder to anchor point to set up', beside a drawn topo titled 'SHADY CRACK' (16M scale). Topo shows routes A1 (4), A2 (5b, 'Many variations'), B (6c), with 1-bolt and 2-bolt anchors marked. Crag attribution unverified (adjacent to Mek's Mountain pages, so possibly that crag).",
+      "caption": "Composite layout: small crag photo (dark overhanging crack with rope) plus bullets 'Easy crack climb that is always in the shade / Difficult face climb / Need to abseil or lower from bolt near ladder to anchor point to set up', beside a drawn topo titled 'SHADY CRACK' (16M scale). Topo shows routes A1 (4), A2 (5b, 'Many variations'), B (6c), with 1-bolt and 2-bolt anchors marked. Crag attribution unverified (adjacent to Mek's Mountain pages, so possibly that crag). DQ-1019: Within the supplied Mek's Mountain database, Shady Crack has entries A1 (4), A2 (5b) and B (6c), matching the transcribed labels and grades. Low Bulge separately has Route A (6b), Route B (6a), Route C (5b) and Route D (4). Its Route B is not the Shady Crack B label. These matches do not independently verify this image's crag attribution or current anchor condition.",
       "crag": "Mek's Mountain",
       "page": 10
     },
@@ -1081,7 +1081,7 @@
     {
       "file": "Images/guide/p42-2-X154.jpg",
       "kind": "topo-diagram",
-      "caption": "Full guidebook page \"Lang Khaai Bay\": intro text (secluded seaside granite, Tantalis roof, Yang's Bungalows, potential DWS/cliff-jumping spot toward Tanote bay), compass rose and hand-drawn topo with 12 numbered problems: 1. ***Planet Paradise V4, 2. ***Tantalis V6 (traverse right along break, crank through jugs), 3. ***Pinatubo V4, 4. *Hairy Classic Right V2 (splitter crack), 5. *Hairy Classic Left V3 (vertical break), 6. ***Zenalithic V2, 7. **Difensless V3 (arete), 8. *V1, 9. *V1, 10. *Seafluzy V4, 11. ***Infra-bubba V2, 12. *V0. Credit: \"Maps and problems by Matt Pierson, July 2010\".",
+      "caption": "Full guidebook page \"Lang Khaai Bay\": intro text (secluded seaside granite, Tantalis roof, Yang's Bungalows, potential DWS/cliff-jumping spot toward Tanote bay), compass rose and hand-drawn topo with 12 numbered problems: 1. ***Planet Paradise V4, 2. ***Tantalis V6 (traverse right along break, crank through jugs), 3. ***Pinatubo V4, 4. *Hairy Classic Right V2 (splitter crack), 5. *Hairy Classic Left V3 (vertical break), 6. ***Zenalithic V2, 7. **Difensless V3 (arete), 8. *V1, 9. *V1, 10. *Seafluzy V4, 11. ***Infra-bubba V2, 12. *V0. Credit: \"Maps and problems by Matt Pierson, July 2010\". DQ-1019: This July 2010 topo transcribes Tantalis V6, Hairy Classic Right V2 and Zenalithic V2. Their database candidates are 27crags Font records: Tantalis 7B, Hairy  Classic Right 6B and Zenalithic 6B+, all marked unverified. Preserve both sources; route identity and grade reconciliation need verification. The database also contains guidebook Difensless V3 and 27crags Diffensless 6B+; whether these represent the same line remains unverified. The database has no number/order field, so its ordering does not validate the topo's numbering.",
       "crag": "Lang Khai",
       "page": 42
     },
