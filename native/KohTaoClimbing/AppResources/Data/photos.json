@@ -354,27 +354,27 @@
       "file": "Images/guide/p17-1-X50.jpg",
       "kind": "map",
       "caption": "Hand-drawn area map titled 'Laem Thian Jungle'. Labels: 'Mao Rock', 'Drink more - 6b, 30 m', 'Come on Dave!! 6b, 30 m', '6a, 12 m' (x2), '5a-6a 22m', '5a, 10m', '7+, 16m (stringer)', 'Hill', 'Thick jungle edge', 'Coconut palms', 'Tanote Bay view', 'Top of hill', 'Laem Thian Resort 10 min walk', 'Aow Mao 10 min walk', 'Car park', compass rose. Text notes trad potential and that MAO ROCK needs a natural/trad anchor.",
-      "crag": "Laem Thian (Mao Rock)",
+      "crag": "Mao Rock",
       "page": 17
     },
     {
       "file": "Images/guide/p17-2-X51.jpg",
       "kind": "photo-topo",
-      "caption": "Photo-topo titled 'Laem Thian Coast'. Two route lines with star-marked anchors. Captions: '5a-5c, 3 small routes, 13m' and '6b+, 15 m'; 'Top rope access'. Description text: access from Laem Thian Resort by rock hopping at low tide; beginner area set up for resort use and GTA trips.",
-      "crag": "Laem Thian (Mao Rock)",
+      "caption": "Photo-topo titled 'Laem Thian Coast'. Two route lines with star-marked anchors. Captions: '5a-5c, 3 small routes, 13m' and '6b+, 15 m'; 'Top rope access'. Description text: access from Laem Thian Resort by rock hopping at low tide; beginner area set up for resort use and GTA trips. DQ-1019: This caption preserves the older guide's coastal access and anchor descriptions. The app's Laem Thian record reports the resort closed and access degraded, with access only with a GTA guide. The historical description does not confirm present access or anchor condition; both need verification. Mao Rock's separate jungle map specifies a natural/trad anchor.",
+      "crag": "Laem Thian",
       "page": 17
     },
     {
       "file": "Images/guide/p18-0-X52.jpg",
       "kind": "photo-topo",
-      "caption": "Photo-topo titled 'The Elephant – North Side' with compass rose. Dashed route lines with star anchor. Route list at bottom: '6. MH', '7. E', '8. MH', '9. The Wet Beaver 4', '10. H', '11. The Trunk 7a'. Beach, longtail boats and buildings visible. DQ-002: The Trunk 7a corresponds to the database entry Trunk, The (French 7a) at Sairee Beach Boulders; the names differ by article inversion.",
+      "caption": "Photo-topo titled 'The Elephant – North Side' with compass rose. Dashed route lines with star anchor. Route list at bottom: '6. MH', '7. E', '8. MH', '9. The Wet Beaver 4', '10. H', '11. The Trunk 7a'. Beach, longtail boats and buildings visible. DQ-002: The Trunk 7a corresponds to the database entry Trunk, The (French 7a) at Sairee Beach Boulders; the names differ by article inversion. DQ-1019: The older guide's anchor symbol does not establish current anchor safety. The app's crag warning, added 2026-09-28 and citing rakkup, theCrag and Mountain Project, reports that The Elephant's top bolts have not been replaced or checked in a long time. Current anchor condition needs verification. This caption transcribes #11 The Trunk 7a; the database separately contains Trunk, The, French 7a, sourced to Mountain Project with sector unspecified, and (The Elephant #11), VE, sourced to the zen-gecko guidebook and marked verified. The shared number does not establish route identity or justify merging, renumbering or changing grades.",
       "crag": "Sairee Beach Boulders",
       "page": 18
     },
     {
       "file": "Images/guide/p18-1-X53.jpg",
       "kind": "photo-topo",
-      "caption": "Photo-topo titled 'The Elephant – South Side' with compass rose, '9m' height marker and 'Anchor' star. Route list: '1. Lobe Lieback 6a', '2. Cross Eyed 6c', '3. Yu's Jam Crack 5c', '4. MH', '5. M'. Sea and islands in background.",
+      "caption": "Photo-topo titled 'The Elephant – South Side' with compass rose, '9m' height marker and 'Anchor' star. Route list: '1. Lobe Lieback 6a', '2. Cross Eyed 6c', '3. Yu's Jam Crack 5c', '4. MH', '5. M'. Sea and islands in background. DQ-1019: The older guide's Anchor star does not establish current anchor safety. The app's crag warning, added 2026-09-28 and citing rakkup, theCrag and Mountain Project, reports that The Elephant's top bolts have not been replaced or checked in a long time. Current anchor condition needs verification.",
       "crag": "Sairee Beach Boulders",
       "page": 18
     },
