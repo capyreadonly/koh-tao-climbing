@@ -11,7 +11,7 @@ const isFactChecked = (verified?: string) =>
   verified != null && !verified.toLowerCase().startsWith('unverified')
 
 // Short fee tag for the photo corner (mirrors thetopo's yellow "Premium" tag):
-// "100 THB entry, paid at …" → "100 THB".
+// "200 THB entry, payable locally …" → "200 THB".
 const feeTag = (accessFee?: string) => accessFee?.match(/\d[\d,]*\s*THB/i)?.[0].toUpperCase()
 
 // The crag card (Home "topos" grid + Crags page), restyled 2026-08 to

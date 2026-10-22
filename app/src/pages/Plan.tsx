@@ -178,7 +178,7 @@ export default function Plan() {
         <TabsContent value="gear" className="mt-6 space-y-6">
           <Alert className="rounded-xl border-rose-300 dark:border-rose-500/30 bg-rose-50 dark:bg-rose-950/40 text-rose-900 dark:text-rose-300">
             <ShieldAlert className="h-4 w-4 text-rose-600 dark:text-rose-400" />
-            <AlertTitle className="text-rose-800 dark:text-rose-300">Bolts &amp; the Thaitanium warning</AlertTitle>
+            <AlertTitle className="text-rose-800 dark:text-rose-300">Bolts &amp; the stainless-steel warning</AlertTitle>
             <AlertDescription className="text-rose-800/90 dark:text-rose-300/90">{gearAndSafety.bolts}</AlertDescription>
           </Alert>
 
