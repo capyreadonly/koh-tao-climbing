@@ -2,7 +2,7 @@
 
 Updated 16 Nov 2026 (Asia/Bangkok). Living backlog for the native iOS app. Highest first.
 
-Status: live `READY_FOR_SALE` — ASC/iTunes `1.0.2` / binary build `7` (released 20 Sep); store still `1.0.2` as of 9 Nov, 0 ratings (iTunes lookup US on 9 Nov; 24-storefront weekday watch through 6 Nov all 0), now 50 days old. Product tip `feat/ui-pass-light-dark` @ `d2e5469` (22 Oct: build bump `1.0.5` (9) for DQ-1019 TestFlight, atop `946bf4c` DQ-1019-P3, `b2e988e` DQ-1019-P2, `e50a591` merge of `data/post-1.0.5-fixes` @ `87e17fb` = DQ-1019-P1); branch head `6e0d986` is the 26 Oct IMPROVEMENTS doc. No product commits for 18 days. Soft-launch Instagram paused. `main` still Aug 23 TF 0.1 (1) (`0cc0074`).
+Status: live `READY_FOR_SALE` — ASC/iTunes `1.0.2` / binary build `7` (released 20 Sep); store still `1.0.2` as of 16 Nov, 0 ratings (iTunes lookup US on 16 Nov; 24-storefront weekday watch through 13 Nov all 0), now 57 days old. Product tip `feat/ui-pass-light-dark` @ `d2e5469` (22 Oct: build bump `1.0.5` (9) for DQ-1019 TestFlight, atop `946bf4c` DQ-1019-P3, `b2e988e` DQ-1019-P2, `e50a591` merge of `data/post-1.0.5-fixes` @ `87e17fb` = DQ-1019-P1); branch head `5100d79` is the 9 Nov IMPROVEMENTS doc. No product commits for 25 days. Soft-launch Instagram paused. `main` still Aug 23 TF 0.1 (1) (`0cc0074`).
 
 Skip tip ancestry: About/first-run, privacy/support, map QA, show-on-map, launch screen, PrivacyInfo, Claude fable UX, Map→routes + grade/style filters, map pin → CragDetail, Has/No photo filter (crag-level), MapKit zoom, DQ-001-B1, DQ-002-B1, light/dark, StoreKit `1.0.5`, photo credits/attribution (`f9e7084`), DQ-003 P1–P4 (`d2ca7e8`), DQ-003-F2 (`1537787`), DQ-003-FIX-09/10, web `app/src/data` sync (`8825b0c`), **DQ-1019-P1/P2/P3** (`e50a591`, `b2e988e`, `946bf4c`; all nine DQ-1019 fixes re-confirmed on tip by the 26 Oct DQ run). Public title Koh Tao Climbing; ASC 6798921403, https://apps.apple.com/us/app/kohtaoclimbing/id6798921403. Do not archive/upload from this list.
 
@@ -23,7 +23,7 @@ DQ-2026-10-26 (Codex gpt-6.1-sol, brief `/workspace/koh-tao-briefs/data-quality/
 
 ## Notes
 
-- 16 Nov check: no product movement since 9 Nov (tip , docs head  before this commit); live iTunes US , 0 ratings;  (9) unshipped 25 days. DQ-1109 fixes (FIX-01..06) still unapplied; 9 Nov DQ/research URGENT=false. Scorecard/ASC numbers owed by app manager.
+- 16 Nov check: no product movement since 9 Nov (tip `d2e5469`, docs head `5100d79` before this commit); live iTunes US `1.0.2`, 0 ratings; `1.0.5` (9) unshipped 25 days. DQ-1109-FIX-01..06 still unapplied; 9 Nov DQ/research URGENT=false. Scorecard/ASC numbers owed by app manager.
 - Do not invent climbing facts.
 - Push as `capyreadonly` only.
 - Do not archive/upload to TestFlight or App Store from this list.
