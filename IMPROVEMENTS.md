@@ -1,6 +1,6 @@
 # Koh Tao Climbing — improvements
 
-Updated 9 Nov 2026 (Asia/Bangkok). Living backlog for the native iOS app. Highest first.
+Updated 16 Nov 2026 (Asia/Bangkok). Living backlog for the native iOS app. Highest first.
 
 Status: live `READY_FOR_SALE` — ASC/iTunes `1.0.2` / binary build `7` (released 20 Sep); store still `1.0.2` as of 9 Nov, 0 ratings (iTunes lookup US on 9 Nov; 24-storefront weekday watch through 6 Nov all 0), now 50 days old. Product tip `feat/ui-pass-light-dark` @ `d2e5469` (22 Oct: build bump `1.0.5` (9) for DQ-1019 TestFlight, atop `946bf4c` DQ-1019-P3, `b2e988e` DQ-1019-P2, `e50a591` merge of `data/post-1.0.5-fixes` @ `87e17fb` = DQ-1019-P1); branch head `6e0d986` is the 26 Oct IMPROVEMENTS doc. No product commits for 18 days. Soft-launch Instagram paused. `main` still Aug 23 TF 0.1 (1) (`0cc0074`).
 
@@ -10,7 +10,7 @@ DQ-2026-10-26 (Codex gpt-6.1-sol, brief `/workspace/koh-tao-briefs/data-quality/
 
 ## Next
 
-1. **Ship `1.0.5` (9) to TestFlight, then App Store** — tip `d2e5469` carries the DQ-1019 safety/access data; this is the only way the warning reaches climbers. 18 days since the build bump with no visible TestFlight/App Review movement from the repo or storefront. Ship lane (app manager) to confirm upload/processing state, attach proof video + `DataStoreTests` result, and queue App Review. App Store submit needs Nic’s yes.
+1. **Ship `1.0.5` (9) to TestFlight, then App Store** — tip `d2e5469` carries the DQ-1019 safety/access data; this is the only way the warning reaches climbers. 25 days since the build bump with no visible TestFlight/App Review movement from the repo or storefront. Ship lane (app manager) to confirm upload/processing state, attach proof video + `DataStoreTests` result, and queue App Review. App Store submit needs Nic’s yes.
 2. **Verify DQ-1019 in the build** — on device/simulator: The Elephant shows the top-bolt warning; Secret Garden reads "access limited (construction), not closed"; Mao Rock has the jungle topo and Laem Thian the coast topo; Elephant anchor captions show the anchor-honesty appends.
 3. **DQ-1026 / DQ-1102 caption fixes (P2, caption-only; 2 Nov DQ proposed DQ-1102-FIX-01..05 + P3 FIX-06, still unapplied)** — `DQ-1026-FIX-01` (`p18-0-X52`), `FIX-02` (`p36-0-X121`), `FIX-03` (`p09-0-X21`) per `dq-2026-10-26-fixes.json`. Small; can ride `1.0.5` if not yet uploaded, else next build. Also fix the stale UKC "rechecked 2026-09-28" note in `sources.json` / `reports.json` (reconfirmed 12, 19, 26 Oct).
 4. **Land tip on `main`** — PR from `feat/ui-pass-light-dark` @ `d2e5469`. Prefer this over advancing [PR #6](https://github.com/capyreadonly/koh-tao-climbing/pull/6) still at `5f11bcc`. Close superseded [#1](https://github.com/capyreadonly/koh-tao-climbing/pull/1)–[#3](https://github.com/capyreadonly/koh-tao-climbing/pull/3), [#5](https://github.com/capyreadonly/koh-tao-climbing/pull/5). Keep growth [#4](https://github.com/capyreadonly/koh-tao-climbing/pull/4) separate. Delete merged `data/post-1.0.5-fixes` and `fix/dq-002-b1-dual-nulls` after owner confirms.
@@ -23,6 +23,7 @@ DQ-2026-10-26 (Codex gpt-6.1-sol, brief `/workspace/koh-tao-briefs/data-quality/
 
 ## Notes
 
+- 16 Nov check: no product movement since 9 Nov (tip , docs head  before this commit); live iTunes US , 0 ratings;  (9) unshipped 25 days. DQ-1109 fixes (FIX-01..06) still unapplied; 9 Nov DQ/research URGENT=false. Scorecard/ASC numbers owed by app manager.
 - Do not invent climbing facts.
 - Push as `capyreadonly` only.
 - Do not archive/upload to TestFlight or App Store from this list.
